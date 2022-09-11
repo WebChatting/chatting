@@ -3,6 +3,7 @@ package com.sxrekord.chatting.service.impl;
 import com.sxrekord.chatting.model.vo.ResponseJson;
 import com.sxrekord.chatting.service.FileUploadService;
 import com.sxrekord.chatting.util.FileUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,8 +21,9 @@ import java.util.UUID;
 @Service
 public class FileUploadServiceImpl implements FileUploadService{
 
-    private final static String SERVER_URL_PREFIX = "http://localhost:8080/WebSocket/";
-    private final static String FILE_STORE_PATH = "UploadFile";
+    private final static String SERVER_URL_PREFIX = "http://localhost:8088/UploadFile";
+    @Value("${file.upload.path}")
+    private String FILE_STORE_PATH;
     
     @Override
     public ResponseJson upload(MultipartFile file, HttpServletRequest request) {
@@ -35,11 +37,10 @@ public class FileUploadServiceImpl implements FileUploadService{
             suffix = originalFilename.substring(originalFilename.lastIndexOf("."));
         }
         filename = filename + suffix;
-        String prefix = request.getSession().getServletContext().getRealPath("/") + FILE_STORE_PATH;
 
-        System.out.println("存储路径为:" + prefix + "\\" + filename);
-        new File(prefix).mkdir();
-        Path filePath = Paths.get(prefix, filename);
+        System.out.println("存储路径为:" + FILE_STORE_PATH + filename);
+        new File(FILE_STORE_PATH).mkdir();
+        Path filePath = Paths.get(FILE_STORE_PATH, filename);
         try {
             Files.copy(file.getInputStream(), filePath);
         } catch (IOException e) {
@@ -49,7 +50,7 @@ public class FileUploadServiceImpl implements FileUploadService{
         return new ResponseJson().success()
                 .setData("originalFilename", originalFilename)
                 .setData("fileSize", fileSize)
-                .setData("fileUrl", SERVER_URL_PREFIX + FILE_STORE_PATH + "\\" + filename);
+                .setData("fileUrl", SERVER_URL_PREFIX  + "\\" + filename);
     }
 
     private String getRandomUUID() {

@@ -2,6 +2,7 @@ package com.sxrekord.chatting.config;
 
 import com.sxrekord.chatting.interceptor.UserAuthInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -45,8 +46,14 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .excludePathPatterns(uriConfig.getExcludeUri());
     }
 
+    @Value("${file.upload.path}")
+    private String resourceLocation;
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/apk/**").addResourceLocations("file:/home/rekord/apk/");
+//        /UploadFile/xxx --> ${resourceLocation}/xxx
+        registry.addResourceHandler("/UploadFile/**").addResourceLocations("file:" + resourceLocation);
+
+//        /UploadFile/xxx --> classpath:/UploadFile/xxx
+//        registry.addResourceHandler("/UploadFile/**").addResourceLocations("classpath:/UploadFile/");
     }
 }

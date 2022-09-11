@@ -6,6 +6,14 @@ spring:
     view:
       suffix: .html
       prefix: /views/
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 500MB
+
+file:
+ upload:
+   path: F:/repo/chatting/UploadFile/
 
 netty:
   server:
