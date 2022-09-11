@@ -1,12 +1,13 @@
 package com.sxrekord.chatting.model.vo;
 
-import java.util.HashMap;
-
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.http.HttpStatus;
 
-import com.alibaba.fastjson.JSONObject;
+import java.util.HashMap;
 
 /**
+ * @author Rekord
+ * @date 2022/9/10 14:13
  * status
  * msg
  * data(HashMap)

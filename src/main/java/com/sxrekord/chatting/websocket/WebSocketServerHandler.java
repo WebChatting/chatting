@@ -1,27 +1,23 @@
-package com.sxrekord.chatting.web.websocket;
+package com.sxrekord.chatting.websocket;
 
 
+import com.alibaba.fastjson.JSONObject;
 import com.sxrekord.chatting.model.vo.ResponseJson;
 import com.sxrekord.chatting.service.ChatService;
 import com.sxrekord.chatting.util.Constant;
+import io.netty.channel.ChannelHandler.Sharable;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.handler.codec.http.websocketx.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.alibaba.fastjson.JSONObject;
 
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.SimpleChannelInboundHandler;
-import io.netty.channel.ChannelHandler.Sharable;
-import io.netty.handler.codec.http.websocketx.CloseWebSocketFrame;
-import io.netty.handler.codec.http.websocketx.PingWebSocketFrame;
-import io.netty.handler.codec.http.websocketx.PongWebSocketFrame;
-import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
-import io.netty.handler.codec.http.websocketx.WebSocketFrame;
-import io.netty.handler.codec.http.websocketx.WebSocketServerHandshaker;
-
-
+/**
+ * @author Rekord
+ */
 @Component
 @Sharable
 public class WebSocketServerHandler extends SimpleChannelInboundHandler<WebSocketFrame> {
@@ -74,6 +70,7 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<WebSocke
         JSONObject param = null;
         try {
             param = JSONObject.parseObject(request);
+            System.out.println(param);
         } catch (Exception e) {
             sendErrorMessage(ctx, "JSON字符串转换出错！");
             e.printStackTrace();

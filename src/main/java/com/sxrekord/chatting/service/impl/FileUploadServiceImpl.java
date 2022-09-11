@@ -1,5 +1,12 @@
 package com.sxrekord.chatting.service.impl;
 
+import com.sxrekord.chatting.model.vo.ResponseJson;
+import com.sxrekord.chatting.service.FileUploadService;
+import com.sxrekord.chatting.util.FileUtils;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -7,15 +14,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
 
-import javax.servlet.http.HttpServletRequest;
-
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
-import com.sxrekord.chatting.model.vo.ResponseJson;
-import com.sxrekord.chatting.service.FileUploadService;
-import com.sxrekord.chatting.util.FileUtils;
-
+/**
+ * @author Rekord
+ */
 @Service
 public class FileUploadServiceImpl implements FileUploadService{
 

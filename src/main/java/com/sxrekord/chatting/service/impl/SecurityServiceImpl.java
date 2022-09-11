@@ -1,20 +1,21 @@
 package com.sxrekord.chatting.service.impl;
 
-import java.text.MessageFormat;
-
-import javax.servlet.http.HttpSession;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.sxrekord.chatting.dao.UserInfoDao;
 import com.sxrekord.chatting.model.po.UserInfo;
 import com.sxrekord.chatting.model.vo.ResponseJson;
 import com.sxrekord.chatting.service.SecurityService;
 import com.sxrekord.chatting.util.Constant;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpSession;
+import java.text.MessageFormat;
+
+/**
+ * @author Rekord
+ */
 @Service
 public class SecurityServiceImpl implements SecurityService{
 

@@ -2,6 +2,10 @@ package com.sxrekord.chatting.model.po;
 
 import java.util.List;
 
+/**
+ * @author Rekord
+ * @date 2022/9/10 14:16
+ */
 public class GroupInfo {
 
     private String groupId;

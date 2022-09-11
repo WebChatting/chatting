@@ -1,8 +1,4 @@
-package com.sxrekord.chatting.web.controller;
-
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
-
-import javax.servlet.http.HttpServletRequest;
+package com.sxrekord.chatting.controller;
 
 import com.sxrekord.chatting.model.vo.ResponseJson;
 import com.sxrekord.chatting.service.FileUploadService;
@@ -13,6 +9,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
+
+/**
+ * @author Rekord
+ */
 @Controller
 @RequestMapping("/chatroom")
 public class FileUploadController {

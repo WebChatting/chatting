@@ -1,0 +1,16 @@
+server:
+  port: 8088
+
+spring:
+  mvc:
+    view:
+      suffix: .html
+      prefix: /views/
+
+netty:
+  server:
+    port: 3333
+
+config:
+  exclude-uri: [ /login, /admin/** ]
+  include-uri: [ /chatroom/** ]

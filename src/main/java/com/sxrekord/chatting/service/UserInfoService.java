@@ -2,6 +2,9 @@ package com.sxrekord.chatting.service;
 
 import com.sxrekord.chatting.model.vo.ResponseJson;
 
+/**
+ * @author Rekord
+ */
 public interface UserInfoService {
 
     /**

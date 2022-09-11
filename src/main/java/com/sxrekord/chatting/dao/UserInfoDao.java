@@ -2,6 +2,9 @@ package com.sxrekord.chatting.dao;
 
 import com.sxrekord.chatting.model.po.UserInfo;
 
+/**
+ * @author Rekord
+ */
 public interface UserInfoDao {
 
     void loadUserInfo();

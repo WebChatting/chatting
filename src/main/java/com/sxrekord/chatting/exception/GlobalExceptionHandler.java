@@ -1,7 +1,4 @@
-package com.sxrekord.chatting.web.controller.common;
-
-import java.util.List;
-import java.util.stream.Collectors;
+package com.sxrekord.chatting.exception;
 
 import com.sxrekord.chatting.model.vo.ResponseJson;
 import org.slf4j.Logger;
@@ -16,6 +13,9 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 描述: 全局错误统一处理控制中心

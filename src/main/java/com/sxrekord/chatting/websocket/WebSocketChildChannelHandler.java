@@ -1,8 +1,4 @@
-package com.sxrekord.chatting.web.websocket;
-
-import javax.annotation.Resource;
-
-import org.springframework.stereotype.Component;
+package com.sxrekord.chatting.websocket;
 
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelInitializer;
@@ -10,8 +6,14 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.stream.ChunkedWriteHandler;
+import org.springframework.stereotype.Component;
 
-@Component
+import javax.annotation.Resource;
+
+/**
+ * @author Rekord
+ */
+@Component("webSocketChildChannelHandler")
 public class WebSocketChildChannelHandler extends ChannelInitializer<SocketChannel>{
 
 	@Resource(name = "webSocketServerHandler")

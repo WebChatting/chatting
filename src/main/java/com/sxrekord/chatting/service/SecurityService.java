@@ -1,9 +1,12 @@
 package com.sxrekord.chatting.service;
 
-import javax.servlet.http.HttpSession;
-
 import com.sxrekord.chatting.model.vo.ResponseJson;
 
+import javax.servlet.http.HttpSession;
+
+/**
+ * @author Rekord
+ */
 public interface SecurityService {
 
     /**

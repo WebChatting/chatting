@@ -1,17 +1,16 @@
-package com.sxrekord.chatting.web.websocket;
+package com.sxrekord.chatting.websocket;
 
+import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.*;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.util.concurrent.Future;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelHandler;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.EventLoopGroup;
-import io.netty.channel.FixedRecvByteBufAllocator;
-import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.util.concurrent.Future;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 /**
  * 描述: Netty WebSocket服务器
@@ -20,18 +19,19 @@ import io.netty.util.concurrent.Future;
  * @version 1.0
  * @date 2018年5月18日 上午11:22:51
  */
+@Component
 public class WebSocketServer implements Runnable{
 
     private final Logger logger = LoggerFactory.getLogger(WebSocketServer.class);
     
-	@Autowired
-	private EventLoopGroup bossGroup;
-	@Autowired
-	private EventLoopGroup workerGroup;
-	@Autowired
-	private ServerBootstrap serverBootstrap;
-	
+	private EventLoopGroup bossGroup = new NioEventLoopGroup();
+	private EventLoopGroup workerGroup = new NioEventLoopGroup();
+	private ServerBootstrap serverBootstrap = new ServerBootstrap();
+
+	@Value("${netty.server.port}")
 	private int port;
+	@Autowired
+	@Qualifier("webSocketChildChannelHandler")
 	private ChannelHandler childChannelHandler;
 	private ChannelFuture serverChannelFuture;
 	

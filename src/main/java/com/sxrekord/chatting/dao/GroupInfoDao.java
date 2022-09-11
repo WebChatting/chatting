@@ -3,6 +3,9 @@ package com.sxrekord.chatting.dao;
 
 import com.sxrekord.chatting.model.po.GroupInfo;
 
+/**
+ * @author Rekord
+ */
 public interface GroupInfoDao {
 
     void loadGroupInfo();

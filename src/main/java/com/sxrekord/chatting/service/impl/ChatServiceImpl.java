@@ -1,25 +1,26 @@
 package com.sxrekord.chatting.service.impl;
 
-import java.text.MessageFormat;
-import java.util.Iterator;
-import java.util.Map.Entry;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.alibaba.fastjson.JSONObject;
-
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import com.sxrekord.chatting.dao.GroupInfoDao;
 import com.sxrekord.chatting.model.po.GroupInfo;
 import com.sxrekord.chatting.model.vo.ResponseJson;
 import com.sxrekord.chatting.service.ChatService;
 import com.sxrekord.chatting.util.ChatType;
 import com.sxrekord.chatting.util.Constant;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import java.text.MessageFormat;
+import java.util.Iterator;
+import java.util.Map.Entry;
+
+/**
+ * @author Rekord
+ */
 @Service
 public class ChatServiceImpl implements ChatService{
 
@@ -31,6 +32,7 @@ public class ChatServiceImpl implements ChatService{
     @Override
     public void register(JSONObject param, ChannelHandlerContext ctx) {
         String userId = (String)param.get("userId");
+        LOGGER.info(userId);
         Constant.onlineUserMap.put(userId, ctx);
         String responseJson = new ResponseJson().success()
                 .setData("type", ChatType.REGISTER)

@@ -1,14 +1,15 @@
 package com.sxrekord.chatting.util;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.http.HttpStatus;
+
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Writer;
 
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.http.HttpStatus;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
+/**
+ * @author Rekord
+ */
 public class JsonMsgHelper {
 
 	private static final ObjectMapper JSONMAPPER = new ObjectMapper();
