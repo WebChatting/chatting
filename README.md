@@ -10,7 +10,7 @@ java -jar target/chatting-springboot-xxx.jar
 ```
 
 ## ToDo
-- [ ] refactor backend with SpringBoot
+- [x] refactor backend with SpringBoot
 - [ ] design and use db
 - [ ] use @Slf4j replace logger field
 - [ ] refactor frontend
