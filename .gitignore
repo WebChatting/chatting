@@ -1,5 +1,4 @@
 UploadFile/
-.idea/
 
 !.mvn/wrapper/maven-wrapper.jar
 
@@ -149,7 +148,7 @@ $RECYCLE.BIN/
 *.lnk
 
 ### IntelliJ IDEA ###
-.idea
+.idea/
 *.iws
 *.iml
 *.ipr
