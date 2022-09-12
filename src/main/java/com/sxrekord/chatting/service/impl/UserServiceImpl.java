@@ -55,19 +55,6 @@ public class UserServiceImpl implements UserService {
         if (user == null) {
             responseJson.error("用户名或密码错误！");
         } else {
-            List<Long> friendList = relationDao.listUserIdByUserId(user.getUserId());
-            user.setFriendList(new ArrayList<>(friendList.size()));
-            for (Long userId : friendList) {
-                user.getFriendList().add(userDao.getUserById(userId));
-            }
-            List<Long> groupList = relationDao.listGroupIdByUserId(user.getUserId());
-            user.setGroupList(new ArrayList<>(groupList.size()));
-            for (Long groupId : groupList) {
-                user.getGroupList().add(groupDao.getGroupById(groupId));
-            }
-
-            log.info(user.toString());
-
             responseJson.success();
             if (session != null) {
                 session.setAttribute(Constant.USER_TOKEN, user.getUserId());
@@ -89,6 +76,31 @@ public class UserServiceImpl implements UserService {
         session.removeAttribute(Constant.USER_TOKEN);
         log.info(MessageFormat.format("userId为 {0} 的用户已注销登录！", userId));
         return responseJson.success();
+    }
+
+    @Override
+    public ResponseJson getUser(Long id) {
+        ResponseJson responseJson = new ResponseJson();
+        User user = userDao.getUserById(id);
+        if (user == null) {
+            responseJson.error("用户未登录！");
+        } else {
+            List<Long> friendList = relationDao.listUserIdByUserId(user.getUserId());
+            user.setFriendList(new ArrayList<>(friendList.size()));
+            for (Long userId : friendList) {
+                user.getFriendList().add(userDao.getUserById(userId));
+            }
+            List<Long> groupList = relationDao.listGroupIdByUserId(user.getUserId());
+            user.setGroupList(new ArrayList<>(groupList.size()));
+            for (Long groupId : groupList) {
+                user.getGroupList().add(groupDao.getGroupById(groupId));
+            }
+
+            log.info(user.toString());
+
+            responseJson.success().setData("userInfo", user);
+        }
+        return responseJson;
     }
 
 }
