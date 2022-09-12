@@ -7,6 +7,7 @@
                 success: function(data) {
                     console.log("获取用户信息...");
                     if (data.status == 200) {
+                        sentMessageMap = new SentMessageMap();
                         var userInfo = data.data.userInfo;
                         userId = userInfo.userId;
                         $("#username").html(userInfo.username);
@@ -14,6 +15,7 @@
                         var groupListHTML = "";
                         var groupList = userInfo.groupList;
                         for (var i = 0; i < groupList.length; i++) {
+                            sentMessageMap.put(groupList[i].groupId, new Array());
                             groupListHTML +=
                             '<li>' + 
                                 '<div class="liLeft"><img src="' + groupList[i].avatarPath + '"></div>' +
@@ -29,6 +31,7 @@
                         var friendListHTML = "";
                         var friendList = userInfo.friendList;
                         for (var i = 0; i < friendList.length; i++) {
+                            sentMessageMap.put(friendList[i].userId, new Array());
                             friendListHTML +=
                             '<li>' + 
                                 '<div class="liLeft"><img src="' + friendList[i].avatarPath + '"></div>' +
@@ -49,21 +52,7 @@
                 }
         });
     }
-    
-    
-    function setSentMessageMap() {
-        sentMessageMap = new SentMessageMap();
-        sentMessageMap.put("001", new Array());
-        sentMessageMap.put("002", new Array());
-        sentMessageMap.put("003", new Array());
-        sentMessageMap.put("004", new Array());
-        sentMessageMap.put("005", new Array());
-        sentMessageMap.put("006", new Array());
-        sentMessageMap.put("007", new Array());
-        sentMessageMap.put("008", new Array());
-        sentMessageMap.put("009", new Array());
-        sentMessageMap.put("01", new Array());
-    }
+
     
     var ws = {
         register: function() {

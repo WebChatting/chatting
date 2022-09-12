@@ -44,9 +44,9 @@ public class ChatServiceImpl implements ChatService{
 
     @Override
     public void singleSend(JSONObject param, ChannelHandlerContext ctx) {
-        String fromUserId = (String)param.get("fromUserId");
-        String toUserId = (String)param.get("toUserId");
-        String content = (String)param.get("content");
+        String fromUserId = param.get("fromUserId").toString();
+        String toUserId = param.get("toUserId").toString();
+        String content = param.get("content").toString();
         ChannelHandlerContext toUserCtx = Constant.onlineUserMap.get(toUserId);
         // 对方不在线不支持发送消息
         if (toUserCtx == null) {
@@ -67,9 +67,9 @@ public class ChatServiceImpl implements ChatService{
     @Override
     public void groupSend(JSONObject param, ChannelHandlerContext ctx) {
         
-        String fromUserId = (String)param.get("fromUserId");
-        String toGroupId = (String)param.get("toGroupId");
-        String content = (String)param.get("content");
+        String fromUserId = param.get("fromUserId").toString();
+        String toGroupId = param.get("toGroupId").toString();
+        String content = param.get("content").toString();
 
         GroupInfo groupInfo = groupDao.getByGroupId(toGroupId);
         if (groupInfo == null) {
@@ -113,11 +113,11 @@ public class ChatServiceImpl implements ChatService{
 
     @Override
     public void FileMsgSingleSend(JSONObject param, ChannelHandlerContext ctx) {
-        String fromUserId = (String)param.get("fromUserId");
-        String toUserId = (String)param.get("toUserId");
-        String originalFilename = (String)param.get("originalFilename");
-        String fileSize = (String)param.get("fileSize");
-        String fileUrl = (String)param.get("fileUrl");
+        String fromUserId = param.get("fromUserId").toString();
+        String toUserId = param.get("toUserId").toString();
+        String originalFilename = param.get("originalFilename").toString();
+        String fileSize = param.get("fileSize").toString();
+        String fileUrl = param.get("fileUrl").toString();
         ChannelHandlerContext toUserCtx = Constant.onlineUserMap.get(toUserId);
         if (toUserCtx == null) {
             String responseJson = new ResponseJson()
@@ -138,11 +138,11 @@ public class ChatServiceImpl implements ChatService{
 
     @Override
     public void FileMsgGroupSend(JSONObject param, ChannelHandlerContext ctx) {
-        String fromUserId = (String)param.get("fromUserId");
-        String toGroupId = (String)param.get("toGroupId");
-        String originalFilename = (String)param.get("originalFilename");
-        String fileSize = (String)param.get("fileSize");
-        String fileUrl = (String)param.get("fileUrl");
+        String fromUserId = param.get("fromUserId").toString();
+        String toGroupId = param.get("toGroupId").toString();
+        String originalFilename = param.get("originalFilename").toString();
+        String fileSize = param.get("fileSize").toString();
+        String fileUrl = param.get("fileUrl").toString();
         GroupInfo groupInfo = groupDao.getByGroupId(toGroupId);
         if (groupInfo == null) {
             String responseJson = new ResponseJson().error("该群id不存在").toString();
