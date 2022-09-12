@@ -20,7 +20,7 @@
         <result column="avatar_path" jdbcType="VARCHAR" property="avatarPath"/>
     </resultMap>
 
-    <select id="getUserById" parameterType="Long" resultMap="UserDao">
+    <select id="getUserById" parameterType="java.lang.Long" resultMap="UserDao">
         select
         <include refid="selectFields"/>
         from user
