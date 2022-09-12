@@ -1,7 +1,7 @@
 package com.sxrekord.chatting.service.impl;
 
 import com.sxrekord.chatting.model.vo.ResponseJson;
-import com.sxrekord.chatting.service.FileUploadService;
+import com.sxrekord.chatting.service.FileService;
 import com.sxrekord.chatting.util.FileUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -19,7 +19,7 @@ import java.util.UUID;
  * @author Rekord
  */
 @Service
-public class FileUploadServiceImpl implements FileUploadService{
+public class FileServiceImpl implements FileService {
 
     private final static String SERVER_URL_PREFIX = "http://localhost:8088/UploadFile";
     @Value("${file.upload.location}")

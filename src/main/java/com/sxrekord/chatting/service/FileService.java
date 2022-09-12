@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * @author Rekord
  */
-public interface FileUploadService {
+public interface FileService {
 
     /**
      * 上传文件
