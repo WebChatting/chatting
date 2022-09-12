@@ -10,7 +10,7 @@ import java.util.List;
  */
 @Data
 public class User {
-    private long userId;
+    private Long userId;
     private String username;
     private String password;
     private String avatarPath;
