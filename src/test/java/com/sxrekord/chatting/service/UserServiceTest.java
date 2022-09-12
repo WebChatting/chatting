@@ -22,4 +22,9 @@ public class UserServiceTest {
     public void register() {
         System.out.println(userService.registerUser("test4", "test4"));
     }
+
+    @Test
+    public void logout() {
+        System.out.println(userService.logoutUser(null));
+    }
 }

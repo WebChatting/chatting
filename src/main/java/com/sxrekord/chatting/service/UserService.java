@@ -27,4 +27,11 @@ public interface UserService {
      * @return
      */
     ResponseJson loginUser(String username, String password, HttpSession session);
+
+    /**
+     * 用户登出
+     * @param session
+     * @return
+     */
+    ResponseJson logoutUser(HttpSession session);
 }
