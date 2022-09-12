@@ -14,7 +14,7 @@ java -jar target/chatting-springboot-xxx.jar
 - [ ] design and use db
   - [ ] use Mybatis
   - [ ] use Druid
-- [ ] use @Slf4j replace logger field
+- [x] use @Slf4j replace logger field
 - [ ] refactor frontend
 - [ ] use Logback replace slf4j
 - [ ] use Redis

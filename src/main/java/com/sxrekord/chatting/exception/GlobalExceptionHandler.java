@@ -1,8 +1,7 @@
 package com.sxrekord.chatting.exception;
 
 import com.sxrekord.chatting.model.vo.ResponseJson;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
@@ -23,11 +22,10 @@ import java.util.stream.Collectors;
  * @version 1.0
  * @date 2018年5月17日 下午3:27:49
  */
+@Slf4j
 @ControllerAdvice
 @ResponseBody
 public class GlobalExceptionHandler {
-
-    private static final Logger LOG = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     private static final ResponseJson ERROR;
 
@@ -43,7 +41,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseJson defaultErrorHandler(Exception exception) {
-        LOG.error(exception.getMessage(), exception);
+        log.error(exception.getMessage(), exception);
         return ERROR;
     }
     
