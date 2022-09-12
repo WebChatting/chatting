@@ -10,10 +10,26 @@ spring:
     multipart:
       max-file-size: 100MB
       max-request-size: 500MB
+  datasource:
+    url: jdbc:mysql://localhost:3306/chatting?serverTimezone=UTC&useUnicode=true&characterEncoding=UTF-8&useSSL=false
+    username: root
+    password: "011010"
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+mybatis:
+  mapper-locations: classpath:mapper/*
+  type-aliases-package: com.sxrekord.chatting.model.po
+  configuration:
+    map-underscore-to-camel-case: true
 
 file:
- upload:
-   path: F:/repo/chatting/UploadFile/
+  upload:
+    path: F:/repo/chatting/UploadFile/
+  user:
+    avatar:
+      location: /home/rekord/chatting/avatar/
+      default: default_user_avatar.jpg
+
 
 netty:
   server:
