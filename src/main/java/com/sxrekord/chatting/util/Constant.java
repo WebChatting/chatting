@@ -1,7 +1,7 @@
 package com.sxrekord.chatting.util;
 
-import com.sxrekord.chatting.model.po.GroupInfo;
-import com.sxrekord.chatting.model.po.UserInfo;
+import com.sxrekord.chatting.model.po.User;
+import com.sxrekord.chatting.model.po.Group;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.websocketx.WebSocketServerHandshaker;
 
@@ -30,9 +30,9 @@ public class Constant {
 	public static Map<String, ChannelHandlerContext> onlineUserMap = 
 	        new ConcurrentHashMap<>();
 
-	public static Map<String, GroupInfo> groupInfoMap =
+	public static Map<String, Group> groupInfoMap =
 	        new ConcurrentHashMap<>();
 	
-	public static Map<String, UserInfo> userInfoMap =
+	public static Map<String, User> userInfoMap =
 	        new HashMap<>();
 }

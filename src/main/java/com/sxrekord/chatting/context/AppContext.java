@@ -1,7 +1,5 @@
 package com.sxrekord.chatting.context;
 
-import com.sxrekord.chatting.dao.GroupInfoDao;
-import com.sxrekord.chatting.dao.UserInfoDao;
 import com.sxrekord.chatting.websocket.WebSocketServer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.DisposableBean;
@@ -22,10 +20,7 @@ public class AppContext implements InitializingBean, DisposableBean {
     @Autowired
     private WebSocketServer webSocketServer;
     private Thread nettyThread;
-    @Autowired
-    private UserInfoDao userInfoDao;
-    @Autowired
-    private GroupInfoDao groupInfoDao;
+
     /**
      * 服务器关闭前调用
      * @throws Exception
@@ -48,9 +43,5 @@ public class AppContext implements InitializingBean, DisposableBean {
         nettyThread = new Thread(webSocketServer);
         log.info("开启独立线程，启动Netty WebSocket服务器...");
         nettyThread.start();
-        log.info("加载用户数据...");
-        userInfoDao.loadUserInfo();
-        log.info("加载用户交流群数据...");
-        groupInfoDao.loadGroupInfo();
     }
 }
