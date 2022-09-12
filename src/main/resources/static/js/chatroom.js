@@ -10,13 +10,13 @@
                         var userInfo = data.data.userInfo;
                         userId = userInfo.userId;
                         $("#username").html(userInfo.username);
-                        $("#avatarUrl").attr("src", userInfo.avatarUrl);
+                        $("#avatarUrl").attr("src", userInfo.avatarPath);
                         var groupListHTML = "";
                         var groupList = userInfo.groupList;
                         for (var i = 0; i < groupList.length; i++) {
                             groupListHTML +=
                             '<li>' + 
-                                '<div class="liLeft"><img src="' + groupList[i].groupAvatarUrl + '"></div>' +
+                                '<div class="liLeft"><img src="' + groupList[i].avatarPath + '"></div>' +
                                     '<div class="liRight">' +
                                         '<span class="hidden-groupId">' + groupList[i].groupId + '</span>' + 
                                         '<span class="intername">' + groupList[i].groupName + '</span>' + 
@@ -31,7 +31,7 @@
                         for (var i = 0; i < friendList.length; i++) {
                             friendListHTML +=
                             '<li>' + 
-                                '<div class="liLeft"><img src="' + friendList[i].avatarUrl + '"></div>' +
+                                '<div class="liLeft"><img src="' + friendList[i].avatarPath + '"></div>' +
                                     '<div class="liRight">' +
                                         '<span class="hidden-userId">' + friendList[i].userId + '</span>' + 
                                         '<span class="intername">' + friendList[i].username + '</span>' + 
