@@ -27,8 +27,8 @@ file:
     path: F:/repo/chatting/UploadFile/
   user:
     avatar:
-      location: /home/rekord/chatting/avatar/
-      default: default_user_avatar.jpg
+      location: F:/repo/chatting/avatar/
+      default: /avatar/default_user_avatar.jpg
 
 
 netty:

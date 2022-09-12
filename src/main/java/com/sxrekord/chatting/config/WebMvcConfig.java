@@ -48,10 +48,13 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Value("${file.upload.path}")
     private String resourceLocation;
+    @Value("${file.user.avatar.location}")
+    private String avatarLocation;
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
 //        /UploadFile/xxx --> ${resourceLocation}/xxx
         registry.addResourceHandler("/UploadFile/**").addResourceLocations("file:" + resourceLocation);
+        registry.addResourceHandler("/avatar/**").addResourceLocations("file:" + avatarLocation);
 
 //        /UploadFile/xxx --> classpath:/UploadFile/xxx
 //        registry.addResourceHandler("/UploadFile/**").addResourceLocations("classpath:/UploadFile/");
