@@ -1,44 +1,51 @@
 package com.sxrekord.chatting.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.sxrekord.chatting.dao.GroupInfoDao;
-import com.sxrekord.chatting.model.po.GroupInfo;
+import com.sxrekord.chatting.dao.GroupDao;
+import com.sxrekord.chatting.dao.RelationDao;
+import com.sxrekord.chatting.dao.UserDao;
+import com.sxrekord.chatting.model.po.Group;
 import com.sxrekord.chatting.model.vo.ResponseJson;
 import com.sxrekord.chatting.service.ChatService;
 import com.sxrekord.chatting.util.ChatType;
 import com.sxrekord.chatting.util.Constant;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map.Entry;
 
 /**
  * @author Rekord
  */
+@Slf4j
 @Service
 public class ChatServiceImpl implements ChatService{
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ChatServiceImpl.class);
             
     @Autowired
-    private GroupInfoDao groupDao;
+    private GroupDao groupDao;
+    @Autowired
+    private RelationDao relationDao;
+    @Autowired
+    private UserDao userDao;
     
     @Override
     public void register(JSONObject param, ChannelHandlerContext ctx) {
         String userId = param.get("userId").toString();
-        LOGGER.info(userId);
+        log.info(userId);
         Constant.onlineUserMap.put(userId, ctx);
         String responseJson = new ResponseJson().success()
                 .setData("type", ChatType.REGISTER)
                 .toString();
         sendMessage(ctx, responseJson);
-        LOGGER.info(MessageFormat.format("userId为 {0} 的用户登记到在线用户表，当前在线人数为：{1}"
+        log.info(MessageFormat.format("userId为 {0} 的用户登记到在线用户表，当前在线人数为：{1}"
                 , userId, Constant.onlineUserMap.size()));
     }
 
@@ -66,13 +73,12 @@ public class ChatServiceImpl implements ChatService{
 
     @Override
     public void groupSend(JSONObject param, ChannelHandlerContext ctx) {
-        
-        String fromUserId = param.get("fromUserId").toString();
-        String toGroupId = param.get("toGroupId").toString();
+        Long fromUserId = Long.parseLong(param.get("fromUserId").toString());
+        Long toGroupId = Long.parseLong(param.get("toGroupId").toString());
         String content = param.get("content").toString();
 
-        GroupInfo groupInfo = groupDao.getByGroupId(toGroupId);
-        if (groupInfo == null) {
+        Group group = groupDao.getGroupById(toGroupId);
+        if (group == null) {
             String responseJson = new ResponseJson().error("该群id不存在").toString();
             sendMessage(ctx, responseJson);
         } else {
@@ -82,13 +88,7 @@ public class ChatServiceImpl implements ChatService{
                     .setData("toGroupId", toGroupId)
                     .setData("type", ChatType.GROUP_SENDING)
                     .toString();
-            groupInfo.getMembers().stream()
-                .forEach(member -> { 
-                    ChannelHandlerContext toCtx = Constant.onlineUserMap.get(member.getUserId());
-                    if (toCtx != null && !member.getUserId().equals(fromUserId)) {
-                        sendMessage(toCtx, responseJson);
-                    }
-                });
+            setMembers(group, fromUserId, responseJson);
         }
     }
     
@@ -99,12 +99,12 @@ public class ChatServiceImpl implements ChatService{
         while(iterator.hasNext()) {
             Entry<String, ChannelHandlerContext> entry = iterator.next();
             if (entry.getValue() == ctx) {
-                LOGGER.info("正在移除握手实例...");
+                log.info("正在移除握手实例...");
                 Constant.webSocketHandshakerMap.remove(ctx.channel().id().asLongText());
-                LOGGER.info(MessageFormat.format("已移除握手实例，当前握手实例总数为：{0}"
+                log.info(MessageFormat.format("已移除握手实例，当前握手实例总数为：{0}"
                         , Constant.webSocketHandshakerMap.size()));
                 iterator.remove();
-                LOGGER.info(MessageFormat.format("userId为 {0} 的用户已退出聊天，当前在线人数为：{1}"
+                log.info(MessageFormat.format("userId为 {0} 的用户已退出聊天，当前在线人数为：{1}"
                         , entry.getKey(), Constant.onlineUserMap.size()));
                 break;
             }
@@ -138,13 +138,13 @@ public class ChatServiceImpl implements ChatService{
 
     @Override
     public void FileMsgGroupSend(JSONObject param, ChannelHandlerContext ctx) {
-        String fromUserId = param.get("fromUserId").toString();
-        String toGroupId = param.get("toGroupId").toString();
+        Long fromUserId = Long.parseLong(param.get("fromUserId").toString());
+        Long toGroupId = Long.parseLong(param.get("toGroupId").toString());
         String originalFilename = param.get("originalFilename").toString();
         String fileSize = param.get("fileSize").toString();
         String fileUrl = param.get("fileUrl").toString();
-        GroupInfo groupInfo = groupDao.getByGroupId(toGroupId);
-        if (groupInfo == null) {
+        Group group = groupDao.getGroupById((long)toGroupId);
+        if (group == null) {
             String responseJson = new ResponseJson().error("该群id不存在").toString();
             sendMessage(ctx, responseJson);
         } else {
@@ -156,13 +156,8 @@ public class ChatServiceImpl implements ChatService{
                     .setData("fileUrl", fileUrl)
                     .setData("type", ChatType.FILE_MSG_GROUP_SENDING)
                     .toString();
-            groupInfo.getMembers().stream()
-                .forEach(member -> { 
-                    ChannelHandlerContext toCtx = Constant.onlineUserMap.get(member.getUserId());
-                    if (toCtx != null && !member.getUserId().equals(fromUserId)) {
-                        sendMessage(toCtx, responseJson);
-                    }
-                });
+            setMembers(group, fromUserId, responseJson);
+
         }
     }
     
@@ -180,6 +175,20 @@ public class ChatServiceImpl implements ChatService{
         ctx.channel().writeAndFlush(new TextWebSocketFrame(message));
     }
 
-   
+    private void setMembers(Group group, Long fromUserId, String responseJson) {
+        List<Long> members = relationDao.listUserIdByGroupId(group.getGroupId());
+        group.setMembers(new ArrayList<>(members.size()));
+        for (Long userId : members) {
+            group.getMembers().add(userDao.getUserById(userId));
+        }
+
+        group.getMembers().stream()
+                .forEach(member -> {
+                    ChannelHandlerContext toCtx = Constant.onlineUserMap.get(member.getUserId());
+                    if (toCtx != null && !fromUserId.equals(member.getUserId())) {
+                        sendMessage(toCtx, responseJson);
+                    }
+                });
+    }
     
 }
