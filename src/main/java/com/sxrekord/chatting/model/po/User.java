@@ -14,8 +14,8 @@ public class User {
     private String username;
     private String password;
     private String avatarPath;
-    private List<UserInfo> friendList;
-    private List<GroupInfo> groupList;
+    private List<User> friendList;
+    private List<Group> groupList;
 
     public User() {}
 

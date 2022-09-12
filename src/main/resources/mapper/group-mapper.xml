@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sxrekord.chatting.dao.GroupDao">
+    <sql id="selectFields">
+        group_id, group_name, avatar_path
+    </sql>
+
+    <resultMap id="GroupDao" type="Group">
+        <id column="group_id" jdbcType="INTEGER" property="groupId"/>
+        <result column="group_name" jdbcType="VARCHAR" property="groupName"/>
+        <result column="avatar_path" jdbcType="VARCHAR" property="avatarPath"/>
+    </resultMap>
+
+    <select id="getGroupById" parameterType="java.lang.Long" resultMap="GroupDao">
+        select
+        <include refid="selectFields"/>
+        from `group`
+        where group_id = #{groupId}
+    </select>
+
+</mapper>

@@ -18,16 +18,16 @@ insert into relation (`request_id`, `accept_id`, `type`) values (504, 101, 1);
 insert into relation (`request_id`, `accept_id`, `type`) values (505, 101, 1);
 
 -- build user relation
-insert into relation (`request_id`, `accept_id`, `type`) values (501, 102, 0);
-insert into relation (`request_id`, `accept_id`, `type`) values (501, 103, 0);
-insert into relation (`request_id`, `accept_id`, `type`) values (501, 104, 0);
-insert into relation (`request_id`, `accept_id`, `type`) values (501, 105, 0);
-insert into relation (`request_id`, `accept_id`, `type`) values (502, 103, 0);
-insert into relation (`request_id`, `accept_id`, `type`) values (502, 104, 0);
-insert into relation (`request_id`, `accept_id`, `type`) values (502, 105, 0);
-insert into relation (`request_id`, `accept_id`, `type`) values (503, 104, 0);
-insert into relation (`request_id`, `accept_id`, `type`) values (503, 105, 0);
-insert into relation (`request_id`, `accept_id`, `type`) values (504, 105, 0);
+insert into relation (`request_id`, `accept_id`, `type`) values (501, 502, 0);
+insert into relation (`request_id`, `accept_id`, `type`) values (501, 503, 0);
+insert into relation (`request_id`, `accept_id`, `type`) values (501, 504, 0);
+insert into relation (`request_id`, `accept_id`, `type`) values (501, 505, 0);
+insert into relation (`request_id`, `accept_id`, `type`) values (502, 503, 0);
+insert into relation (`request_id`, `accept_id`, `type`) values (502, 504, 0);
+insert into relation (`request_id`, `accept_id`, `type`) values (502, 505, 0);
+insert into relation (`request_id`, `accept_id`, `type`) values (503, 504, 0);
+insert into relation (`request_id`, `accept_id`, `type`) values (503, 505, 0);
+insert into relation (`request_id`, `accept_id`, `type`) values (504, 505, 0);
 
 
 

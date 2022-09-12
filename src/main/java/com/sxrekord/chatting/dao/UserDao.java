@@ -22,7 +22,7 @@ public interface UserDao {
      * @param userId
      * @return
      */
-    User getUserById(long userId);
+    User getUserById(@Param("userId") long userId);
 
     /**
      * 根据用户名和密码查询用户
