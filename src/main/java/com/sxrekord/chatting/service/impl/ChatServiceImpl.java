@@ -31,7 +31,7 @@ public class ChatServiceImpl implements ChatService{
     
     @Override
     public void register(JSONObject param, ChannelHandlerContext ctx) {
-        String userId = (String)param.get("userId");
+        String userId = param.get("userId").toString();
         LOGGER.info(userId);
         Constant.onlineUserMap.put(userId, ctx);
         String responseJson = new ResponseJson().success()
