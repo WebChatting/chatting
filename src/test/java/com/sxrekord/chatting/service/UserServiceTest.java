@@ -15,7 +15,10 @@ public class UserServiceTest {
 
     @Test
     public void login() {
-        System.out.println(userService.loginUser("test1", "test2", null));
+        System.out.println(userService.loginUser("member001", "001", null));
+        System.out.println(userService.loginUser("test1", "test1", null));
+        System.out.println(userService.loginUser("test2", "test1", null));
+        System.out.println(userService.loginUser("not_exists", "not_exists", null));
     }
 
     @Test
