@@ -12,10 +12,11 @@ java -jar target/chatting-springboot-xxx.jar
 ## ToDo
 - [x] refactor backend with SpringBoot
 - [ ] design and use db
-  - [ ] use Mybatis
+  - [x] use Mybatis
   - [ ] use Druid
 - [x] use @Slf4j replace logger field
 - [ ] refactor frontend
 - [ ] use Logback replace slf4j
 - [ ] use Redis
 - [ ] automatically delete files when they expire
+- [ ] deploy with docker

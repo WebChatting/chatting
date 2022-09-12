@@ -22,7 +22,7 @@ import java.util.UUID;
 public class FileUploadServiceImpl implements FileUploadService{
 
     private final static String SERVER_URL_PREFIX = "http://localhost:8088/UploadFile";
-    @Value("${file.upload.path}")
+    @Value("${file.upload.location}")
     private String FILE_STORE_PATH;
     
     @Override

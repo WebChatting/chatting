@@ -23,7 +23,10 @@ public class UserServiceTest {
 
     @Test
     public void register() {
-        System.out.println(userService.registerUser("test4", "test4"));
+        System.out.println(userService.registerUser("test1", "test1"));
+        System.out.println(userService.registerUser("test2", "test2"));
+        System.out.println(userService.registerUser("test3", "test3"));
+        System.out.println(userService.registerUser("test2", "test3"));
     }
 
     @Test
