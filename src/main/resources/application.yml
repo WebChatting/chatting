@@ -24,7 +24,7 @@ mybatis:
 
 file:
   upload:
-    path: F:/repo/chatting/UploadFile/
+    location: F:/repo/chatting/UploadFile/
   user:
     avatar:
       location: F:/repo/chatting/avatar/
