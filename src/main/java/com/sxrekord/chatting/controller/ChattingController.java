@@ -1,7 +1,7 @@
 package com.sxrekord.chatting.controller;
 
 import com.sxrekord.chatting.model.vo.ResponseJson;
-import com.sxrekord.chatting.service.UserInfoService;
+import com.sxrekord.chatting.service.UserService;
 import com.sxrekord.chatting.util.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,7 +19,7 @@ import javax.servlet.http.HttpSession;
 public class ChattingController {
 
     @Autowired
-    UserInfoService userInfoService;
+    UserService userService;
 
     /**
      * 登录成功跳转页面后，调用此接口获取用户信息
@@ -30,7 +30,7 @@ public class ChattingController {
     @ResponseBody
     public ResponseJson getUserInfo(HttpSession session) {
         Object userId = session.getAttribute(Constant.USER_TOKEN);
-        return userInfoService.getByUserId((String)userId);
+        return userService.getUser((Long)userId);
     }
 
     /**
@@ -39,7 +39,6 @@ public class ChattingController {
      */
     @GetMapping
     public String toChatroom() {
-        System.out.println("visit toChatroom method.");
         return "chatroom";
     }
 }
