@@ -24,4 +24,11 @@ public interface RelationDao {
      * @return
      */
     List<Long> listGroupIdByUserId(@Param("id") Long id);
+
+    /**
+     * 根据群组ID查询所有用户
+     * @param id
+     * @return
+     */
+    List<Long> listUserIdByGroupId(@Param("id") Long id);
 }

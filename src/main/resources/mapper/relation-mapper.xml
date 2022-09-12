@@ -17,4 +17,9 @@
         select accept_id from relation
         where type = 1 and request_id = #{id};
     </select>
+
+    <select id="listUserIdByGroupId" resultType="java.lang.Long">
+        select request_id from relation
+        where type = 1 and accept_id = #{id};
+    </select>
 </mapper>
