@@ -24,6 +24,7 @@ create table if not exists `message` (
     `type` int not null comment '消息类型',
     `content_type` int not null comment '消息内容类型',
     `content_id` bigint unsigned not null comment '消息ID',
+    `send_time` timestamp not null default current_timestamp comment '消息发送时间',
     primary key (`message_id`) using btree,
     constraint FK_MESSAGE_FROM_ID foreign key(`from_id`) references user(`user_id`) on delete cascade,
     constraint FK_MESSAGE_TO_ID foreign key(`to_id`) references user(`user_id`) on delete cascade
