@@ -1,8 +1,5 @@
-package com.sxrekord.chatting.service;
+package com.sxrekord.chatting.dao;
 
-import com.sxrekord.chatting.dao.FileContentDao;
-import com.sxrekord.chatting.dao.MessageDao;
-import com.sxrekord.chatting.dao.TextContentDao;
 import com.sxrekord.chatting.model.po.FileContent;
 import com.sxrekord.chatting.model.po.Message;
 import com.sxrekord.chatting.model.po.TextContent;
@@ -11,12 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.util.Assert;
 
+import java.util.List;
+
 /**
  * @author Rekord
  * @date 2022/9/13 17:11
  */
 @SpringBootTest
-public class MessageServiceTest {
+public class MessageDaoTest {
 
     @Autowired
     FileContentDao fileContentDao;
@@ -27,7 +26,9 @@ public class MessageServiceTest {
 
     @Test
     public void getMessageTest() {
-        System.out.println(messageDao.getMessageByFromIdAndToId(501L, 502L));
+        List<Message> messages = messageDao.getMessageByFromIdAndToId(501L, 502L);
+        Assert.isTrue(messages != null, "getMessage error!");
+        System.out.println("get message success");
     }
 
     @Test
