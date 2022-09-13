@@ -2,6 +2,7 @@ package com.sxrekord.chatting.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.sxrekord.chatting.dao.*;
+import com.sxrekord.chatting.model.po.FileContent;
 import com.sxrekord.chatting.model.po.Group;
 import com.sxrekord.chatting.model.po.Message;
 import com.sxrekord.chatting.model.po.TextContent;
@@ -39,6 +40,8 @@ public class ChatServiceImpl implements ChatService{
     private MessageDao messageDao;
     @Autowired
     private TextContentDao textContentDao;
+    @Autowired
+    private FileContentDao fileContentDao;
     
     @Override
     public void register(JSONObject param, ChannelHandlerContext ctx) {
@@ -119,12 +122,10 @@ public class ChatServiceImpl implements ChatService{
         String fileSize = param.get("fileSize").toString();
         String fileUrl = param.get("fileUrl").toString();
         ChannelHandlerContext toUserCtx = Constant.onlineUserMap.get(toUserId);
-        if (toUserCtx == null) {
-            String responseJson = new ResponseJson()
-                    .error(MessageFormat.format("userId为 {0} 的用户没有登录！", toUserId))
-                    .toString();
-            sendMessage(ctx, responseJson);
-        } else {
+
+        storeFileMessage(new Message(Long.parseLong(fromUserId), Long.parseLong(toUserId), 0, 1),
+                originalFilename, fileSize, fileUrl);
+        if (toUserCtx != null) {
             String responseJson = new ResponseJson().success()
                     .setData("fromUserId", fromUserId)
                     .setData("originalFilename", originalFilename)
@@ -144,10 +145,9 @@ public class ChatServiceImpl implements ChatService{
         String fileSize = param.get("fileSize").toString();
         String fileUrl = param.get("fileUrl").toString();
         Group group = groupDao.getGroupById((long)toGroupId);
-        if (group == null) {
-            String responseJson = new ResponseJson().error("该群id不存在").toString();
-            sendMessage(ctx, responseJson);
-        } else {
+        storeFileMessage(new Message(fromUserId, toGroupId, 1, 1),
+                originalFilename, fileSize, fileUrl);
+        if (group != null) {
             String responseJson = new ResponseJson().success()
                     .setData("fromUserId", fromUserId)
                     .setData("toGroupId", toGroupId)
@@ -192,7 +192,7 @@ public class ChatServiceImpl implements ChatService{
     }
 
     /**
-     * 将聊天记录存储到数据库中
+     * 将文字聊天记录存储到数据库中
      * @param message
      * @param content
      */
@@ -200,6 +200,20 @@ public class ChatServiceImpl implements ChatService{
         TextContent textContent = new TextContent(content);
         textContentDao.insertTextContent(textContent);
         message.setContentId(textContent.getId());
+        messageDao.insertMessage(message);
+    }
+
+    /**
+     * 将文件聊天记录存储到数据库中
+     * @param message
+     * @param name
+     * @param size
+     * @param path
+     */
+    private void storeFileMessage(Message message, String name, String size, String path) {
+        FileContent fileContent = new FileContent(name, size, path);
+        fileContentDao.insertFileContent(fileContent);
+        message.setContentId(fileContent.getId());
         messageDao.insertMessage(message);
     }
 

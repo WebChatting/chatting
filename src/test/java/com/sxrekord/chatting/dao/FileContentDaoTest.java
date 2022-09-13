@@ -1,13 +1,11 @@
 package com.sxrekord.chatting.dao;
 
 import com.sxrekord.chatting.model.po.FileContent;
-import com.sxrekord.chatting.model.po.TextContent;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.util.Assert;
 
-import java.io.File;
 
 /**
  * @author Rekord
