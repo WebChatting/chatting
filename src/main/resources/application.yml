@@ -15,6 +15,35 @@ spring:
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      # 初始化连接数
+      initial-size: 1
+      # 最小连接池数量，一般设置和initial-size一致
+      min-idle: 3
+      # 最大活动连接数
+      max-active: 20
+      # 从连接池获取连接超时
+      max-wait: 60000
+      # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+      timeBetweenEvictionRunsMillis: 60000
+      # 配置一个连接在池中最小生存的时间，单位是毫秒
+      minEvictableIdleTimeMillis: 300000
+      # 打开PSCache，并且指定每个连接上PSCache的大小
+      # Oracle等支持游标的数据库，打开此开关，会以数量级提升性能，具体查阅PSCache相关资料
+      pool-prepared-statements: true
+      max-open-prepared-statements: 20
+      # 用来检测连接是否有效的sql，要求是一个查询语句
+      validationQuery: SELECT 1 FROM DUAL
+      # 配置下面参数用于启动监控页面（/druid），考虑安全问题，默认是关闭的，按需开启
+      stat-view-servlet:
+        enabled: true
+      filter:
+        stat:
+          enabled: true
+      web-stat-filter:
+        enabled: true
+
   sql:
     init:
       mode: always
