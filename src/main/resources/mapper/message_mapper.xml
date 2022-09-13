@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sxrekord.chatting.dao.MessageDao">
+    <sql id="selectFields">
+        content_id, content_type
+    </sql>
+
+    <sql id="insertFields">
+        from_id, to_id, type, content_type, content_id
+    </sql>
+
+    <resultMap id="MessageDao" type="Message">
+        <id column="message_id" jdbcType="BIGINT" property="messageId"/>
+        <result column="from_id" jdbcType="INTEGER" property="fromId"/>
+        <result column="to_id" jdbcType="INTEGER" property="toId"/>
+        <result column="type" jdbcType="INTEGER" property="type"/>
+        <result column="content_type" jdbcType="INTEGER" property="contentType"/>
+        <result column="content_id" jdbcType="BIGINT" property="contentId"/>
+        <result column="send_time" jdbcType="TIMESTAMP" property="sendTime"/>
+    </resultMap>
+
+    <select id="getMessageByFromIdAndToId" resultMap="MessageDao">
+        select <include refid="selectFields"/> from message
+        where from_id = #{fromId} and to_id = #{toId}
+        order by send_time desc;
+    </select>
+
+    <insert id="insertMessage" parameterType="Message" keyProperty="messageId">
+        insert into Message (<include refid="insertFields"/>)
+        values(#{fromId}, #{toId}, #{type}, #{contentType}, #{contentId})
+    </insert>
+
+</mapper>
