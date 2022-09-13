@@ -4,6 +4,7 @@ import com.sxrekord.chatting.model.po.TextContent;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.util.Assert;
 
 /**
  * @author Rekord
@@ -16,8 +17,10 @@ public class TextContentDaoTest {
 
     @Test
     public void insertTextContentTest() {
-        System.out.println(textContentDao.insertTextContent(new TextContent("test statement1")));
-        System.out.println(textContentDao.insertTextContent(new TextContent("test statement2")));
+        TextContent textContent = new TextContent("test statement");
+        textContentDao.insertTextContent(textContent);
+        Assert.isTrue(textContent.getId() != null, "insert textContent fail!");
+        System.out.println(textContent);
     }
 
     @Test

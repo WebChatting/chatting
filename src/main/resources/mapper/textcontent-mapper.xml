@@ -25,7 +25,7 @@
         where id = #{id}
     </select>
 
-    <insert id="insertTextContent" parameterType="TextContent" keyProperty="id">
+    <insert id="insertTextContent" parameterType="TextContent" useGeneratedKeys="true" keyProperty="id">
         insert into text_content (<include refid="insertFields"/>)
         values(#{content})
     </insert>
