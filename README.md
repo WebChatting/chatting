@@ -3,8 +3,7 @@
 
 ## Usage
 ### 1. 根据主机环境修改[配置文件](src/main/resources/application.yml)
-### 2. 先后执行 [chatting.sql](chatting.sql) 和 [init.sql](init.sql)
-### 3. Build and Run
+### 2. Build and Run
 ```shell
 mvn package
 # peek inside

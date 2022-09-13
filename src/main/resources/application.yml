@@ -11,9 +11,9 @@ spring:
       max-file-size: 100MB
       max-request-size: 500MB
   datasource:
-    url: jdbc:mysql://localhost:3306/chatting?serverTimezone=UTC&useUnicode=true&characterEncoding=UTF-8&useSSL=false
+    url: jdbc:mysql://localhost:3306/chatting?serverTimezone=UTC&useUnicode=true&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true
     username: root
-    password: "011010"
+    password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
     druid:
@@ -44,6 +44,11 @@ spring:
       web-stat-filter:
         enabled: true
 
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:sql/schema.sql
+      data-locations: classpath:sql/data.sql
 
 mybatis:
   mapper-locations: classpath:mapper/*
