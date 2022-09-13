@@ -1,9 +1,13 @@
 package com.sxrekord.chatting.dao;
 
 import com.sxrekord.chatting.model.po.FileContent;
+import com.sxrekord.chatting.model.po.TextContent;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.util.Assert;
+
+import java.io.File;
 
 /**
  * @author Rekord
@@ -17,7 +21,10 @@ public class FileContentDaoTest {
 
     @Test
     public void insertFileContentTest() {
-        System.out.println(fileContentDao.insertFileContent(new FileContent("法语成绩单.pdf", "165.6KB", "/UploadFile/b88cbb8786604ea6bcba0be61743de5e.pdf")));
+        FileContent fileContent = new FileContent("法语成绩单.pdf", "165.6KB", "/UploadFile/b88cbb8786604ea6bcba0be61743de5e.pdf");
+        fileContentDao.insertFileContent(fileContent);
+        Assert.isTrue(fileContent.getId() != null, "insert fileContent fail!");
+        System.out.println(fileContent);
     }
 
     @Test

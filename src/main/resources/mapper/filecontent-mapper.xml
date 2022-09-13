@@ -27,7 +27,7 @@
         where id = #{id}
     </select>
 
-    <insert id="insertFileContent" parameterType="FileContent" keyProperty="id">
+    <insert id="insertFileContent" parameterType="FileContent" useGeneratedKeys="true" keyProperty="id">
         insert into file_content (<include refid="insertFields"/>)
         values(#{name}, #{size}, #{path})
     </insert>
