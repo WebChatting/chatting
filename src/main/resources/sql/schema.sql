@@ -33,7 +33,9 @@ create table if not exists `group` (
 	`group_id` bigint unsigned not null auto_increment comment '群组ID',
     `group_name` varchar(20) not null comment '群组名',
     `avatar_path` varchar(266) not null comment '群组头像存储路径',
-    primary key (`group_id`) using btree
+    `owner` bigint unsigned not null comment '创建者ID',
+    primary key (`group_id`) using btree,
+    constraint FK_GROUP_OWNER foreign key(`owner`) references user(`user_id`) on delete cascade
 ) ENGINE=InnoDB auto_increment=101 DEFAULT charset=utf8;
 
 -- create relation table

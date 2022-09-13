@@ -13,6 +13,7 @@ public class Group {
     private Long groupId;
     private String groupName;
     private String AvatarPath;
+    private Long owner;
     private List<User> members;
 
     public Group() {}
