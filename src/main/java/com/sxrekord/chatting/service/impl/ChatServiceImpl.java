@@ -1,10 +1,10 @@
 package com.sxrekord.chatting.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.sxrekord.chatting.dao.GroupDao;
-import com.sxrekord.chatting.dao.RelationDao;
-import com.sxrekord.chatting.dao.UserDao;
+import com.sxrekord.chatting.dao.*;
 import com.sxrekord.chatting.model.po.Group;
+import com.sxrekord.chatting.model.po.Message;
+import com.sxrekord.chatting.model.po.TextContent;
 import com.sxrekord.chatting.model.vo.ResponseJson;
 import com.sxrekord.chatting.service.ChatService;
 import com.sxrekord.chatting.util.ChatType;
@@ -35,6 +35,10 @@ public class ChatServiceImpl implements ChatService{
     private RelationDao relationDao;
     @Autowired
     private UserDao userDao;
+    @Autowired
+    private MessageDao messageDao;
+    @Autowired
+    private TextContentDao textContentDao;
     
     @Override
     public void register(JSONObject param, ChannelHandlerContext ctx) {
@@ -55,13 +59,11 @@ public class ChatServiceImpl implements ChatService{
         String toUserId = param.get("toUserId").toString();
         String content = param.get("content").toString();
         ChannelHandlerContext toUserCtx = Constant.onlineUserMap.get(toUserId);
+
+        storeTextMessage(new Message(Long.parseLong(fromUserId), Long.parseLong(toUserId), 0, 0), content);
+
         // 对方不在线不支持发送消息
-        if (toUserCtx == null) {
-            String responseJson = new ResponseJson()
-                    .error(MessageFormat.format("userId为 {0} 的用户没有登录！", toUserId))
-                    .toString();
-            sendMessage(ctx, responseJson);
-        } else {
+        if (toUserCtx != null) {
             String responseJson = new ResponseJson().success()
                     .setData("fromUserId", fromUserId)
                     .setData("content", content)
@@ -78,10 +80,8 @@ public class ChatServiceImpl implements ChatService{
         String content = param.get("content").toString();
 
         Group group = groupDao.getGroupById(toGroupId);
-        if (group == null) {
-            String responseJson = new ResponseJson().error("该群id不存在").toString();
-            sendMessage(ctx, responseJson);
-        } else {
+        storeTextMessage(new Message(fromUserId, toGroupId, 1, 0), content);
+        if (group != null) {
             String responseJson = new ResponseJson().success()
                     .setData("fromUserId", fromUserId)
                     .setData("content", content)
@@ -190,5 +190,17 @@ public class ChatServiceImpl implements ChatService{
                     }
                 });
     }
-    
+
+    /**
+     * 将聊天记录存储到数据库中
+     * @param message
+     * @param content
+     */
+    private void storeTextMessage(Message message, String content) {
+        TextContent textContent = new TextContent(content);
+        textContentDao.insertTextContent(textContent);
+        message.setContentId(textContent.getId());
+        messageDao.insertMessage(message);
+    }
+
 }

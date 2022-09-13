@@ -26,10 +26,14 @@ public class Message {
     public Message() {}
 
     public Message(Long fromId, Long toId, Integer type, Integer contentType, Long contentId) {
+        this(fromId, toId, type, contentType);
+        this.contentId = contentId;
+    }
+
+    public Message(Long fromId, Long toId, Integer type, Integer contentType) {
         this.fromId = fromId;
         this.toId = toId;
         this.type = type;
-        this.contentId = contentId;
         this.contentType = contentType;
     }
 }
