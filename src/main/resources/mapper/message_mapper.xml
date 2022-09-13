@@ -29,7 +29,7 @@
     </select>
 
     <insert id="insertMessage" parameterType="Message" keyProperty="messageId">
-        insert into Message (<include refid="insertFields"/>)
+        insert into message (<include refid="insertFields"/>)
         values(#{fromId}, #{toId}, #{type}, #{contentType}, #{contentId})
     </insert>
 
