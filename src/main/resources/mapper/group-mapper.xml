@@ -12,6 +12,7 @@
         <id column="group_id" jdbcType="INTEGER" property="groupId"/>
         <result column="group_name" jdbcType="VARCHAR" property="groupName"/>
         <result column="avatar_path" jdbcType="VARCHAR" property="avatarPath"/>
+        <result column="owner" jdbcType="INTEGER" property="owner"/>
     </resultMap>
 
     <select id="getGroupById" parameterType="java.lang.Long" resultMap="GroupDao">

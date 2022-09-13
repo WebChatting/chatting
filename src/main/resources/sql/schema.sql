@@ -23,9 +23,10 @@ create table if not exists `message` (
     `to_id` bigint unsigned not null comment '接收方用户ID',
     `type` int not null comment '消息类型',
     `content_type` int not null comment '消息内容类型',
+    `content_id` bigint unsigned not null comment '消息ID',
+    `send_time` timestamp not null default current_timestamp comment '消息发送时间',
     primary key (`message_id`) using btree,
-    constraint FK_MESSAGE_FROM_ID foreign key(`from_id`) references user(`user_id`) on delete cascade,
-    constraint FK_MESSAGE_TO_ID foreign key(`to_id`) references user(`user_id`) on delete cascade
+    constraint FK_MESSAGE_FROM_ID foreign key(`from_id`) references user(`user_id`) on delete cascade
 ) ENGINE=InnoDB DEFAULT charset=utf8;
 
 -- create group table
@@ -33,7 +34,9 @@ create table if not exists `group` (
 	`group_id` bigint unsigned not null auto_increment comment '群组ID',
     `group_name` varchar(20) not null comment '群组名',
     `avatar_path` varchar(266) not null comment '群组头像存储路径',
-    primary key (`group_id`) using btree
+    `owner` bigint unsigned not null comment '创建者ID',
+    primary key (`group_id`) using btree,
+    constraint FK_GROUP_OWNER foreign key(`owner`) references user(`user_id`) on delete cascade
 ) ENGINE=InnoDB auto_increment=101 DEFAULT charset=utf8;
 
 -- create relation table
@@ -50,7 +53,7 @@ create table if not exists `text_content` (
 	`id` bigint unsigned not null auto_increment comment '文本消息ID',
     `content` varchar(1024) not null comment '文本消息',
     primary key (`id`) using btree
-) engine=InnoDB default charset=utf8;
+) engine=InnoDB auto_increment=1001 default charset=utf8;
 
 create table if not exists `file_content` (
 	`id` bigint unsigned not null auto_increment comment '文本消息ID',
@@ -58,6 +61,6 @@ create table if not exists `file_content` (
     `size` varchar(12) not null comment '文件大小（带单位）',
     `path` varchar(255) not null comment '文件存储路径',
     primary key (`id`) using btree
-) engine=InnoDB default charset=utf8;
+) engine=InnoDB auto_increment=1001 default charset=utf8;
 
 set foreign_key_checks = 1;
