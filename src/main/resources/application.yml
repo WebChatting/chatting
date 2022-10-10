@@ -1,5 +1,7 @@
 server:
   port: 8088
+  servlet:
+    context-path: /chatting
 
 spring:
   mvc:
