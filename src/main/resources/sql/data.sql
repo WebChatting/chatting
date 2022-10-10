@@ -1,15 +1,15 @@
 use chatting;
 
 -- init user
-insert into user (`username`, `password`, `avatar_path`) values ('member001', '001', '/avatar/default_user_avatar.jpg');
-insert into user (`username`, `password`, `avatar_path`) values ('member002', '002', '/avatar/default_user_avatar.jpg');
-insert into user (`username`, `password`, `avatar_path`) values ('member003', '003', '/avatar/default_user_avatar.jpg');
-insert into user (`username`, `password`, `avatar_path`) values ('member004', '004', '/avatar/default_user_avatar.jpg');
-insert into user (`username`, `password`, `avatar_path`) values ('member005', '005', '/avatar/default_user_avatar.jpg');
+insert into user (`username`, `password`, `avatar_path`) values ('member001', '001', 'avatar/default_user_avatar.jpg');
+insert into user (`username`, `password`, `avatar_path`) values ('member002', '002', 'avatar/default_user_avatar.jpg');
+insert into user (`username`, `password`, `avatar_path`) values ('member003', '003', 'avatar/default_user_avatar.jpg');
+insert into user (`username`, `password`, `avatar_path`) values ('member004', '004', 'avatar/default_user_avatar.jpg');
+insert into user (`username`, `password`, `avatar_path`) values ('member005', '005', 'avatar/default_user_avatar.jpg');
 
 -- init group
 -- 1. create group (the group is a keyword)
-insert into `group` (`group_name`, `avatar_path`, `owner`) values ('group001', '/avatar/default_group_avatar.jpg', 501);
+insert into `group` (`group_name`, `avatar_path`, `owner`) values ('group001', 'avatar/default_group_avatar.jpg', 501);
 -- 2. add user to group
 insert into relation (`request_id`, `accept_id`, `type`) values (501, 101, 1);
 insert into relation (`request_id`, `accept_id`, `type`) values (502, 101, 1);
@@ -46,8 +46,8 @@ insert into message (`from_id`, `to_id`, `type`, `content_type`, `content_id`) v
 
 
 -- insert file message
-insert into file_content (`name`, `size`, `path`) values ('中文成绩单.pdf', '165.6KB', '/UploadFile/b88cbb8786604ea6bcba0be61743de5e.pdf');
-insert into file_content (`name`, `size`, `path`) values ('英文成绩单.pdf', '165.6KB', '/UploadFile/b88cbb8786604ea6bcba0be61743de5e.pdf');
+insert into file_content (`name`, `size`, `path`) values ('中文成绩单.pdf', '165.6KB', 'UploadFile/b88cbb8786604ea6bcba0be61743de5e.pdf');
+insert into file_content (`name`, `size`, `path`) values ('英文成绩单.pdf', '165.6KB', 'UploadFile/b88cbb8786604ea6bcba0be61743de5e.pdf');
 
 insert into message (`from_id`, `to_id`, `type`, `content_type`, `content_id`) values (501, 502, 0, 1, 1001);
 insert into message (`from_id`, `to_id`, `type`, `content_type`, `content_id`) values (501, 502, 0, 1, 1002);
