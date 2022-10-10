@@ -34,11 +34,15 @@ insert into text_content (`content`) values ('hi');
 insert into text_content (`content`) values ('hello');
 insert into text_content (`content`) values ("I'm rekord");
 insert into text_content (`content`) values ("I'm KangKang");
+insert into text_content (`content`) values ("hi, I'm member001");
+insert into text_content (`content`) values ("hi, I'm member002");
 
 insert into message (`from_id`, `to_id`, `type`, `content_type`, `content_id`) values (501, 502, 0, 0, 1001);
 insert into message (`from_id`, `to_id`, `type`, `content_type`, `content_id`) values (501, 502, 0, 0, 1002);
 insert into message (`from_id`, `to_id`, `type`, `content_type`, `content_id`) values (501, 502, 0, 0, 1003);
 insert into message (`from_id`, `to_id`, `type`, `content_type`, `content_id`) values (501, 502, 0, 0, 1004);
+insert into message (`from_id`, `to_id`, `type`, `content_type`, `content_id`) values (501, 101, 1, 0, 1005);
+insert into message (`from_id`, `to_id`, `type`, `content_type`, `content_id`) values (502, 101, 1, 0, 1006);
 
 
 -- insert file message
@@ -47,6 +51,8 @@ insert into file_content (`name`, `size`, `path`) values ('英文成绩单.pdf',
 
 insert into message (`from_id`, `to_id`, `type`, `content_type`, `content_id`) values (501, 502, 0, 1, 1001);
 insert into message (`from_id`, `to_id`, `type`, `content_type`, `content_id`) values (501, 502, 0, 1, 1002);
+insert into message (`from_id`, `to_id`, `type`, `content_type`, `content_id`) values (501, 101, 1, 1, 1001);
+insert into message (`from_id`, `to_id`, `type`, `content_type`, `content_id`) values (502, 101, 1, 1, 1002);
 
 
 
