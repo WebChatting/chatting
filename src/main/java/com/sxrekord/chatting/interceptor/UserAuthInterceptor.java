@@ -24,7 +24,7 @@ public class UserAuthInterceptor implements HandlerInterceptor{
         if (userToken == null) {
 //            JsonMsgHelper.writeJson(response, new ResponseJson(HttpStatus.FORBIDDEN).setMsg("请登录"),
 //                    HttpStatus.FORBIDDEN);
-            response.sendRedirect("/login");
+            response.sendRedirect("/chatting/login");
             return false;
         }
         return true;

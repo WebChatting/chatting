@@ -5,7 +5,7 @@
 
 <mapper namespace="com.sxrekord.chatting.dao.MessageDao">
     <sql id="selectFields">
-        content_id, content_type
+        from_id, content_type, content_id
     </sql>
 
     <sql id="insertFields">
@@ -14,8 +14,8 @@
 
     <resultMap id="MessageDao" type="Message">
         <id column="message_id" jdbcType="BIGINT" property="messageId"/>
-        <result column="from_id" jdbcType="INTEGER" property="fromId"/>
-        <result column="to_id" jdbcType="INTEGER" property="toId"/>
+        <result column="from_id" jdbcType="BIGINT" property="fromId"/>
+        <result column="to_id" jdbcType="BIGINT" property="toId"/>
         <result column="type" jdbcType="INTEGER" property="type"/>
         <result column="content_type" jdbcType="INTEGER" property="contentType"/>
         <result column="content_id" jdbcType="BIGINT" property="contentId"/>
@@ -24,8 +24,15 @@
 
     <select id="getMessageByFromIdAndToId" resultMap="MessageDao">
         select <include refid="selectFields"/> from message
-        where from_id = #{fromId} and to_id = #{toId}
-        order by send_time desc;
+        where type = 0 and ((from_id = #{fromId} and to_id = #{toId})
+        or (from_id = #{toId} and to_id = #{fromId}))
+        order by send_time;
+    </select>
+
+    <select id="getMessageByToId" resultMap="MessageDao">
+        select <include refid="selectFields"/> from message
+        where type = 1 and to_id = #{toId}
+        order by send_time;
     </select>
 
     <insert id="insertMessage" parameterType="Message" keyProperty="messageId">

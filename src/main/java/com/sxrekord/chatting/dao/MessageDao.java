@@ -22,6 +22,12 @@ public interface MessageDao {
     List<Message> getMessageByFromIdAndToId(@Param("fromId") Long fromId, @Param("toId") Long toId);
 
     /**
+     * 通过toID查询消息
+     * @param toId
+     * @return
+     */
+    List<Message> getMessageByToId(@Param("toId") Long toId);
+    /**
      * 保存消息
      * @param message
      * @return
