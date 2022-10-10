@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import org.springframework.http.HttpStatus;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Rekord
@@ -53,7 +54,7 @@ public class ResponseJson extends HashMap<String, Object> {
     }
 
     public ResponseJson setData(String key, Object obj) {
-        HashMap<String, Object> data = (HashMap<String, Object>) get("data");
+        Map<String, Object> data = (Map<String, Object>) get("data");
         if (data == null) {
             data = new HashMap<String, Object>();
             put("data", data);
@@ -61,7 +62,7 @@ public class ResponseJson extends HashMap<String, Object> {
         data.put(key, obj);
         return this;
     }
-    
+
     public ResponseJson setStatus(int status) {
         put("status", status);
         return this;
