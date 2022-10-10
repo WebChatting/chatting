@@ -554,14 +554,9 @@
                         if (!messages) {
                             return;
                         }
+
                         console.log(messages);
-                        let fromAvatarUrl;
-                        $('.conLeft').find('span.hidden-userId').each(function(){
-                            if (this.innerHTML == toUserId) {
-                                fromAvatarUrl = $(this).parent(".liRight")
-                                    .siblings(".liLeft").children('img').attr("src");
-                            }
-                        });
+                        let fromAvatarUrl = $(".conLeft .bg img").attr("src");
                         for (let i = messages.length - 1; i >= 0; i--) {
                             if (messages[i].type == 'FILE_MSG_SINGLE_SENDING') {
 
