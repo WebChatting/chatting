@@ -21,7 +21,7 @@ import java.util.UUID;
 @Service
 public class FileServiceImpl implements FileService {
 
-    private final static String SERVER_URL_PREFIX = "http://localhost:8088/UploadFile";
+    private final static String SERVER_URL_PREFIX = "http://localhost:8088/chatting/UploadFile";
     @Value("${file.upload.location}")
     private String FILE_STORE_PATH;
     
