@@ -558,24 +558,56 @@
                         console.log(messages);
                         let fromAvatarUrl = $(".conLeft .bg img").attr("src");
                         for (let i = messages.length - 1; i >= 0; i--) {
-                            if (messages[i].type == 'FILE_MSG_SINGLE_SENDING') {
-
-                            } else {
-                                let message = '';
-                                // 发送方为当前登录用户
-                                if (messages[i].fromUserId == userId) {
+                            let message = '';
+                            // 发送方为当前登录用户
+                            if (messages[i].fromUserId == userId) {
+                                if (messages[i].type == 'FILE_MSG_SINGLE_SENDING') {
+                                    message += '<li>'+
+                                                    '<div class="send-file-shown">' +
+                                                        '<div class="media">' +
+                                                            '<a href="' + messages[i].fileUrl + '" class="media-left">' +
+                                                                '<i class="glyphicon glyphicon-file" style="font-size:28pt;"></i>' +
+                                                            '</a>' +
+                                                            '<div class="media-body"> ' +
+                                                                '<h5 class="media-heading">' + messages[i].originalFilename + '</h5>' +
+                                                                '<span>'+ messages[i].fileSize + '</span>' +
+                                                            '</div>' +
+                                                        '</div>'+
+                                                    '</div>' +
+                                                    '<div class="nesHead"><img src="' + $('#avatarUrl').attr("src") + '"/></div>' +
+                                               '</li>';
+                                    processMsgBox.loadSentMessage(message, toUserId, toGroupId, "FILE");
+                                } else {
                                     message += '<li>'+
                                                    '<div class="news">' + messages[i].content + '</div>' +
                                                    '<div class="nesHead"><img src="' + $('#avatarUrl').attr("src") + '"/></div>' +
                                                '</li>';
-                                    processMsgBox.loadSentMessage(message, toUserId, toGroupId);
+                                    processMsgBox.loadSentMessage(message, toUserId, toGroupId, "TEXT");
+                                }
+                            } else {
+                                // 发送方为对方
+                                if (messages[i].type == 'FILE_MSG_SINGLE_SENDING') {
+                                    message += '<li>'+
+                                                    '<div class="receive-file-shown">' +
+                                                        '<div class="media">' +
+                                                            '<div class="media-body"> ' +
+                                                                '<h5 class="media-heading">' + messages[i].originalFilename + '</h5>' +
+                                                                '<span>'+ messages[i].fileSize + '</span>' +
+                                                            '</div>' +
+                                                            '<a href="' + messages[i].fileUrl + '" class="media-right">' +
+                                                                '<i class="glyphicon glyphicon-file" style="font-size:28pt;"></i>' +
+                                                            '</a>' +
+                                                        '</div>'+
+                                                    '</div>' +
+                                                    '<div class="answerHead"><img src="' + fromAvatarUrl + '"/></div>' +
+                                               '</li>';
+                                    processMsgBox.loadReceivedMessage(message, toUserId, toGroupId, "FILE");
                                 } else {
-                                    // 发送方为对方
                                     message += '<li>' +
                                                   '<div class="answers">'+ messages[i].content +'</div>' +
                                                   '<div class="answerHead"><img src="' + fromAvatarUrl + '"/></div>' +
                                               '</li>';
-                                    processMsgBox.loadReceivedMessage(message, toUserId, toGroupId);
+                                    processMsgBox.loadReceivedMessage(message, toUserId, toGroupId, "TEXT");
                                 }
                             }
                         }
@@ -611,23 +643,25 @@
 	// 3. receiveSingleMsg： 收到单发(普通对话、文件)消息时，调用此函数处理消息框变化；
 	// 4. receiveGroupMsg： 收到群发(普通对话、文件)消息时，调用此函数处理消息框变化。
 	var processMsgBox = {
-	        loadSentMessage: function(msg, toUserId, toGroupId) {
+	        loadSentMessage: function(msg, toUserId, toGroupId, type) {
 				// 1. 把内容添加到消息框
 				$('.newsList').prepend(msg);
 
-				// 2. 手动计算、调整回显消息的宽度
-				let newsDiv = $('.newsList li').first().children("div").first();
-				let fixWidth = 300; // 自定义的消息框本身的最长宽度
-				let maxWidth = 493; // 消息框所在行(div)的满宽度(不包含头像框的宽度部分)
-				let minMarginLeftWidth = 224; // 按理说应该是 maxwidth - fixWidth，这里出现了点问题
-				let marginLeftWidth; // 要计算消息框的margin-left宽度
-				if (newsDiv.actual('width') < fixWidth) {
-					marginLeftWidth = maxWidth - newsDiv.actual('width');;
-					newsDiv.css("margin-left", marginLeftWidth + "px");
-				} else {
-					newsDiv.css("width", fixWidth + "px")
-					        .css("margin-left", minMarginLeftWidth + "px");
-				}
+                if (type != 'FILE') {
+                    // 2. 手动计算、调整回显消息的宽度
+                    let newsDiv = $('.newsList li').first().children("div").first();
+                    let fixWidth = 300; // 自定义的消息框本身的最长宽度
+                    let maxWidth = 493; // 消息框所在行(div)的满宽度(不包含头像框的宽度部分)
+                    let minMarginLeftWidth = 224; // 按理说应该是 maxwidth - fixWidth，这里出现了点问题
+                    let marginLeftWidth; // 要计算消息框的margin-left宽度
+                    if (newsDiv.actual('width') < fixWidth) {
+                        marginLeftWidth = maxWidth - newsDiv.actual('width');;
+                        newsDiv.css("margin-left", marginLeftWidth + "px");
+                    } else {
+                        newsDiv.css("width", fixWidth + "px")
+                                .css("margin-left", minMarginLeftWidth + "px");
+                    }
+                }
 
 				// 3. 把 调整后的消息html标签字符串 添加到已发送用户消息表
 				if (toUserId.length != 0) {
@@ -637,31 +671,33 @@
 				}
 	        },
 
-            loadReceivedMessage: function(msg, toUserId, toGroupId) {
+            loadReceivedMessage: function(msg, toUserId, toGroupId, type) {
                 // 1. 设置消息框可见
 				$('.conRight').css("display", "-webkit-box");
 
 				// 2. 把内容添加到消息框
                 $('.newsList').prepend(msg);
 
-		        // 3. 手动计算、调整新消息的宽度；
-		        let answersDiv = $('.newsList li').first().children("div").first();
-		        let fixWidth = 300; // 消息框本身的最长宽度
-		        let maxWidth = 480; // 消息框所在行(div)的满宽度(不包含头像框的宽度部分)
-		        let minMarginRightWidth = 212; // 按理说应该是 maxwidth - fixWidth，这里出现了点问题
-		        let marginRightWidth; // 要计算消息框的margin-right宽度
-		        if (answersDiv.actual('width') < fixWidth) {
-		            marginRightWidth = maxWidth - answersDiv.actual('width');
-		            answersDiv.css("margin-right", marginRightWidth + "px");
-                    $('.newsList li').first().children("div").first()
-                        .css("margin-right", marginRightWidth + "px");
-		        } else {
-		            answersDiv.css("width", fixWidth + "px")
-		                       .css("margin-right", minMarginRightWidth + "px");
-                    $('.newsList li').first().children("div").first()
-                        .css("width", fixWidth + "px")
-                        .css("margin-right", minMarginRightWidth + "px");
-		        }
+                if (type != "FILE") {
+                    // 3. 手动计算、调整新消息的宽度；
+                    let answersDiv = $('.newsList li').first().children("div").first();
+                    let fixWidth = 300; // 消息框本身的最长宽度
+                    let maxWidth = 480; // 消息框所在行(div)的满宽度(不包含头像框的宽度部分)
+                    let minMarginRightWidth = 212; // 按理说应该是 maxwidth - fixWidth，这里出现了点问题
+                    let marginRightWidth; // 要计算消息框的margin-right宽度
+                    if (answersDiv.actual('width') < fixWidth) {
+                        marginRightWidth = maxWidth - answersDiv.actual('width');
+                        answersDiv.css("margin-right", marginRightWidth + "px");
+                        $('.newsList li').first().children("div").first()
+                            .css("margin-right", marginRightWidth + "px");
+                    } else {
+                        answersDiv.css("width", fixWidth + "px")
+                                   .css("margin-right", minMarginRightWidth + "px");
+                        $('.newsList li').first().children("div").first()
+                            .css("width", fixWidth + "px")
+                            .css("margin-right", minMarginRightWidth + "px");
+                    }
+                }
 
 		        // 4. 把调整后的消息html标签字符串添加到已发送用户消息表
 		        sentMessageMap.get(toUserId).unshift($('.newsLis li').first().prop("outerHTML"));
