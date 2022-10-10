@@ -3,7 +3,9 @@ package com.sxrekord.chatting.model.vo;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.http.HttpStatus;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -60,6 +62,17 @@ public class ResponseJson extends HashMap<String, Object> {
             put("data", data);
         }
         data.put(key, obj);
+        return this;
+    }
+
+    public ResponseJson addToMessage() {
+        List<Map<String, Object>> messages = (List<Map<String, Object>>)get("messages");
+        if (messages == null) {
+            messages = new ArrayList<>();
+            put("messages", messages);
+        }
+        messages.add((Map<String, Object>)get("data"));
+        remove("data");
         return this;
     }
 
