@@ -53,7 +53,37 @@
         });
     }
 
-    
+    function loadHistoryMessage(e) {
+        let scrollTop = e.target.scrollTop;
+        let clientHeight = e.target.clientHeight;
+        let scrollHeight = e.target.scrollHeight;
+
+//        // 打印数值
+//        console.table([
+//          {
+//            label: "距顶部",
+//            value: scrollTop,
+//          },
+//          {
+//            label: "可视区高度",
+//            value: clientHeight,
+//          },
+//          {
+//            label: "滚动条总高度",
+//            value: scrollHeight,
+//          },
+//          {
+//            label: "距顶部 + 可视区高度",
+//            value: scrollTop + clientHeight,
+//          },
+//        ]);
+
+        // 如果滚动到最顶端，则向后端发送请求，获取旧的消息
+        if (scrollTop === 0) {
+            console.log('向后端发送请求');
+        }
+    }
+
     var ws = {
         register: function() {
             if (!window.WebSocket) {
@@ -477,7 +507,7 @@
 	
 	// 好友框点击事件
 	function friendLiClickEvent(){
-		
+
 		// 1. 设置点击阴影效果
 	    $(this).addClass('bg').siblings().removeClass('bg');
 		
@@ -504,10 +534,60 @@
 			messageArray = sentMessageMap.get(toGroupId);
 			$('#toGroupId').val(toGroupId);
 		}
+
+		// 如果 messageArray 为空，则视为第一次点击，需要向后端加载数据
+        if (messageArray.length == 0) {
+            $.ajax({
+                type : 'POST',
+                url : 'message/get_user_message',
+                dataType: 'json',
+                data: {
+                    fromId: userId,
+                    toId: toUserId
+                },
+                async : true,
+                success: function(data) {
+                    console.log("获取用户历史消息...");
+                    if (data.status == 200) {
+                        let messages = data.messages;
+                        // 无历史数据
+                        if (!messages) {
+                            return;
+                        }
+                        console.log(messages);
+                        let fromAvatarUrl;
+                        $('.conLeft').find('span.hidden-userId').each(function(){
+                            if (this.innerHTML == toUserId) {
+                                fromAvatarUrl = $(this).parent(".liRight")
+                                    .siblings(".liLeft").children('img').attr("src");
+                            }
+                        });
+                        for (let i = messages.length - 1; i >= 0; i--) {
+                            if (messages[i].type == 'FILE_MSG_SINGLE_SENDING') {
+
+                            } else {
+                                let avatar = messages[i].fromUserId == userId ? $('#avatarUrl').attr("src") : fromAvatarUrl;
+                                let message = '<li>'+
+                                                '<div class="news">' + messages[i].content + '</div>' +
+                                                '<div class="nesHead"><img src="' + avatar + '"/></div>' +
+                                              '</li>';
+                                processMsgBox.loadMessage(message, toUserId, toGroupId);
+                            }
+                        }
+                    } else {
+                        alert(data.msg);
+                    }
+                }
+            });
+        }
+
 		for (var i = 0; i < messageArray.length; i++) {
 			$('.newsList').append(messageArray[i]);
 		}
-		
+
+		// 绑定消息框滚动事件
+		document.querySelector('.RightCont').addEventListener('scroll', loadHistoryMessage);
+
 		// 5.设置消息框滚动条滑到底部
 		$('.RightCont').scrollTop($('.RightCont')[0].scrollHeight );
 		
@@ -526,6 +606,32 @@
 	// 3. receiveSingleMsg： 收到单发(普通对话、文件)消息时，调用此函数处理消息框变化；
 	// 4. receiveGroupMsg： 收到群发(普通对话、文件)消息时，调用此函数处理消息框变化。
 	var processMsgBox = {
+	        loadMessage: function(msg, toUserId, toGroupId) {
+				// 1. 把内容添加到消息框
+				$('.newsList').prepend(msg);
+
+				// 2. 手动计算、调整回显消息的宽度
+				let newsDiv = $('.newsList li').first().children("div").first();
+				let fixWidth = 300; // 自定义的消息框本身的最长宽度
+				let maxWidth = 493; // 消息框所在行(div)的满宽度(不包含头像框的宽度部分)
+				let minMarginLeftWidth = 224; // 按理说应该是 maxwidth - fixWidth，这里出现了点问题
+				let marginLeftWidth; // 要计算消息框的margin-left宽度
+				if (newsDiv.actual('width') < fixWidth) {
+					marginLeftWidth = maxWidth - newsDiv.actual('width');;
+					newsDiv.css("margin-left", marginLeftWidth + "px");
+				} else {
+					newsDiv.css("width", fixWidth + "px")
+					        .css("margin-left", minMarginLeftWidth + "px");
+				}
+
+				// 3. 把 调整后的消息html标签字符串 添加到已发送用户消息表
+				if (toUserId.length != 0) {
+					sentMessageMap.get(toUserId).unshift($('.newsList li').first().prop("outerHTML"));
+				} else {
+					sentMessageMap.get(toGroupId).unshift($('.newsList li').first().prop("outerHTML"));
+				}
+	        },
+
 			sendMsg: function(msg, toUserId, toGroupId) {
 				// 1. 把内容添加到消息框
 				$('.newsList').append(msg);
@@ -713,7 +819,7 @@
 	        return (this.elements.length < 1);
 	    };
 
-	    //删除MAP所有元素 
+	    //删除MAP所有元素
 	    this.clear = function () {
 	        this.elements = new Array();
 	    };
