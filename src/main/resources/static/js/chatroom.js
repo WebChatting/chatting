@@ -566,12 +566,22 @@
                             if (messages[i].type == 'FILE_MSG_SINGLE_SENDING') {
 
                             } else {
-                                let avatar = messages[i].fromUserId == userId ? $('#avatarUrl').attr("src") : fromAvatarUrl;
-                                let message = '<li>'+
-                                                '<div class="news">' + messages[i].content + '</div>' +
-                                                '<div class="nesHead"><img src="' + avatar + '"/></div>' +
+                                let message = '';
+                                // 发送方为当前登录用户
+                                if (messages[i].fromUserId == userId) {
+                                    message += '<li>'+
+                                                   '<div class="news">' + messages[i].content + '</div>' +
+                                                   '<div class="nesHead"><img src="' + $('#avatarUrl').attr("src") + '"/></div>' +
+                                               '</li>';
+                                    processMsgBox.loadSentMessage(message, toUserId, toGroupId);
+                                } else {
+                                    // 发送方为对方
+                                    message += '<li>' +
+                                                  '<div class="answers">'+ messages[i].content +'</div>' +
+                                                  '<div class="answerHead"><img src="' + fromAvatarUrl + '"/></div>' +
                                               '</li>';
-                                processMsgBox.loadMessage(message, toUserId, toGroupId);
+                                    processMsgBox.loadReceivedMessage(message, toUserId, toGroupId);
+                                }
                             }
                         }
                     } else {
@@ -606,7 +616,7 @@
 	// 3. receiveSingleMsg： 收到单发(普通对话、文件)消息时，调用此函数处理消息框变化；
 	// 4. receiveGroupMsg： 收到群发(普通对话、文件)消息时，调用此函数处理消息框变化。
 	var processMsgBox = {
-	        loadMessage: function(msg, toUserId, toGroupId) {
+	        loadSentMessage: function(msg, toUserId, toGroupId) {
 				// 1. 把内容添加到消息框
 				$('.newsList').prepend(msg);
 
@@ -631,6 +641,36 @@
 					sentMessageMap.get(toGroupId).unshift($('.newsList li').first().prop("outerHTML"));
 				}
 	        },
+
+            loadReceivedMessage: function(msg, toUserId, toGroupId) {
+                // 1. 设置消息框可见
+				$('.conRight').css("display", "-webkit-box");
+
+				// 2. 把内容添加到消息框
+                $('.newsList').prepend(msg);
+
+		        // 3. 手动计算、调整新消息的宽度；
+		        let answersDiv = $('.newsList li').first().children("div").first();
+		        let fixWidth = 300; // 消息框本身的最长宽度
+		        let maxWidth = 480; // 消息框所在行(div)的满宽度(不包含头像框的宽度部分)
+		        let minMarginRightWidth = 212; // 按理说应该是 maxwidth - fixWidth，这里出现了点问题
+		        let marginRightWidth; // 要计算消息框的margin-right宽度
+		        if (answersDiv.actual('width') < fixWidth) {
+		            marginRightWidth = maxWidth - answersDiv.actual('width');
+		            answersDiv.css("margin-right", marginRightWidth + "px");
+                    $('.newsList li').first().children("div").first()
+                        .css("margin-right", marginRightWidth + "px");
+		        } else {
+		            answersDiv.css("width", fixWidth + "px")
+		                       .css("margin-right", minMarginRightWidth + "px");
+                    $('.newsList li').first().children("div").first()
+                        .css("width", fixWidth + "px")
+                        .css("margin-right", minMarginRightWidth + "px");
+		        }
+
+		        // 4. 把调整后的消息html标签字符串添加到已发送用户消息表
+		        sentMessageMap.get(toUserId).unshift($('.newsLis li').first().prop("outerHTML"));
+            },
 
 			sendMsg: function(msg, toUserId, toGroupId) {
 				// 1. 把内容添加到消息框
