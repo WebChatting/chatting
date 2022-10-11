@@ -541,175 +541,85 @@ function friendLiClickEvent() {
 
     // 如果 messageArray 为空，则视为第一次点击，需要向后端加载数据
     if (messageArray.length == 0) {
-        // 加载私聊历史消息
-        if (toUserId && toUserId != '') {
-            $.ajax({
-                type: 'POST',
-                url: 'message/get_user_message',
-                dataType: 'json',
-                data: {
-                    fromId: userId,
-                    toId: toUserId
-                },
-                async: true,
-                success: function (data) {
-                    console.log("获取用户历史消息...");
-                    if (data.status == 200) {
-                        let messages = data.messages;
-                        // 无历史数据
-                        if (!messages) {
-                            return;
-                        }
-
-                        let fromAvatarUrl = $(".conLeft .bg img").attr("src");
-                        for (let i = messages.length - 1; i >= 0; i--) {
-                            let message = '';
-                            // 发送方为当前登录用户
-                            if (messages[i].fromUserId == userId) {
-                                if (messages[i].type == 'FILE_MSG_SINGLE_SENDING') {
-                                    message += '<li>' +
-                                        '<div class="send-file-shown">' +
-                                        '<div class="media">' +
-                                        '<a href="' + messages[i].fileUrl + '" class="media-left">' +
-                                        '<i class="glyphicon glyphicon-file" style="font-size:28pt;"></i>' +
-                                        '</a>' +
-                                        '<div class="media-body"> ' +
-                                        '<h5 class="media-heading">' + messages[i].originalFilename + '</h5>' +
-                                        '<span>' + messages[i].fileSize + '</span>' +
-                                        '</div>' +
-                                        '</div>' +
-                                        '</div>' +
-                                        '<div class="nesHead"><img src="' + $('#avatarUrl').attr("src") + '"/></div>' +
-                                        '</li>';
-                                    processMsgBox.loadSentMessage(message, toUserId, toGroupId, "FILE");
-                                } else {
-                                    message += '<li>' +
-                                        '<div class="news">' + messages[i].content + '</div>' +
-                                        '<div class="nesHead"><img src="' + $('#avatarUrl').attr("src") + '"/></div>' +
-                                        '</li>';
-                                    processMsgBox.loadSentMessage(message, toUserId, toGroupId, "TEXT");
-                                }
-                            } else {
-                                // 发送方为对方
-                                if (messages[i].type == 'FILE_MSG_SINGLE_SENDING') {
-                                    message += '<li>' +
-                                        '<div class="receive-file-shown">' +
-                                        '<div class="media">' +
-                                        '<div class="media-body"> ' +
-                                        '<h5 class="media-heading">' + messages[i].originalFilename + '</h5>' +
-                                        '<span>' + messages[i].fileSize + '</span>' +
-                                        '</div>' +
-                                        '<a href="' + messages[i].fileUrl + '" class="media-right">' +
-                                        '<i class="glyphicon glyphicon-file" style="font-size:28pt;"></i>' +
-                                        '</a>' +
-                                        '</div>' +
-                                        '</div>' +
-                                        '<div class="answerHead"><img src="' + fromAvatarUrl + '"/></div>' +
-                                        '</li>';
-                                    processMsgBox.loadReceivedMessage(message, toUserId, toGroupId, "FILE");
-                                } else {
-                                    message += '<li>' +
-                                        '<div class="answers">' + messages[i].content + '</div>' +
-                                        '<div class="answerHead"><img src="' + fromAvatarUrl + '"/></div>' +
-                                        '</li>';
-                                    processMsgBox.loadReceivedMessage(message, toUserId, toGroupId, "TEXT");
-                                }
-                            }
-                        }
-                    } else {
-                        alert(data.msg);
+        // 加载历史消息
+        $.ajax({
+            type: 'POST',
+            url: 'message/' + (toUserId != '' ? 'get_user_message' : 'get_group_message'),
+            dataType: 'json',
+            data: {
+                fromId: userId,
+                toId: toUserId,
+                groupId: toGroupId
+            },
+            async: true,
+            success: function (data) {
+                console.log("获取历史消息...");
+                if (data.status == 200) {
+                    let messages = data.messages;
+                    // 无历史数据
+                    if (!messages) {
+                        return;
                     }
-                }
-            });
-        } else {
-            // 加载群聊历史消息
-            $.ajax({
-                type: 'POST',
-                url: 'message/get_group_message',
-                dataType: 'json',
-                data: {
-                    groupId: toGroupId,
-                },
-                async: true,
-                success: function (data) {
-                    console.log("获取群组历史消息...");
-                    if (data.status == 200) {
-                        let messages = data.messages;
-                        // 无历史数据
-                        if (!messages) {
-                            return;
-                        }
 
-                        console.log(messages);
-                        for (let i = messages.length - 1; i >= 0; i--) {
-                            let message = '';
-                            // 发送方为登录用户
-                            if (messages[i].fromUserId == userId) {
-                                if (messages[i].type == 'FILE_MSG_SINGLE_SENDING') {
-                                    message += '<li>' +
-                                        '<div class="send-file-shown">' +
-                                        '<div class="media">' +
-                                        '<a href="' + messages[i].fileUrl + '" class="media-left">' +
-                                        '<i class="glyphicon glyphicon-file" style="font-size:28pt;"></i>' +
-                                        '</a>' +
-                                        '<div class="media-body"> ' +
-                                        '<h5 class="media-heading">' + messages[i].originalFilename + '</h5>' +
-                                        '<span>' + messages[i].fileSize + '</span>' +
-                                        '</div>' +
-                                        '</div>' +
-                                        '</div>' +
-                                        '<div class="nesHead"><img src="' + $('#avatarUrl').attr("src") + '"/></div>' +
-                                        '</li>';
-                                    processMsgBox.loadSentMessage(message, toUserId, toGroupId, "FILE");
-                                } else {
-                                    message += '<li>' +
-                                        '<div class="news">' + messages[i].content + '</div>' +
-                                        '<div class="nesHead"><img src="' + $('#avatarUrl').attr("src") + '"/></div>' +
-                                        '</li>';
-                                    processMsgBox.loadSentMessage(message, toUserId, toGroupId, "TEXT");
-                                }
+                    console.log(messages);
+                    for (let i = messages.length - 1; i >= 0; i--) {
+                        let message = '';
+                        // 发送方为当前登录用户
+                        if (messages[i].fromUserId == userId) {
+                            // 发送类型为文件
+                            if (messages[i].type == 'FILE_MSG_SINGLE_SENDING') {
+                                message += '<li>' +
+                                    '<div class="send-file-shown">' +
+                                    '<div class="media">' +
+                                    '<a href="' + messages[i].fileUrl + '" class="media-left">' +
+                                    '<i class="glyphicon glyphicon-file" style="font-size:28pt;"></i>' +
+                                    '</a>' +
+                                    '<div class="media-body"> ' +
+                                    '<h5 class="media-heading">' + messages[i].originalFilename + '</h5>' +
+                                    '<span>' + messages[i].fileSize + '</span>' +
+                                    '</div>' +
+                                    '</div>' +
+                                    '</div>' +
+                                    '<div class="nesHead"><img src="' + messages[i].fromAvatarUrl + '"/></div>' +
+                                    '</li>';
                             } else {
-                                // 隐藏bug，应改为后端提供数据
-                                let fromAvatarUrl;
-                                $('.conLeft').find('span.hidden-userId').each(function () {
-                                    if (this.innerHTML == messages[i].fromUserId) {
-                                        fromAvatarUrl = $(this).parent(".liRight")
-                                            .siblings(".liLeft").children('img').attr("src");
-                                    }
-                                });
-                                // 发送方为其他用户
-                                if (messages[i].type == 'FILE_MSG_SINGLE_SENDING') {
-                                    message += '<li>' +
-                                        '<div class="receive-file-shown">' +
-                                        '<div class="media">' +
-                                        '<div class="media-body"> ' +
-                                        '<h5 class="media-heading">' + messages[i].originalFilename + '</h5>' +
-                                        '<span>' + messages[i].fileSize + '</span>' +
-                                        '</div>' +
-                                        '<a href="' + messages[i].fileUrl + '" class="media-right">' +
-                                        '<i class="glyphicon glyphicon-file" style="font-size:28pt;"></i>' +
-                                        '</a>' +
-                                        '</div>' +
-                                        '</div>' +
-                                        '<div class="answerHead"><img src="' + fromAvatarUrl + '"/></div>' +
-                                        '</li>';
-                                    processMsgBox.loadReceivedMessage(message, toUserId, toGroupId, "FILE");
-                                } else {
-                                    message += '<li>' +
-                                        '<div class="answers">' + messages[i].content + '</div>' +
-                                        '<div class="answerHead"><img src="' + fromAvatarUrl + '"/></div>' +
-                                        '</li>';
-                                    processMsgBox.loadReceivedMessage(message, toUserId, toGroupId, "TEXT");
-                                }
+                                message += '<li>' +
+                                    '<div class="news">' + messages[i].content + '</div>' +
+                                    '<div class="nesHead"><img src="' + messages[i].fromAvatarUrl + '"/></div>' +
+                                    '</li>';
                             }
-
+                            processMsgBox.loadSentMessage(message, toUserId, toGroupId, messages[i].type == 'FILE_MSG_SINGLE_SENDING' ? "FILE" : "TEXT");
+                        } else {
+                            // 发送类型为文件
+                            if (messages[i].type == 'FILE_MSG_SINGLE_SENDING') {
+                                message += '<li>' +
+                                    '<div class="receive-file-shown">' +
+                                    '<div class="media">' +
+                                    '<div class="media-body"> ' +
+                                    '<h5 class="media-heading">' + messages[i].originalFilename + '</h5>' +
+                                    '<span>' + messages[i].fileSize + '</span>' +
+                                    '</div>' +
+                                    '<a href="' + messages[i].fileUrl + '" class="media-right">' +
+                                    '<i class="glyphicon glyphicon-file" style="font-size:28pt;"></i>' +
+                                    '</a>' +
+                                    '</div>' +
+                                    '</div>' +
+                                    '<div class="answerHead"><img src="' + messages[i].fromAvatarUrl + '"/></div>' +
+                                    '</li>';
+                            } else {
+                                message += '<li>' +
+                                    '<div class="answers">' + messages[i].content + '</div>' +
+                                    '<div class="answerHead"><img src="' + messages[i].fromAvatarUrl + '"/></div>' +
+                                    '</li>';
+                            }
+                            processMsgBox.loadReceivedMessage(message, toUserId, toGroupId, messages[i].type == 'FILE_MSG_SINGLE_SENDING' ? "FILE" : "TEXT");
                         }
-                    } else {
-                        alert(data.msg);
                     }
+                } else {
+                    alert(data.msg);
                 }
-            });
-        }
+            }
+        });
     }
 
     for (var i = 0; i < messageArray.length; i++) {
