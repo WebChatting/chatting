@@ -700,7 +700,11 @@
                 }
 
 		        // 4. 把调整后的消息html标签字符串添加到已发送用户消息表
-		        sentMessageMap.get(toUserId).unshift($('.newsLis li').first().prop("outerHTML"));
+                if (toUserId.length != 0) {
+                    sentMessageMap.get(toUserId).unshift($('.newsList li').first().prop("outerHTML"));
+                } else {
+                    sentMessageMap.get(toGroupId).unshift($('.newsList li').first().prop("outerHTML"));
+                }
             },
 
 			sendMsg: function(msg, toUserId, toGroupId) {
