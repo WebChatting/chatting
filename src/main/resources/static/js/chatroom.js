@@ -1,355 +1,4 @@
-// 第一次进入聊天室后加载用户信息
-function setUserInfo() {
-    $.ajax({
-        type: 'POST',
-        url: 'chatroom/get_userinfo',
-        dataType: 'json',
-        async: true,
-        success: function (data) {
-            console.log("获取用户信息...");
-            if (data.status == 200) {
-                sentMessageMap = new SentMessageMap();
-                var userInfo = data.data.userInfo;
-                userId = userInfo.userId;
-                $("#username").html(userInfo.username);
-                $("#avatarUrl").attr("src", userInfo.avatarPath);
-                var groupListHTML = "";
-                var groupList = userInfo.groupList;
-                for (var i = 0; i < groupList.length; i++) {
-                    sentMessageMap.put(groupList[i].groupId, new Array());
-                    groupListHTML +=
-                        '<li>' +
-                        '<div class="liLeft"><img src="' + groupList[i].avatarPath + '"></div>' +
-                        '<div class="liRight">' +
-                        '<span class="hidden-groupId">' + groupList[i].groupId + '</span>' +
-                        '<span class="intername">' + groupList[i].groupName + '</span>' +
-                        '<span class="infor"></span>' +
-                        '</div>' +
-                        '</li>';
-                }
-                $('.conLeft ul').append(groupListHTML);
-
-                var friendListHTML = "";
-                var friendList = userInfo.friendList;
-                for (var i = 0; i < friendList.length; i++) {
-                    sentMessageMap.put(friendList[i].userId, new Array());
-                    friendListHTML +=
-                        '<li>' +
-                        '<div class="liLeft"><img src="' + friendList[i].avatarPath + '"></div>' +
-                        '<div class="liRight">' +
-                        '<span class="hidden-userId">' + friendList[i].userId + '</span>' +
-                        '<span class="intername">' + friendList[i].username + '</span>' +
-                        '<span class="infor"></span>' +
-                        '</div>' +
-                        '</li>';
-                }
-                // 设置好友列表
-                $('.conLeft ul').append(friendListHTML);
-                // 绑定好友框点击事件
-                $('.conLeft ul li').on('click', friendLiClickEvent);
-            } else {
-                alert(data.msg);
-            }
-        }
-    });
-}
-
-// 加载历史消息
-function loadHistoryMessage(e) {
-    let scrollTop = e.target.scrollTop;
-    let clientHeight = e.target.clientHeight;
-    let scrollHeight = e.target.scrollHeight;
-
-    //        // 打印数值
-    //        console.table([
-    //          {
-    //            label: "距顶部",
-    //            value: scrollTop,
-    //          },
-    //          {
-    //            label: "可视区高度",
-    //            value: clientHeight,
-    //          },
-    //          {
-    //            label: "滚动条总高度",
-    //            value: scrollHeight,
-    //          },
-    //          {
-    //            label: "距顶部 + 可视区高度",
-    //            value: scrollTop + clientHeight,
-    //          },
-    //        ]);
-
-    // 如果滚动到最顶端，则向后端发送请求，获取旧的消息
-    if (scrollTop === 0) {
-        console.log('向后端发送请求');
-    }
-}
-
-// 处理 websocket
-var ws = {
-    register: function () {
-        if (!window.WebSocket) {
-            return;
-        }
-        // open 只是一个状态码
-        if (socket.readyState == WebSocket.OPEN) {
-            var data = {
-                "userId": userId,
-                "type": "REGISTER"
-            };
-            socket.send(JSON.stringify(data));
-        } else {
-            alert("Websocket连接没有开启！");
-        }
-    },
-
-    singleSend: function (fromUserId, toUserId, content) {
-        if (!window.WebSocket) {
-            return;
-        }
-        if (socket.readyState == WebSocket.OPEN) {
-            var data = {
-                "fromUserId": fromUserId,
-                "toUserId": toUserId,
-                "content": content,
-                "type": "SINGLE_SENDING"
-            };
-            socket.send(JSON.stringify(data));
-        } else {
-            alert("Websocket连接没有开启！");
-        }
-    },
-
-    groupSend: function (fromUserId, toGroupId, content) {
-        if (!window.WebSocket) {
-            return;
-        }
-        if (socket.readyState == WebSocket.OPEN) {
-            var data = {
-                "fromUserId": fromUserId,
-                "toGroupId": toGroupId,
-                "content": content,
-                "type": "GROUP_SENDING"
-            };
-            socket.send(JSON.stringify(data));
-        } else {
-            alert("Websocket连接没有开启！");
-        }
-    },
-
-    fileMsgSingleSend: function (fromUserId, toUserId, originalFilename, fileUrl, fileSize) {
-        if (!window.WebSocket) {
-            return;
-        }
-        if (socket.readyState == WebSocket.OPEN) {
-            var data = {
-                "fromUserId": fromUserId,
-                "toUserId": toUserId,
-                "originalFilename": originalFilename,
-                "fileUrl": fileUrl,
-                "fileSize": fileSize,
-                "type": "FILE_MSG_SINGLE_SENDING"
-            };
-            socket.send(JSON.stringify(data));
-        } else {
-            alert("Websocket连接没有开启！");
-        }
-    },
-
-    fileMsgGroupSend: function (fromUserId, toGroupId, originalFilename, fileUrl, fileSize) {
-        if (!window.WebSocket) {
-            return;
-        }
-        if (socket.readyState == WebSocket.OPEN) {
-            var data = {
-                "fromUserId": fromUserId,
-                "toGroupId": toGroupId,
-                "originalFilename": originalFilename,
-                "fileUrl": fileUrl,
-                "fileSize": fileSize,
-                "type": "FILE_MSG_GROUP_SENDING"
-            };
-            socket.send(JSON.stringify(data));
-        } else {
-            alert("Websocket连接没有开启！");
-        }
-    },
-
-    registerReceive: function () {
-        console.log("userId为 " + userId + " 的用户登记到在线用户表成功！");
-    },
-
-    singleReceive: function (data) {
-        // 获取、构造参数
-        console.log(data);
-        var fromUserId = data.fromUserId;
-        var content = data.content;
-        var fromAvatarUrl;
-        var $receiveLi;
-        $('.conLeft').find('span.hidden-userId').each(function () {
-            if (this.innerHTML == fromUserId) {
-                fromAvatarUrl = $(this).parent(".liRight")
-                    .siblings(".liLeft").children('img').attr("src");
-                $receiveLi = $(this).parent(".liRight").parent("li");
-            }
-        })
-        var answer = '';
-        answer += '<li>' +
-            '<div class="answers">' + content + '</div>' +
-            '<div class="answerHead"><img src="' + fromAvatarUrl + '"/></div>' +
-            '</li>';
-
-        // 消息框处理
-        processMsgBox.receiveSingleMsg(answer, fromUserId);
-        // 好友列表处理
-        processFriendList.receiving(fromUserId, content, $receiveLi);
-    },
-
-    groupReceive: function (data) {
-        // 获取、构造参数
-        console.log(data);
-        var fromUserId = data.fromUserId;
-        var content = data.content;
-        var toGroupId = data.toGroupId;
-        var fromAvatarUrl;
-        var $receiveLi;
-        $('.conLeft').find('span.hidden-userId').each(function () {
-            if (this.innerHTML == fromUserId) {
-                fromAvatarUrl = $(this).parent(".liRight")
-                    .siblings(".liLeft").children('img').attr("src");
-                /* $receiveLi = $(this).parent(".liRight").parent("li"); */
-            }
-        })
-        $('.conLeft').find('span.hidden-groupId').each(function () {
-            if (this.innerHTML == toGroupId) {
-                $receiveLi = $(this).parent(".liRight").parent("li");
-            }
-        })
-        var answer = '';
-        answer += '<li>' +
-            '<div class="answers">' + content + '</div>' +
-            '<div class="answerHead"><img src="' + fromAvatarUrl + '"/></div>' +
-            '</li>';
-
-        // 消息框处理
-        processMsgBox.receiveGroupMsg(answer, toGroupId);
-        // 好友列表处理
-        processFriendList.receiving(content, $receiveLi);
-    },
-
-    fileMsgSingleRecieve: function (data) {
-        // 获取、构造参数
-        console.log(data);
-        var fromUserId = data.fromUserId;
-        var originalFilename = data.originalFilename;
-        var fileSize = data.fileSize;
-        var fileUrl = data.fileUrl;
-        var content = "[文件]";
-        var fromAvatarUrl;
-        var $receiveLi;
-        $('.conLeft').find('span.hidden-userId').each(function () {
-            if (this.innerHTML == fromUserId) {
-                fromAvatarUrl = $(this).parent(".liRight")
-                    .siblings(".liLeft").children('img').attr("src");
-                $receiveLi = $(this).parent(".liRight").parent("li");
-            }
-        })
-        var fileHtml =
-            '<li>' +
-            '<div class="receive-file-shown">' +
-            '<div class="media">' +
-            '<div class="media-body"> ' +
-            '<h5 class="media-heading">' + originalFilename + '</h5>' +
-            '<span>' + fileSize + '</span>' +
-            '</div>' +
-            '<a href="' + fileUrl + '" class="media-right">' +
-            '<i class="glyphicon glyphicon-file" style="font-size:28pt;"></i>' +
-            '</a>' +
-            '</div>' +
-            '</div>' +
-            '<div class="answerHead"><img src="' + fromAvatarUrl + '"/></div>' +
-            '</li>';
-
-        // 消息框处理
-        processMsgBox.receiveSingleMsg(fileHtml, fromUserId);
-        // 好友列表处理
-        processFriendList.receiving(content, $receiveLi);
-    },
-
-    fileMsgGroupRecieve: function (data) {
-        // 1. 获取、构造参数
-        console.log(data);
-        var fromUserId = data.fromUserId;
-        var toGroupId = data.toGroupId;
-        var originalFilename = data.originalFilename;
-        var fileSize = data.fileSize;
-        var fileUrl = data.fileUrl;
-        var content = "[文件]";
-        var fromAvatarUrl;
-        var $receiveLi;
-        $('.conLeft').find('span.hidden-userId').each(function () {
-            if (this.innerHTML == fromUserId) {
-                fromAvatarUrl = $(this).parent(".liRight")
-                    .siblings(".liLeft").children('img').attr("src");
-                /* $receiveLi = $(this).parent(".liRight").parent("li"); */
-            }
-        })
-        $('.conLeft').find('span.hidden-groupId').each(function () {
-            if (this.innerHTML == toGroupId) {
-                $receiveLi = $(this).parent(".liRight").parent("li");
-            }
-        })
-        var fileHtml =
-            '<li>' +
-            '<div class="receive-file-shown">' +
-            '<div class="media">' +
-            '<div class="media-body"> ' +
-            '<h5 class="media-heading">' + originalFilename + '</h5>' +
-            '<span>' + fileSize + '</span>' +
-            '</div>' +
-            '<a href="' + fileUrl + '" class="media-right">' +
-            '<i class="glyphicon glyphicon-file" style="font-size:28pt;"></i>' +
-            '</a>' +
-            '</div>' +
-            '</div>' +
-            '<div class="answerHead"><img src="' + fromAvatarUrl + '"/></div>' +
-            '</li>';
-
-        // 2. 消息框处理
-        processMsgBox.receiveGroupMsg(fileHtml, toGroupId);
-        // 3. 好友列表处理
-        processFriendList.receiving(content, $receiveLi);
-    },
-
-    remove: function () {
-        socket.close();
-    }
-};
-
-// 退出聊天室
-function logout() {
-    // 1. 关闭websocket连接
-    ws.remove();
-
-    // 2. 注销登录状态
-    $.ajax({
-        type: 'POST',
-        url: 'logout',
-        dataType: 'json',
-        async: true,
-        success: function (data) {
-            if (data.status == 200) {
-                // 3. 注销成功，进行页面跳转
-                console.log("注销成功！");
-                window.location.href = "login";
-            } else {
-                alert(data.msg);
-            }
-        }
-    });
-}
-
+// 以下是相关事件绑定
 $(".myfile").fileinput({
     uploadUrl: "chatroom/upload",
     uploadAsync: true, //默认异步上传
@@ -367,11 +16,13 @@ $(".myfile").fileinput({
     msgFilesTooMany: "选择上传的文件数量({n}) 超过允许的最大数值{m}！",
     language: 'zh'
 })
+
 //异步上传返回结果处理
 $('.myfile').on('fileerror', function (event, data, msg) {
     console.log("fileerror");
     console.log(data);
 });
+
 //异步上传返回结果处理
 $(".myfile").on("fileuploaded", function (event, data, previewId, index) {
 
@@ -510,6 +161,118 @@ $('.emjon li').on('click', function () {
 })
 
 
+// 以下是相关函数
+// 第一次进入聊天室后加载用户信息
+function setUserInfo() {
+    $.ajax({
+        type: 'POST',
+        url: 'chatroom/get_userinfo',
+        dataType: 'json',
+        async: true,
+        success: function (data) {
+            console.log("获取用户信息...");
+            if (data.status == 200) {
+                sentMessageMap = new SentMessageMap();
+                var userInfo = data.data.userInfo;
+                userId = userInfo.userId;
+                $("#username").html(userInfo.username);
+                $("#avatarUrl").attr("src", userInfo.avatarPath);
+                var groupListHTML = "";
+                var groupList = userInfo.groupList;
+                for (var i = 0; i < groupList.length; i++) {
+                    sentMessageMap.put(groupList[i].groupId, new Array());
+                    groupListHTML +=
+                        '<li>' +
+                        '<div class="liLeft"><img src="' + groupList[i].avatarPath + '"></div>' +
+                        '<div class="liRight">' +
+                        '<span class="hidden-groupId">' + groupList[i].groupId + '</span>' +
+                        '<span class="intername">' + groupList[i].groupName + '</span>' +
+                        '<span class="infor"></span>' +
+                        '</div>' +
+                        '</li>';
+                }
+                $('.conLeft ul').append(groupListHTML);
+
+                var friendListHTML = "";
+                var friendList = userInfo.friendList;
+                for (var i = 0; i < friendList.length; i++) {
+                    sentMessageMap.put(friendList[i].userId, new Array());
+                    friendListHTML +=
+                        '<li>' +
+                        '<div class="liLeft"><img src="' + friendList[i].avatarPath + '"></div>' +
+                        '<div class="liRight">' +
+                        '<span class="hidden-userId">' + friendList[i].userId + '</span>' +
+                        '<span class="intername">' + friendList[i].username + '</span>' +
+                        '<span class="infor"></span>' +
+                        '</div>' +
+                        '</li>';
+                }
+                // 设置好友列表
+                $('.conLeft ul').append(friendListHTML);
+                // 绑定好友框点击事件
+                $('.conLeft ul li').on('click', friendLiClickEvent);
+            } else {
+                alert(data.msg);
+            }
+        }
+    });
+}
+
+// 加载历史消息
+function loadHistoryMessage(e) {
+    let scrollTop = e.target.scrollTop;
+    let clientHeight = e.target.clientHeight;
+    let scrollHeight = e.target.scrollHeight;
+
+    //        // 打印数值
+    //        console.table([
+    //          {
+    //            label: "距顶部",
+    //            value: scrollTop,
+    //          },
+    //          {
+    //            label: "可视区高度",
+    //            value: clientHeight,
+    //          },
+    //          {
+    //            label: "滚动条总高度",
+    //            value: scrollHeight,
+    //          },
+    //          {
+    //            label: "距顶部 + 可视区高度",
+    //            value: scrollTop + clientHeight,
+    //          },
+    //        ]);
+
+    // 如果滚动到最顶端，则向后端发送请求，获取旧的消息
+    if (scrollTop === 0) {
+        console.log('向后端发送请求');
+    }
+}
+
+// 退出聊天室
+function logout() {
+    // 1. 关闭websocket连接
+    ws.remove();
+
+    // 2. 注销登录状态
+    $.ajax({
+        type: 'POST',
+        url: 'logout',
+        dataType: 'json',
+        async: true,
+        success: function (data) {
+            if (data.status == 200) {
+                // 3. 注销成功，进行页面跳转
+                console.log("注销成功！");
+                window.location.href = "login";
+            } else {
+                alert(data.msg);
+            }
+        }
+    });
+}
+
 // 好友框点击事件
 function friendLiClickEvent() {
 
@@ -638,6 +401,7 @@ function friendLiClickEvent() {
         $badge.remove();
     }
 }
+
 
 // 处理消息框的对象，统一管理相关处理函数，主要包括6个事件函数：
 // 1. loadSentMsg: 加载发送消息
@@ -1086,3 +850,244 @@ function SentMessageMap() {
         return arr;
     };
 }
+
+// 处理 websocket
+var ws = {
+    register: function () {
+        if (!window.WebSocket) {
+            return;
+        }
+        // open 只是一个状态码
+        if (socket.readyState == WebSocket.OPEN) {
+            var data = {
+                "userId": userId,
+                "type": "REGISTER"
+            };
+            socket.send(JSON.stringify(data));
+        } else {
+            alert("Websocket连接没有开启！");
+        }
+    },
+
+    singleSend: function (fromUserId, toUserId, content) {
+        if (!window.WebSocket) {
+            return;
+        }
+        if (socket.readyState == WebSocket.OPEN) {
+            var data = {
+                "fromUserId": fromUserId,
+                "toUserId": toUserId,
+                "content": content,
+                "type": "SINGLE_SENDING"
+            };
+            socket.send(JSON.stringify(data));
+        } else {
+            alert("Websocket连接没有开启！");
+        }
+    },
+
+    groupSend: function (fromUserId, toGroupId, content) {
+        if (!window.WebSocket) {
+            return;
+        }
+        if (socket.readyState == WebSocket.OPEN) {
+            var data = {
+                "fromUserId": fromUserId,
+                "toGroupId": toGroupId,
+                "content": content,
+                "type": "GROUP_SENDING"
+            };
+            socket.send(JSON.stringify(data));
+        } else {
+            alert("Websocket连接没有开启！");
+        }
+    },
+
+    fileMsgSingleSend: function (fromUserId, toUserId, originalFilename, fileUrl, fileSize) {
+        if (!window.WebSocket) {
+            return;
+        }
+        if (socket.readyState == WebSocket.OPEN) {
+            var data = {
+                "fromUserId": fromUserId,
+                "toUserId": toUserId,
+                "originalFilename": originalFilename,
+                "fileUrl": fileUrl,
+                "fileSize": fileSize,
+                "type": "FILE_MSG_SINGLE_SENDING"
+            };
+            socket.send(JSON.stringify(data));
+        } else {
+            alert("Websocket连接没有开启！");
+        }
+    },
+
+    fileMsgGroupSend: function (fromUserId, toGroupId, originalFilename, fileUrl, fileSize) {
+        if (!window.WebSocket) {
+            return;
+        }
+        if (socket.readyState == WebSocket.OPEN) {
+            var data = {
+                "fromUserId": fromUserId,
+                "toGroupId": toGroupId,
+                "originalFilename": originalFilename,
+                "fileUrl": fileUrl,
+                "fileSize": fileSize,
+                "type": "FILE_MSG_GROUP_SENDING"
+            };
+            socket.send(JSON.stringify(data));
+        } else {
+            alert("Websocket连接没有开启！");
+        }
+    },
+
+    registerReceive: function () {
+        console.log("userId为 " + userId + " 的用户登记到在线用户表成功！");
+    },
+
+    singleReceive: function (data) {
+        // 获取、构造参数
+        console.log(data);
+        var fromUserId = data.fromUserId;
+        var content = data.content;
+        var fromAvatarUrl;
+        var $receiveLi;
+        $('.conLeft').find('span.hidden-userId').each(function () {
+            if (this.innerHTML == fromUserId) {
+                fromAvatarUrl = $(this).parent(".liRight")
+                    .siblings(".liLeft").children('img').attr("src");
+                $receiveLi = $(this).parent(".liRight").parent("li");
+            }
+        })
+        var answer = '';
+        answer += '<li>' +
+            '<div class="answers">' + content + '</div>' +
+            '<div class="answerHead"><img src="' + fromAvatarUrl + '"/></div>' +
+            '</li>';
+
+        // 消息框处理
+        processMsgBox.receiveSingleMsg(answer, fromUserId);
+        // 好友列表处理
+        processFriendList.receiving(fromUserId, content, $receiveLi);
+    },
+
+    groupReceive: function (data) {
+        // 获取、构造参数
+        console.log(data);
+        var fromUserId = data.fromUserId;
+        var content = data.content;
+        var toGroupId = data.toGroupId;
+        var fromAvatarUrl;
+        var $receiveLi;
+        $('.conLeft').find('span.hidden-userId').each(function () {
+            if (this.innerHTML == fromUserId) {
+                fromAvatarUrl = $(this).parent(".liRight")
+                    .siblings(".liLeft").children('img').attr("src");
+                /* $receiveLi = $(this).parent(".liRight").parent("li"); */
+            }
+        })
+        $('.conLeft').find('span.hidden-groupId').each(function () {
+            if (this.innerHTML == toGroupId) {
+                $receiveLi = $(this).parent(".liRight").parent("li");
+            }
+        })
+        var answer = '';
+        answer += '<li>' +
+            '<div class="answers">' + content + '</div>' +
+            '<div class="answerHead"><img src="' + fromAvatarUrl + '"/></div>' +
+            '</li>';
+
+        // 消息框处理
+        processMsgBox.receiveGroupMsg(answer, toGroupId);
+        // 好友列表处理
+        processFriendList.receiving(content, $receiveLi);
+    },
+
+    fileMsgSingleRecieve: function (data) {
+        // 获取、构造参数
+        console.log(data);
+        var fromUserId = data.fromUserId;
+        var originalFilename = data.originalFilename;
+        var fileSize = data.fileSize;
+        var fileUrl = data.fileUrl;
+        var content = "[文件]";
+        var fromAvatarUrl;
+        var $receiveLi;
+        $('.conLeft').find('span.hidden-userId').each(function () {
+            if (this.innerHTML == fromUserId) {
+                fromAvatarUrl = $(this).parent(".liRight")
+                    .siblings(".liLeft").children('img').attr("src");
+                $receiveLi = $(this).parent(".liRight").parent("li");
+            }
+        })
+        var fileHtml =
+            '<li>' +
+            '<div class="receive-file-shown">' +
+            '<div class="media">' +
+            '<div class="media-body"> ' +
+            '<h5 class="media-heading">' + originalFilename + '</h5>' +
+            '<span>' + fileSize + '</span>' +
+            '</div>' +
+            '<a href="' + fileUrl + '" class="media-right">' +
+            '<i class="glyphicon glyphicon-file" style="font-size:28pt;"></i>' +
+            '</a>' +
+            '</div>' +
+            '</div>' +
+            '<div class="answerHead"><img src="' + fromAvatarUrl + '"/></div>' +
+            '</li>';
+
+        // 消息框处理
+        processMsgBox.receiveSingleMsg(fileHtml, fromUserId);
+        // 好友列表处理
+        processFriendList.receiving(content, $receiveLi);
+    },
+
+    fileMsgGroupRecieve: function (data) {
+        // 1. 获取、构造参数
+        console.log(data);
+        var fromUserId = data.fromUserId;
+        var toGroupId = data.toGroupId;
+        var originalFilename = data.originalFilename;
+        var fileSize = data.fileSize;
+        var fileUrl = data.fileUrl;
+        var content = "[文件]";
+        var fromAvatarUrl;
+        var $receiveLi;
+        $('.conLeft').find('span.hidden-userId').each(function () {
+            if (this.innerHTML == fromUserId) {
+                fromAvatarUrl = $(this).parent(".liRight")
+                    .siblings(".liLeft").children('img').attr("src");
+                /* $receiveLi = $(this).parent(".liRight").parent("li"); */
+            }
+        })
+        $('.conLeft').find('span.hidden-groupId').each(function () {
+            if (this.innerHTML == toGroupId) {
+                $receiveLi = $(this).parent(".liRight").parent("li");
+            }
+        })
+        var fileHtml =
+            '<li>' +
+            '<div class="receive-file-shown">' +
+            '<div class="media">' +
+            '<div class="media-body"> ' +
+            '<h5 class="media-heading">' + originalFilename + '</h5>' +
+            '<span>' + fileSize + '</span>' +
+            '</div>' +
+            '<a href="' + fileUrl + '" class="media-right">' +
+            '<i class="glyphicon glyphicon-file" style="font-size:28pt;"></i>' +
+            '</a>' +
+            '</div>' +
+            '</div>' +
+            '<div class="answerHead"><img src="' + fromAvatarUrl + '"/></div>' +
+            '</li>';
+
+        // 2. 消息框处理
+        processMsgBox.receiveGroupMsg(fileHtml, toGroupId);
+        // 3. 好友列表处理
+        processFriendList.receiving(content, $receiveLi);
+    },
+
+    remove: function () {
+        socket.close();
+    }
+};
