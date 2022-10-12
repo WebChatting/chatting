@@ -203,7 +203,7 @@ var ws = {
         // 消息框处理
         processMsgBox.receiveSingleMsg(answer, fromUserId);
         // 好友列表处理
-        processFriendList.receiving(content, $receiveLi);
+        processFriendList.receiving(fromUserId, content, $receiveLi);
     },
 
     groupReceive: function (data) {
@@ -859,14 +859,16 @@ var processFriendList = {
         $('.conLeft ul li').first().on('click', friendLiClickEvent)
     },
 
-    receiving: function (content, $receiveLi) {
-        // 1. 设置红色提醒徽章
-        var $badge = $receiveLi.find(".layui-badge");
-        if ($badge.length > 0) {
-            $badge.html(parseInt($badge.html()) + 1);
-        } else {
-            var badgeHTML = '<span class="layui-badge badge-avatar">1</span>';
-            $receiveLi.children(".liLeft").prepend(badgeHTML);
+    receiving: function (fromUserId, content, $receiveLi) {
+        // 1. 设置红色提醒徽章(如果新消息来自当前聊天用户，则不设置)
+        if ($(".conLeft .bg .hidden-userId").html() != fromUserId) {
+            let $badge = $receiveLi.find(".layui-badge");
+            if ($badge.length > 0) {
+                $badge.html(parseInt($badge.html()) + 1);
+            } else {
+                let badgeHTML = '<span class="layui-badge badge-avatar">1</span>';
+                $receiveLi.children(".liLeft").prepend(badgeHTML);
+            }
         }
         // 2. 设置部分新消息提醒
         if (content.length > 8) { // 只显示前八个字符
