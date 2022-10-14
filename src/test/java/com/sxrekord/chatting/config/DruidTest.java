@@ -19,14 +19,14 @@ public class DruidTest {
     DruidDataSource dataSource;
 
     @Test
-    public void druidTest() throws SQLException, SQLException {
+    public void druidTest() throws SQLException {
         //看一下默认数据源
         System.out.println(dataSource.getClass());
         //获得连接
         Connection connection =   dataSource.getConnection();
         System.out.println(connection);
 
-        DruidDataSource druidDataSource = (DruidDataSource) dataSource;
+        DruidDataSource druidDataSource = dataSource;
         System.out.println("druidDataSource 数据源最大连接数：" + druidDataSource.getMaxActive());
         System.out.println("druidDataSource 数据源初始化连接数：" + druidDataSource.getInitialSize());
         System.out.println("druidDataSource 数据源最大超时时间：" + druidDataSource.getMaxWait());
