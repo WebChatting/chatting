@@ -11,7 +11,7 @@ mvn package
 # run
 # java -jar target/chatting-springboot-xxx.jar
 docker build -t sxrekord/chatting .
-docker run -d -p 8088:8088 sxrekord/chatting
+docker run -d -p 8088:8088 -p 3333:3333 sxrekord/chatting
 ```
 
 ## ToDo
@@ -24,4 +24,4 @@ docker run -d -p 8088:8088 sxrekord/chatting
 - [ ] use Logback replace slf4j
 - [ ] use Redis
 - [ ] automatically delete files when they expire
-- [ ] deploy with docker
+- [x] deploy with docker
