@@ -138,7 +138,7 @@
         }
         if (window.WebSocket) {
             // 本质还是 HTTP 请求，服务端将升级该请求到 WebSocket 连接
-            socket = new WebSocket("ws://localhost:3333");
+            socket = new WebSocket("ws://" + window.location.hostname + ":3333");
             socket.onmessage = function (event) {
                 var json = JSON.parse(event.data);
                 if (json.status == 200) {
