@@ -3,6 +3,9 @@ package com.sxrekord.chatting.service;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.mock.web.MockHttpSession;
+
+import javax.servlet.http.HttpSession;
 
 /**
  * @author Rekord
@@ -32,5 +35,13 @@ public class UserServiceTest {
     @Test
     public void logout() {
         System.out.println(userService.logoutUser(null));
+    }
+
+    @Test
+    public void update() {
+        register();
+        HttpSession httpSession = new MockHttpSession();
+        httpSession.setAttribute("userId", 506L);
+        System.out.println(userService.updateUser("test_test", "test_test", "avatar/default_user_avatar.jpg", httpSession));
     }
 }
