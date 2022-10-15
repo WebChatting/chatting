@@ -31,8 +31,6 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private GroupDao groupDao;
 
-    @Value("${file.user.avatar.location}")
-    private String user_avatar_location;
     @Value("${file.user.avatar.default}")
     private String user_avatar_default;
 
@@ -40,7 +38,7 @@ public class UserServiceImpl implements UserService {
     public ResponseJson registerUser(String username, String password) {
         ResponseJson responseJson = new ResponseJson();
         if (userDao.getUserByUsername(username) == null) {
-            userDao.insertUser(new User(username, password, user_avatar_location + user_avatar_default));
+            userDao.insertUser(new User(username, password, user_avatar_default));
             responseJson.success("注册成功");
         } else {
             responseJson.error("用户名已存在");
