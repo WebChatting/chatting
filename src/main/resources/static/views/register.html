@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+    content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="renderer" content="webkit">
+  <base href="/chatting/" />
+  <title>注册</title>
+  <link rel='shortcut icon' type='image/x-icon' href='https://cdn.sxrekord.com/blog/favicon.ico' />
+  <link rel="stylesheet" href="css/icon/iconfont.css?v=65">
+  <link rel="stylesheet" href="css/account.css?v=65">
+</head>
+
+<body data-source="" data-plugin_code="">
+  <div class="account-container">
+    <!-- <a href="#" class="left-logo">
+      <img src="images/sign-logo2.png" alt="">
+    </a> -->
+
+    <div class="left-text-container">
+      <h2>chatting</h2>
+      <p>网页聊天系统</p>
+    </div>
+
+    <div class="right-container">
+      <div class="sign-list" id="sign-in" style="display: block">
+        <h1>注册</h1>
+        <div class="input-list">
+          <!--                密码注册-->
+          <div class="input-list-con first-init" style="display: block">
+            <div class="list">
+              <input type="text" class="input-text the-signin-account" placeholder="账号" data-errortext="请输入格式正确的账号"
+                data-type="account" oninput="javascript:void(0)" onpropertychange="javascript:void(0)" data-index="0"
+                autocomplete="on">
+            </div>
+            <div class="list">
+              <input type="password" class="input-text the-signin-password" placeholder="密码" data-errortext="密码长度为6-20"
+                data-type="password" oninput="javascript:void(0)" onpropertychange="javascript:void(0)" data-index="1"
+                id="signin-password" autocomplete="on">
+            </div>
+            <div class="submit">
+              <div class="error-text"></div>
+              <div class="button" id="normal-login">注册</div>
+            </div>
+          </div>
+          <!----------------- over ----------------->
+
+        </div>
+        <div class="other-sign-type">
+          <div class="left"><span>第三方注册</span></div>
+          <div class="right">
+            <a href="#" class="icon" style="background-image: url('img/sign-weixin.png')" title="微信"></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/common/jquery.min.js"></script>
+  <script src="js/public.js"></script>
+  <script>
+    var $normalLogin = $('#normal-login'); // 密码注册提交button
+
+    $(function () {
+      $normalLogin.parents('.input-list-con').find('.input-text').eq(0).focus();
+
+      // 注册
+      $normalLogin.click(function () {
+        var $this = $(this);
+        if ($(this).hasClass('disabled')) {
+          return;
+        }
+        var inputList = $this.parents('.input-list-con').find('input');
+        var $account;
+        var $password;
+
+        for (var item of inputList) {
+          if ($(item).data('type') === 'account') {
+            $account = $(item);
+          }
+          if ($(item).data('type') === 'password') {
+            $password = $(item);
+          }
+        }
+
+        showLoading();
+        $this.addClass('disabled').text('注册中...');
+        $.ajax({
+          type: 'POST',
+          url: 'register',
+          dataType: 'json',
+          data: {
+            username: $account.val().trim(),
+            password: $password.val().trim()
+          },
+          async: false,
+          success: function (res) {
+            $this.text('注册');
+            hideLoading();
+            $this.removeClass('disabled');
+            if (res.status == 200) {
+              alert('注册成功');
+              window.location.href = "login";
+            } else {
+              $this.prev('.error-text').text(res.msg);
+            }
+          }
+        });
+      });
+
+    })
+  </script>
+</body>
+
+</html>
