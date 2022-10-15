@@ -8,7 +8,10 @@
 mvn package
 # peek inside
 # jar tvf target/chatting-springboot-xxx.jar
-java -jar target/chatting-springboot-xxx.jar
+# run
+# java -jar target/chatting-springboot-xxx.jar
+docker build -t sxrekord/chatting .
+docker run -d -p 8088:8088 sxrekord/chatting
 ```
 
 ## ToDo
