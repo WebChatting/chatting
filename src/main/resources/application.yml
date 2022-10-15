@@ -64,7 +64,7 @@ file:
   user:
     avatar:
       location: F:/repo/chatting/avatar/
-      default: /avatar/default_user_avatar.jpg
+      default: default_user_avatar.jpg
 
 
 netty:
