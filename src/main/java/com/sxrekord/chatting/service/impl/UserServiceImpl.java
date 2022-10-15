@@ -103,4 +103,19 @@ public class UserServiceImpl implements UserService {
         return responseJson;
     }
 
+    @Override
+    public ResponseJson updateUser(String username, String password, String avatarPath, HttpSession session) {
+        ResponseJson responseJson = new ResponseJson();
+        if (session == null) {
+            return responseJson.error("请传入session！");
+        }
+        Object userId = session.getAttribute(Constant.USER_TOKEN);
+        if (userId == null) {
+            return responseJson.error("请先登录！");
+        }
+        userDao.updateUser(new User((long)userId, username, password, avatarPath));
+        responseJson.success("信息更新成功");
+        return responseJson;
+    }
+
 }

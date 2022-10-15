@@ -28,4 +28,9 @@ public class User {
         this(username, password);
         this.avatarPath = avatarPath;
     }
+
+    public User(Long userId, String username, String password, String avatarPath) {
+        this(username, password, avatarPath);
+        this.userId = userId;
+    }
 }

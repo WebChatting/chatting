@@ -41,4 +41,14 @@ public interface UserService {
      * @return
      */
     ResponseJson getUser(Long id);
+
+    /**
+     * 更新用户信息
+     * @param username
+     * @param password
+     * @param avatarPath
+     * @param session
+     * @return
+     */
+    ResponseJson updateUser(String username, String password, String avatarPath, HttpSession session);
 }

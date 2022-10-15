@@ -48,4 +48,10 @@
         where username = #{username}
     </select>
 
+    <update id="updateUser" parameterType="User" keyProperty="userId">
+        update user
+        set username = #{username}, password = #{password}, avatar_path = #{avatarPath}
+        where user_id = #{userId};
+    </update>
+
 </mapper>
