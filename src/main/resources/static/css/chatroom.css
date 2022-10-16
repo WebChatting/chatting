@@ -141,12 +141,10 @@ main {
     list-style: none;
     margin: 0;
     padding: 0;
-    background-color: #767676;
 }
 
 .RightCont li {
     margin: 10px 5px;
-    background-color: thistle;
     width: 100%;
     word-wrap: break-word;
     word-break: break-all;
@@ -168,7 +166,6 @@ main {
 .nesHead {
     margin-left: 10px;
     margin-top: 3px;
-    background-color: aqua;
 }
 .nesHead img {
     width: 40px;
@@ -206,7 +203,6 @@ main {
     margin-left: 5px;
     margin-right: 15px;
     margin-top: 3px;
-    background-color: aqua;
 }
 .answerHead img {
     width: 40px;
