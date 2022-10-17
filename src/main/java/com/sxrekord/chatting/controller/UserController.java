@@ -23,6 +23,11 @@ public class UserController {
         return "login";
     }
 
+    @RequestMapping(value = "register", method = RequestMethod.GET)
+    public String toRegister() {
+        return "register";
+    }
+
     @RequestMapping(value = "login", method = RequestMethod.POST)
     @ResponseBody
     public ResponseJson login(HttpSession session,
