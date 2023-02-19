@@ -10,7 +10,7 @@ import java.util.List;
  */
 @Data
 public class User {
-    private Long userId;
+    private Long id;
     private String username;
     private String password;
     private String avatarPath;
@@ -29,8 +29,8 @@ public class User {
         this.avatarPath = avatarPath;
     }
 
-    public User(Long userId, String username, String password, String avatarPath) {
+    public User(Long id, String username, String password, String avatarPath) {
         this(username, password, avatarPath);
-        this.userId = userId;
+        this.id = id;
     }
 }
