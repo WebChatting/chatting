@@ -5,21 +5,21 @@
 
 <mapper namespace="com.sxrekord.chatting.dao.GroupDao">
     <sql id="selectFields">
-        group_id, group_name, avatar_path
+        id, name, owner_id, avatar_path
     </sql>
 
     <resultMap id="GroupDao" type="Group">
-        <id column="group_id" jdbcType="INTEGER" property="groupId"/>
-        <result column="group_name" jdbcType="VARCHAR" property="groupName"/>
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
         <result column="avatar_path" jdbcType="VARCHAR" property="avatarPath"/>
-        <result column="owner" jdbcType="INTEGER" property="owner"/>
+        <result column="owner_id" jdbcType="INTEGER" property="ownerId"/>
     </resultMap>
 
     <select id="getGroupById" parameterType="java.lang.Long" resultMap="GroupDao">
         select
         <include refid="selectFields"/>
         from `group`
-        where group_id = #{groupId}
+        where id = #{id}
     </select>
 
 </mapper>

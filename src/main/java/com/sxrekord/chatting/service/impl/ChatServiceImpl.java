@@ -176,7 +176,7 @@ public class ChatServiceImpl implements ChatService{
     }
 
     private void setMembers(Group group, Long fromUserId, String responseJson) {
-        List<Long> members = relationDao.listUserIdByGroupId(group.getGroupId());
+        List<Long> members = relationDao.listUserIdByGroupId(group.getId());
         group.setMembers(new ArrayList<>(members.size()));
         for (Long userId : members) {
             group.getMembers().add(userDao.getUserById(userId));
@@ -184,8 +184,8 @@ public class ChatServiceImpl implements ChatService{
 
         group.getMembers().stream()
                 .forEach(member -> {
-                    ChannelHandlerContext toCtx = Constant.onlineUserMap.get(member.getUserId());
-                    if (toCtx != null && !fromUserId.equals(member.getUserId())) {
+                    ChannelHandlerContext toCtx = Constant.onlineUserMap.get(member.getId());
+                    if (toCtx != null && !fromUserId.equals(member.getId())) {
                         sendMessage(toCtx, responseJson);
                     }
                 });
