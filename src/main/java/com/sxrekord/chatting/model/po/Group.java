@@ -10,10 +10,10 @@ import java.util.List;
  */
 @Data
 public class Group {
-    private Long groupId;
-    private String groupName;
-    private String AvatarPath;
-    private Long owner;
+    private Long id;
+    private String name;
+    private Long ownerId;
+    private String avatarPath;
     private List<User> members;
 
     public Group() {}

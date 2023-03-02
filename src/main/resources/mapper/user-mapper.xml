@@ -10,11 +10,11 @@
     </sql>
 
     <sql id="selectFields">
-        user_id, username, password, avatar_path
+        id, username, password, avatar_path
     </sql>
 
     <resultMap id="UserDao" type="User">
-        <id column="user_id" jdbcType="INTEGER" property="userId"/>
+        <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="username" jdbcType="VARCHAR" property="username"/>
         <result column="password" jdbcType="VARCHAR" property="password"/>
         <result column="avatar_path" jdbcType="VARCHAR" property="avatarPath"/>
@@ -24,11 +24,11 @@
         select
         <include refid="selectFields"/>
         from user
-        where user_id = #{userId}
+        where id = #{id}
     </select>
 
 <!--    keyProperty 用于指定主键在 POJO 中对应的属性名，需要配合数据库的自增主键来使用。-->
-    <insert id="insertUser" parameterType="User" keyProperty="userId">
+    <insert id="insertUser" parameterType="User" keyProperty="id">
         insert into user (<include refid="insertFields"/>)
         values(#{username}, #{password}, #{avatarPath})
     </insert>
@@ -51,7 +51,7 @@
     <update id="updateUser" parameterType="User" keyProperty="userId">
         update user
         set username = #{username}, password = #{password}, avatar_path = #{avatarPath}
-        where user_id = #{userId};
+        where id = #{id};
     </update>
 
 </mapper>

@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService {
         } else {
             responseJson.success();
             if (session != null) {
-                session.setAttribute(Constant.USER_TOKEN, user.getUserId());
+                session.setAttribute(Constant.USER_TOKEN, user.getId());
             }
         }
         return responseJson;
@@ -83,12 +83,12 @@ public class UserServiceImpl implements UserService {
         if (user == null) {
             responseJson.error("用户未登录！");
         } else {
-            List<Long> friendList = relationDao.listUserIdByUserId(user.getUserId());
+            List<Long> friendList = relationDao.listUserIdByUserId(user.getId());
             user.setFriendList(new ArrayList<>(friendList.size()));
             for (Long userId : friendList) {
                 user.getFriendList().add(userDao.getUserById(userId));
             }
-            List<Long> groupList = relationDao.listGroupIdByUserId(user.getUserId());
+            List<Long> groupList = relationDao.listGroupIdByUserId(user.getId());
             user.setGroupList(new ArrayList<>(groupList.size()));
             for (Long groupId : groupList) {
                 user.getGroupList().add(groupDao.getGroupById(groupId));
