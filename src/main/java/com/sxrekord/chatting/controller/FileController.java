@@ -17,7 +17,6 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
  * @author Rekord
  */
 @Controller
-@RequestMapping("/chatroom")
 public class FileController {
 
     @Autowired
@@ -26,7 +25,7 @@ public class FileController {
     @RequestMapping(value = "/upload", method = POST)
     @ResponseBody 
     public ResponseJson upload(
-            @RequestParam(value = "file", required = true) MultipartFile file, HttpServletRequest request) {
-        return fileService.upload(file, request);
+            @RequestParam(value = "file", required = true) MultipartFile file) {
+        return fileService.upload(file);
     }
 }

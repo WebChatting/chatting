@@ -60,10 +60,10 @@ mybatis:
 
 file:
   upload:
-    location: F:/repo/chatting/UploadFile/
+    location: D:/dev/repo/chatting/UploadFile/
   user:
     avatar:
-      location: F:/repo/chatting/avatar/
+      location: D:/dev/repo/chatting/avatar/
       default: default_user_avatar.jpg
 
 
@@ -72,5 +72,5 @@ netty:
     port: 3333
 
 config:
-  exclude-uri: [ /login, /admin/** ]
+  exclude-uri: [ /register, /upload, /login, /admin/** ]
   include-uri: [ /chatroom/** ]
