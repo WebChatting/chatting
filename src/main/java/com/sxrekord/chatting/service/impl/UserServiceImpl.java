@@ -55,8 +55,7 @@ public class UserServiceImpl implements UserService {
         } else {
             responseJson.setData("username", user.getUsername())
                     .setData("password", user.getPassword())
-                    .setData("avatarPath", user.getAvatarPath());
-            responseJson.success();
+                    .setData("avatarPath", user.getAvatarPath()).success();
             if (session != null) {
                 session.setAttribute(Constant.USER_TOKEN, user.getId());
             }
