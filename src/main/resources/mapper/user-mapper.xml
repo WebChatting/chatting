@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sxrekord.chatting.dao.UserDao">
+
+    <sql id="insertFields">
+        username, password, avatar_path
+    </sql>
+
+    <sql id="selectFields">
+        user_id, username, password, avatar_path
+    </sql>
+
+    <resultMap id="UserDao" type="User">
+        <id column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="username" jdbcType="VARCHAR" property="username"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+        <result column="avatar_path" jdbcType="VARCHAR" property="avatarPath"/>
+    </resultMap>
+
+    <select id="getUserById" parameterType="java.lang.Long" resultMap="UserDao">
+        select
+        <include refid="selectFields"/>
+        from user
+        where user_id = #{userId}
+    </select>
+
+<!--    keyProperty 用于指定主键在 POJO 中对应的属性名，需要配合数据库的自增主键来使用。-->
+    <insert id="insertUser" parameterType="User" keyProperty="userId">
+        insert into user (<include refid="insertFields"/>)
+        values(#{username}, #{password}, #{avatarPath})
+    </insert>
+
+    <select id="getUserByUsernameAndPassword" resultMap="UserDao">
+        select
+        <include refid="selectFields"/>
+        from user
+<!--        where username = #{0} and password = #{1}-->
+        where username = #{username} and password = #{password}
+    </select>
+
+    <select id="getUserByUsername" parameterType="java.lang.String" resultMap="UserDao">
+        select
+        <include refid="selectFields"/>
+        from user
+        where username = #{username}
+    </select>
+
+    <update id="updateUser" parameterType="User" keyProperty="userId">
+        update user
+        set username = #{username}, password = #{password}, avatar_path = #{avatarPath}
+        where user_id = #{userId};
+    </update>
+
+</mapper>

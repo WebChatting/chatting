@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sxrekord.chatting.dao.RelationDao">
+
+    <select id="listUserIdByUserId" resultType="java.lang.Long">
+        select request_id from relation
+        where type = 0 and accept_id = #{id}
+        union
+        select accept_id from relation
+        where type = 0 and request_id = #{id};
+    </select>
+
+    <select id="listGroupIdByUserId" resultType="java.lang.Long">
+        select accept_id from relation
+        where type = 1 and request_id = #{id};
+    </select>
+
+    <select id="listUserIdByGroupId" resultType="java.lang.Long">
+        select request_id from relation
+        where type = 1 and accept_id = #{id};
+    </select>
+</mapper>
