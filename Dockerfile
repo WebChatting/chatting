@@ -1,13 +1,31 @@
-FROM eclipse-temurin:11-jre as builder
-WORKDIR application
-ARG JAR_FILE=target/*.jar
-COPY ${JAR_FILE} application.jar
-RUN java -Djarmode=layertools -jar application.jar extract
+FROM maven:latest AS builder
 
-FROM eclipse-temurin:11-jre
-WORKDIR application
-COPY --from=builder application/dependencies/ ./
-COPY --from=builder application/spring-boot-loader/ ./
-COPY --from=builder application/snapshot-dependencies/ ./
-COPY --from=builder application/application/ ./
-ENTRYPOINT ["java", "org.springframework.boot.loader.JarLauncher"]
+WORKDIR /workdir
+
+COPY pom.xml .
+COPY src src
+
+# skip tests because tests require MySQL runtime
+RUN mvn package -DskipTests
+
+FROM mysql:debian
+
+WORKDIR /workdir
+
+# prepare JRE
+RUN apt-get update
+RUN apt-get install -y --no-install-recommends --no-install-suggests openjdk-17-jre-headless
+RUN rm -rf /var/lib/apt/lists/*
+
+COPY --from=builder /workdir/target/*.jar app.jar
+COPY docker/entrypoint.sh .
+
+# prepare MySQL runtime
+ENV MYSQL_ROOT_PASSWORD=root
+ENV MYSQL_DATABASE=chatting
+ENV MYSQL_USER=webchatting
+ENV MYSQL_PASSWORD=webchatting
+
+EXPOSE 3333 8088
+
+CMD ./entrypoint.sh
