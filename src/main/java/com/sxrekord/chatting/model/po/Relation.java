@@ -12,6 +12,7 @@ public class Relation {
     private Long requestId;
     private Long acceptId;
     private Integer type;
+    private Integer status;
 
     public Relation() {}
 }

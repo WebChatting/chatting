@@ -12,7 +12,7 @@ import java.util.Date;
  */
 @Data
 public class Message {
-    private Long messageId;
+    private Long id;
     private Long fromId;
     private Long toId;
     private Integer type;
@@ -21,7 +21,7 @@ public class Message {
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private Date sendTime;
+    private Date createTime;
 
     public Message() {}
 

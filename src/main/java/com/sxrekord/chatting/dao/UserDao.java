@@ -19,10 +19,10 @@ public interface UserDao {
 
     /**
      * 根据用户ID查询用户
-     * @param userId
+     * @param id
      * @return
      */
-    User getUserById(@Param("userId") long userId);
+    User getUserById(@Param("id") long id);
 
     /**
      * 根据用户名和密码查询用户

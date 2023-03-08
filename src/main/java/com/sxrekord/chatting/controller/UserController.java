@@ -18,22 +18,19 @@ public class UserController {
     @Autowired
     UserService userService;
 
-    @RequestMapping(value = {"login", "/"}, method = RequestMethod.GET)
-    public String toLogin() {
-        return "login";
-    }
-
-    @RequestMapping(value = "register", method = RequestMethod.GET)
-    public String toRegister() {
-        return "register";
-    }
-
     @RequestMapping(value = "login", method = RequestMethod.POST)
     @ResponseBody
     public ResponseJson login(HttpSession session,
                               @RequestParam String username,
                               @RequestParam String password) {
         return userService.loginUser(username, password, session);
+    }
+
+    @RequestMapping(value = "register", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseJson register(@RequestParam String username,
+                                 @RequestParam String password) {
+        return userService.registerUser(username, password);
     }
 
     @RequestMapping(value = "logout", method = RequestMethod.POST)
