@@ -33,12 +33,4 @@ public class ChattingController {
         return userService.getUser((Long)userId);
     }
 
-    /**
-     * 登录成功后，调用此接口进行页面跳转
-     * @return
-     */
-    @GetMapping
-    public String toChatroom() {
-        return "chatroom";
-    }
 }

@@ -38,4 +38,10 @@ public class UserController {
     public ResponseJson logout(HttpSession session) {
         return userService.logoutUser(session);
     }
+
+    @RequestMapping(value = "update", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseJson update(String username, String password, String avatarPath, HttpSession session) {
+        return userService.updateUser(username, password, avatarPath, session);
+    }
 }

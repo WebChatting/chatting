@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -26,7 +25,7 @@ public class FileServiceImpl implements FileService {
     private String FILE_STORE_PATH;
     
     @Override
-    public ResponseJson upload(MultipartFile file, HttpServletRequest request) {
+    public ResponseJson upload(MultipartFile file) {
         // 重命名文件，防止重名
         String filename = getRandomUUID();
         String originalFilename = file.getOriginalFilename();

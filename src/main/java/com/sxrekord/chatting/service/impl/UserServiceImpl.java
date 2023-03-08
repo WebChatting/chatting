@@ -53,7 +53,9 @@ public class UserServiceImpl implements UserService {
         if (user == null) {
             responseJson.error("用户名或密码错误！");
         } else {
-            responseJson.success();
+            responseJson.setData("username", user.getUsername())
+                    .setData("password", user.getPassword())
+                    .setData("avatarPath", user.getAvatarPath()).success();
             if (session != null) {
                 session.setAttribute(Constant.USER_TOKEN, user.getId());
             }

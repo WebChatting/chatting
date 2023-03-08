@@ -28,14 +28,24 @@ datasource:
 ### 2. Build and Run
 
 ```shell
+# run application
+mvn spring-boot:run
+
+## pack
 mvn package
 # peek inside
 # jar tvf target/chatting-springboot-xxx.jar
-# run
-# java -jar target/chatting-springboot-xxx.jar
+# run the jar package
+java -jar target/chatting-springboot-xxx.jar
+
+# run with docker
 docker build -t sxrekord/chatting .
 docker run -d -p 8088:8088 -p 3333:3333 sxrekord/chatting
 ```
+
+## Optimize
+### Database
+see [query.sql](src/main/resources/sql/query.sql).
 
 ## ToDo
 

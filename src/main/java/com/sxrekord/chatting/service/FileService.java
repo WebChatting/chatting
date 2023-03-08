@@ -16,5 +16,5 @@ public interface FileService {
      * @param request
      * @return
      */
-    ResponseJson upload(MultipartFile file, HttpServletRequest request);
+    ResponseJson upload(MultipartFile file);
 }
