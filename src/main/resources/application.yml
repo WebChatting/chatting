@@ -14,8 +14,8 @@ spring:
       max-request-size: 500MB
   datasource:
     url: jdbc:mysql://localhost:3306/chatting?serverTimezone=UTC&useUnicode=true&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true
-    username: root
-    password: root
+    username: webchatting
+    password: webchatting
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
     druid:
