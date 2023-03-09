@@ -1,5 +1,7 @@
 FROM maven:latest AS deps
 
+VOLUME /root/.m2
+
 WORKDIR /workdir
 
 COPY pom.xml .
