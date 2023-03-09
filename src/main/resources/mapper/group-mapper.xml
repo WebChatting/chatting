@@ -29,4 +29,10 @@
         where name like #{name};
     </select>
 
+    <select id="listGroupByOwnerId" parameterType="java.lang.Long" resultMap="GroupDao">
+        select
+        <include refid="selectFields"/>
+        from `group`
+        where owner_id = #{ownerId};
+    </select>
 </mapper>

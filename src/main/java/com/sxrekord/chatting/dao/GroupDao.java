@@ -20,4 +20,6 @@ public interface GroupDao {
     Group getGroupById(@Param("groupId") Long id);
 
     List<Group> searchGroupByName(@Param("name") String name);
+
+    List<Group> listGroupByOwnerId(@Param("ownerId") Long ownerId);
 }
