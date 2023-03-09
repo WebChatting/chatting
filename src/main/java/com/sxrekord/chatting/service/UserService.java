@@ -51,4 +51,11 @@ public interface UserService {
      * @return
      */
     ResponseJson updateUser(String username, String password, String avatarPath, HttpSession session);
+
+    /**
+     * 查询用户
+     * @param username
+     * @return
+     */
+    ResponseJson searchUser(String username);
 }

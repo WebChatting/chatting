@@ -4,6 +4,8 @@ import com.sxrekord.chatting.model.po.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 /**
  * @author Rekord
  * @date 2022/9/12 12:17
@@ -45,4 +47,11 @@ public interface UserDao {
      * @return
      */
     int updateUser(User user);
+
+    /**
+     * 根据用户名查找用户
+     * @param username
+     * @return
+     */
+    List<User> searchUserByUsername(@Param("username") String username);
 }
