@@ -45,4 +45,10 @@ public class UserController {
     public ResponseJson update(String username, String password, String avatarPath, HttpSession session) {
         return userService.updateUser(username, password, avatarPath, session);
     }
+
+    @RequestMapping(value = "search", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseJson search(@RequestParam String username) {
+        return userService.searchUser(username);
+    }
 }

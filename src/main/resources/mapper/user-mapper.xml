@@ -48,10 +48,17 @@
         where username = #{username}
     </select>
 
-    <update id="updateUser" parameterType="User" keyProperty="userId">
+    <update id="updateUser" parameterType="User" keyProperty="id">
         update user
         set username = #{username}, password = #{password}, avatar_path = #{avatarPath}
         where id = #{id};
     </update>
+
+    <select id="searchUserByUsername" resultMap="UserDao">
+        select
+        <include refid="selectFields"/>
+        from user
+        where username like #{username};
+    </select>
 
 </mapper>

@@ -118,4 +118,13 @@ public class UserServiceImpl implements UserService {
         return responseJson;
     }
 
+    @Override
+    public ResponseJson searchUser(String username) {
+        ResponseJson responseJson = new ResponseJson();
+        // 调用dao层
+        List<User> users = userDao.searchUserByUsername("%" + username + "%");
+        responseJson.setData("users", users).success();
+        return responseJson;
+    }
+
 }
