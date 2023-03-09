@@ -67,6 +67,17 @@ where type = 1 and accept_id = 501;
 
 
 /*
+关系更新操作
+*/
+
+update relation
+set status = 1
+where type = 0 and ((request_id = 501 and accept_id = 502) or
+(request_id = 502 and accept_id = 501));
+
+
+
+/*
 更多模块（工具栏）
 */
 
