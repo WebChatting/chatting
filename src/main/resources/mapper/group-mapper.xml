@@ -22,4 +22,11 @@
         where id = #{id}
     </select>
 
+    <select id="searchGroupByName" parameterType="java.lang.String" resultMap="GroupDao">
+        select
+        <include refid="selectFields"/>
+        from `group`
+        where name like #{name};
+    </select>
+
 </mapper>
