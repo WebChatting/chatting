@@ -14,7 +14,7 @@ GRANT ALL PRIVILEGES ON chatting.* TO 'webchatting'@'localhost';
 quit
 ```
 
-### 1. 根据主机环境修改[配置文件](src/main/resources/application.yml)
+### 2. 根据主机环境修改[配置文件](src/main/resources/application.yml)
 
 主要是数据库 URL 和账号密码：
 
@@ -25,7 +25,7 @@ datasource:
   password: webchatting
 ```
 
-### 2. Build and Run
+### 3. Build and Run
 
 ```shell
 # run application
