@@ -18,4 +18,9 @@ public class Group {
 
     public Group() {}
 
+    public Group(String name, Long ownerId, String avatarPath) {
+        this.name = name;
+        this.ownerId = ownerId;
+        this.avatarPath = avatarPath;
+    }
 }

@@ -32,4 +32,12 @@ public class GroupController {
     public ResponseJson list(HttpSession session) {
         return this.groupService.listGroup(session);
     }
+
+    @RequestMapping(value = "add", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseJson add(@RequestParam String name,
+                            @RequestParam String avatarPath,
+                            HttpSession session) {
+        return this.groupService.createGroup(name, avatarPath, session);
+    }
 }
