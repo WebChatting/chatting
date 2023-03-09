@@ -45,4 +45,19 @@ public class GroupServiceImpl implements GroupService {
         responseJson.setData("groups", groups).success();
         return responseJson;
     }
+
+    @Override
+    public ResponseJson createGroup(String name, String avatarPath, HttpSession session) {
+        ResponseJson responseJson = new ResponseJson();
+        if (session == null) {
+            return responseJson.error("请传入session！");
+        }
+        Object ownerId = session.getAttribute(Constant.USER_TOKEN);
+        if (ownerId == null) {
+            return responseJson.error("请先登录！");
+        }
+        groupDao.insertGroup(new Group(name, (long)ownerId, avatarPath));
+        responseJson.success();
+        return responseJson;
+    }
 }

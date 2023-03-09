@@ -22,4 +22,6 @@ public interface GroupDao {
     List<Group> searchGroupByName(@Param("name") String name);
 
     List<Group> listGroupByOwnerId(@Param("ownerId") Long ownerId);
+
+    int insertGroup(Group group);
 }

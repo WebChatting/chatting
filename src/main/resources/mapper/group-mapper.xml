@@ -8,6 +8,10 @@
         id, name, owner_id, avatar_path
     </sql>
 
+    <sql id="insertFields">
+        name, owner_id, avatar_path
+    </sql>
+
     <resultMap id="GroupDao" type="Group">
         <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="name" jdbcType="VARCHAR" property="name"/>
@@ -35,4 +39,8 @@
         from `group`
         where owner_id = #{ownerId};
     </select>
+    <insert id="insertGroup" parameterType="Group" keyProperty="id">
+        insert into `group` (<include refid="insertFields"/>)
+        values (#{name}, #{ownerId}, #{avatarPath});
+    </insert>
 </mapper>

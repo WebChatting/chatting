@@ -18,8 +18,10 @@ public interface GroupService {
 
     /**
      * 列出群组
-     * @param ownerId
+     * @param session
      * @return
      */
     ResponseJson listGroup(HttpSession session);
+
+    ResponseJson createGroup(String name, String avatarPath, HttpSession session);
 }
