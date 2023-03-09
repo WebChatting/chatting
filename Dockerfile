@@ -1,8 +1,14 @@
-FROM maven:latest AS builder
+FROM maven:latest AS deps
 
 WORKDIR /workdir
 
 COPY pom.xml .
+
+# download dependencies in seperate stage for caching
+RUN mvn dependency:resolve
+
+FROM deps AS builder
+
 COPY src src
 
 # skip tests because tests require MySQL runtime
