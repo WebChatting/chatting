@@ -24,4 +24,12 @@ public interface RelationService {
      * @return
      */
     ResponseJson updateRelation(Relation relation, HttpSession httpSession);
+
+    /**
+     * 根据type和status列出所有关系
+     * @param type
+     * @param status
+     * @return
+     */
+    ResponseJson listRelation(int type, int status, HttpSession session);
 }

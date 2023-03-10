@@ -30,4 +30,10 @@ public class RelationController {
     public ResponseJson update(@RequestBody Relation relation, HttpSession session) {
         return relationService.updateRelation(relation, session);
     }
+
+    @GetMapping(value = "list")
+    @ResponseBody
+    public ResponseJson list(@RequestParam int type, int status, HttpSession session) {
+        return relationService.listRelation(type, status, session);
+    }
 }

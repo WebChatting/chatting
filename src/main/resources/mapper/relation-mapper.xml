@@ -45,4 +45,14 @@
         </if>
         );
     </update>
+
+    <select id="listRelation" resultType="java.lang.Long">
+        select request_id from relation
+        where type = #{type} and status = #{status} and accept_id = #{acceptId}
+        <if test="type == 0 and status == 1">
+            union
+            select accept_id from relation
+            where type = #{type} and status = #{status} and request_id = #{acceptId};
+        </if>
+    </select>
 </mapper>

@@ -15,4 +15,10 @@ public class Relation {
     private Integer status;
 
     public Relation() {}
+
+    public Relation(Long acceptId, Integer type, Integer status) {
+        this.acceptId = acceptId;
+        this.type = type;
+        this.status = status;
+    }
 }
