@@ -24,4 +24,10 @@ public class RelationController {
     public ResponseJson add(@RequestBody Relation relation, HttpSession session) {
         return relationService.createRelation(relation, session);
     }
+
+    @PostMapping(value = "update", produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResponseJson update(@RequestBody Relation relation, HttpSession session) {
+        return relationService.updateRelation(relation, session);
+    }
 }
