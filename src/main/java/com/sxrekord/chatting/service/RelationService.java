@@ -17,4 +17,11 @@ public interface RelationService {
      * @return
      */
     ResponseJson createRelation(Relation relation, HttpSession httpSession);
+
+    /**
+     * 更新一条关系
+     * @param relation
+     * @return
+     */
+    ResponseJson updateRelation(Relation relation, HttpSession httpSession);
 }

@@ -39,4 +39,11 @@ public interface RelationDao {
      * @return
      */
     int insertRelation(Relation relation);
+
+    /**
+     * 更新关系状态
+     * @param relation
+     * @return
+     */
+    int updateRelation(Relation relation);
 }
