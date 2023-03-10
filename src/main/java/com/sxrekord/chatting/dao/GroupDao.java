@@ -17,7 +17,7 @@ public interface GroupDao {
      * @param id
      * @return
      */
-    Group getGroupById(@Param("groupId") Long id);
+    Group getGroupById(@Param("id") Long id);
 
     List<Group> searchGroupByName(@Param("name") String name);
 
