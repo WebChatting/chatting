@@ -46,4 +46,11 @@ public interface RelationDao {
      * @return
      */
     int updateRelation(Relation relation);
+
+    /**
+     * 列出关系
+     * @param relation
+     * @return
+     */
+    List<Long> listRelation(Relation relation);
 }

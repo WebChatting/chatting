@@ -2,7 +2,10 @@ package com.sxrekord.chatting.service.impl;
 
 import com.sxrekord.chatting.dao.GroupDao;
 import com.sxrekord.chatting.dao.RelationDao;
+import com.sxrekord.chatting.dao.UserDao;
+import com.sxrekord.chatting.model.po.Group;
 import com.sxrekord.chatting.model.po.Relation;
+import com.sxrekord.chatting.model.po.User;
 import com.sxrekord.chatting.model.vo.ResponseJson;
 import com.sxrekord.chatting.service.RelationService;
 import com.sxrekord.chatting.util.Constant;
@@ -10,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Rekord
@@ -22,6 +27,9 @@ public class RelationServiceImpl implements RelationService {
 
     @Autowired
     GroupDao groupDao;
+
+    @Autowired
+    UserDao userDao;
 
     @Override
     public ResponseJson createRelation(Relation relation, HttpSession session) {
@@ -48,6 +56,27 @@ public class RelationServiceImpl implements RelationService {
             relation.setAcceptId(this.groupDao.getGroupById(relation.getAcceptId()).getOwnerId());
         }
         relationDao.updateRelation(relation);
+        return responseJson.success();
+    }
+
+    @Override
+    public ResponseJson listRelation(int type, int status, HttpSession session) {
+        ResponseJson responseJson = new ResponseJson();
+        Object acceptId = session.getAttribute(Constant.USER_TOKEN);
+        List<Long> ids = relationDao.listRelation(new Relation((long)acceptId, type, status));
+        if (type == 0) {
+            List<User> friends = new ArrayList<>();
+            for (Long id : ids) {
+                friends.add(this.userDao.getUserById(id));
+            }
+            responseJson.setData("friends", friends);
+        } else {
+            List<Group> groups = new ArrayList<>();
+            for (Long id : ids) {
+                groups.add(this.groupDao.getGroupById(id));
+            }
+            responseJson.setData("groups", groups);
+        }
         return responseJson.success();
     }
 
