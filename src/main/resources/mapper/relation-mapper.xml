@@ -5,6 +5,14 @@
 
 <mapper namespace="com.sxrekord.chatting.dao.RelationDao">
 
+    <resultMap id="RelationDao" type="Relation">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="request_id" jdbcType="INTEGER" property="requestId"/>
+        <result column="accept_id" jdbcType="INTEGER" property="acceptId"/>
+        <result column="type" jdbcType="INTEGER" property="type"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+    </resultMap>
+
     <select id="listUserIdByUserId" resultType="java.lang.Long">
         select request_id from relation
         where type = 0 and accept_id = #{id}
@@ -22,4 +30,9 @@
         select request_id from relation
         where type = 1 and accept_id = #{id};
     </select>
+
+    <insert id="insertRelation">
+        insert into relation (`request_id`, `accept_id`, `type`, `status`)
+        values (#{requestId}, #{acceptId}, #{type}, #{status});
+    </insert>
 </mapper>
