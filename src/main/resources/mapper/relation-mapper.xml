@@ -31,7 +31,7 @@
         where type = 1 and accept_id = #{id};
     </select>
 
-    <insert id="insertRelation">
+    <insert id="insertRelation" parameterType="Relation" keyProperty="id">
         insert into relation (`request_id`, `accept_id`, `type`, `status`)
         values (#{requestId}, #{acceptId}, #{type}, #{status});
     </insert>
