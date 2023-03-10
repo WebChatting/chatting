@@ -37,4 +37,18 @@ public class RelationServiceImpl implements RelationService {
         return responseJson.success();
     }
 
+    @Override
+    public ResponseJson updateRelation(Relation relation, HttpSession session) {
+        ResponseJson responseJson = new ResponseJson();
+
+        Object requestId = session.getAttribute(Constant.USER_TOKEN);
+        relation.setRequestId((long)requestId);
+        // 根据群ID查询群主ID
+        if (relation.getType() == 1) {
+            relation.setAcceptId(this.groupDao.getGroupById(relation.getAcceptId()).getOwnerId());
+        }
+        relationDao.updateRelation(relation);
+        return responseJson.success();
+    }
+
 }

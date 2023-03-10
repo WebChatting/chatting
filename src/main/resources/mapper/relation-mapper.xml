@@ -35,4 +35,14 @@
         insert into relation (`request_id`, `accept_id`, `type`, `status`)
         values (#{requestId}, #{acceptId}, #{type}, #{status});
     </insert>
+
+    <update id="updateRelation" parameterType="Relation" keyProperty="id">
+        update relation
+        set status = #{status}
+        where type = #{type} and ((request_id = #{requestId} and accept_id = #{acceptId})
+        <if test="type == 0">
+            or (request_id = #{acceptId} and accept_id = #{requestId})
+        </if>
+        );
+    </update>
 </mapper>
