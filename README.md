@@ -14,7 +14,7 @@ GRANT ALL PRIVILEGES ON chatting.* TO 'webchatting'@'localhost';
 quit
 ```
 
-### 1. 根据主机环境修改[配置文件](src/main/resources/application.yml)
+### 2. 根据主机环境修改[配置文件](src/main/resources/application.yml)
 
 主要是数据库 URL 和账号密码：
 
@@ -25,23 +25,28 @@ datasource:
   password: webchatting
 ```
 
-### 2. Build and Run
+### 3. Build and Run
 
-```shell
-# run application
-mvn spring-boot:run
+1. On Local Host:
 
-## pack
-mvn package
-# peek inside
-# jar tvf target/chatting-springboot-xxx.jar
-# run the jar package
-java -jar target/chatting-springboot-xxx.jar
+	```shell
+	# build
+	mvn package
 
-# run with docker
-docker build -t sxrekord/chatting .
-docker run -d -p 8088:8088 -p 3333:3333 sxrekord/chatting
-```
+	# run application
+	mvn spring-boot:run
+	```
+
+2. Use Docker:
+
+	```shell
+	# manually
+	docker build -t webchatting/chatting .
+	docker run -d -p 8088:8088 -p 3333:3333 webchatting/chatting
+
+	# or use make
+	make run
+	```
 
 ## Optimize
 ### Database
