@@ -1,5 +1,6 @@
 package com.sxrekord.chatting.dao;
 
+import com.sxrekord.chatting.model.po.Relation;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -31,4 +32,11 @@ public interface RelationDao {
      * @return
      */
     List<Long> listUserIdByGroupId(@Param("id") Long id);
+
+    /**
+     * 插入一条关系
+     * @param relation
+     * @return
+     */
+    int insertRelation(Relation relation);
 }
