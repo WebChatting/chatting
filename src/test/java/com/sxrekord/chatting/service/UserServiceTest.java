@@ -44,4 +44,12 @@ public class UserServiceTest {
         httpSession.setAttribute("userId", 506L);
         System.out.println(userService.updateUser("test_test", "test_test", "avatar/default_user_avatar.jpg", httpSession));
     }
+
+    @Test void search() {
+        register();
+        HttpSession httpSession = new MockHttpSession();
+        httpSession.setAttribute("userId", 506L);
+        System.out.println(userService.searchUser("test"));
+        System.out.println(userService.searchUser("3"));
+    }
 }
