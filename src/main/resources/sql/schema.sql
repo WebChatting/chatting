@@ -86,4 +86,16 @@ create table if not exists `image_content` (
     primary key `pk_id` (`id`)
 ) engine=InnoDB auto_increment=1001 default charset=utf8mb4;
 
+create table if not exists `remark` (
+	`id` bigint unsigned not null auto_increment comment '备注ID',
+	`from_id` bigint unsigned not null comment '备注方用户ID',
+    `to_id` bigint unsigned not null comment '被备注方用户ID',
+    `type` tinyint unsigned not null comment '备注类型，好友(0)/群友(1) 备注',
+    `remark` varchar(16) not null comment '备注内容',
+    `create_time` timestamp default current_timestamp comment '创建时间',
+    `update_time` timestamp default current_timestamp on update current_timestamp comment '更新时间',
+    primary key `pk_id` (`id`),
+    constraint `fk_from_id` foreign key (`from_id`) references `user` (`id`) on delete cascade
+) engine=InnoDB auto_increment=501 default charset=utf8mb4 comment="备注表";
+
 set foreign_key_checks = 1;
