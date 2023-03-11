@@ -78,6 +78,18 @@ where type = 0 and ((request_id = 501 and accept_id = 502) or
 
 
 /*
+消息模块
+*/
+
+select `from_id`, `type`, `content_type`, `update_time` from `message`
+where type = 0 and `update_time` <= DATE_ADD('2023-03-18 20:01:19', INTERVAL 10 DAY) and (from_id = 501 and to_id = 503 or from_id = 503 and to_id = 501)
+order by update_time
+limit 0, 2;
+
+select * from text_content
+where id = 1001;
+
+/*
 更多模块（工具栏）
 */
 
