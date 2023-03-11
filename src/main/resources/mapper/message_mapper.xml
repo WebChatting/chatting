@@ -42,7 +42,7 @@
     </insert>
 
     <select id="listMessage" resultMap="MessageDao">
-        select `from_id`, `type`, `content_type`, `update_time` from `message`
+        select `from_id`, `content_id`, `content_type` from `message`
         where type = #{type} and `update_time` &lt; #{updateTime} and
         (from_id = #{fromId} and to_id = #{toId}
         <if test="type == 0">
