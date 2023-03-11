@@ -19,9 +19,24 @@ public interface GroupDao {
      */
     Group getGroupById(@Param("id") Long id);
 
+    /**
+     * 根据名字查找群组
+     * @param name
+     * @return
+     */
     List<Group> searchGroupByName(@Param("name") String name);
 
+    /**
+     * 根据ownerId列出群组
+     * @param ownerId
+     * @return
+     */
     List<Group> listGroupByOwnerId(@Param("ownerId") Long ownerId);
 
+    /**
+     * 插入群组
+     * @param group
+     * @return
+     */
     int insertGroup(Group group);
 }
