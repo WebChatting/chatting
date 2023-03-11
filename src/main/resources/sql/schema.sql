@@ -56,8 +56,7 @@ create table if not exists `relation` (
     `create_time` timestamp default current_timestamp comment '创建时间',
     `update_time` timestamp default current_timestamp on update current_timestamp comment '更新时间',
     primary key `pk_id` (`id`),
-    constraint `fk_request_id` foreign key (`request_id`) references `user` (`id`) on delete cascade,
-    constraint `fk_accept_id` foreign key (`accept_id`) references `user` (`id`) on delete cascade
+    constraint `fk_request_id` foreign key (`request_id`) references `user` (`id`) on delete cascade
 ) ENGINE=InnoDB default charset=utf8mb4;
 
 create table if not exists `text_content` (
