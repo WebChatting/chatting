@@ -5,7 +5,7 @@
 
 <mapper namespace="com.sxrekord.chatting.dao.MessageDao">
     <sql id="selectFields">
-        `from_id`, `content_type`, `content_id`, `update_time`
+        `from_id`, `type`, `content_type`, `content_id`, `update_time`
     </sql>
 
     <sql id="insertFields">
@@ -42,7 +42,7 @@
     </insert>
 
     <select id="listMessage" resultMap="MessageDao">
-        select `from_id`, `content_id`, `content_type` from `message`
+        select <include refid="selectFields"/> from `message`
         where type = #{type} and `update_time` &lt; #{updateTime} and
         (from_id = #{fromId} and to_id = #{toId}
         <if test="type == 0">
