@@ -10,9 +10,12 @@ import com.sxrekord.chatting.model.po.TextContent;
 import com.sxrekord.chatting.model.vo.ResponseJson;
 import com.sxrekord.chatting.service.MessageService;
 import com.sxrekord.chatting.util.ChatType;
+import com.sxrekord.chatting.util.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpSession;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -89,6 +92,15 @@ public class MessageServiceImpl implements MessageService {
             }
             responseJson.addToMessage();
         }
+        return responseJson.success();
+    }
+
+    @Override
+    public ResponseJson loadMessage(Integer type, Date updateTime, Long toId, Integer count, HttpSession session) {
+        ResponseJson responseJson = new ResponseJson();
+
+        responseJson.setData("messages",
+                this.messageDao.listMessage(type, updateTime, (long)session.getAttribute(Constant.USER_TOKEN), toId, count));
         return responseJson.success();
     }
 }
