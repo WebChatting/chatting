@@ -5,7 +5,7 @@
 
 <mapper namespace="com.sxrekord.chatting.dao.MessageDao">
     <sql id="selectFields">
-        from_id, content_type, content_id
+        `from_id`, `content_type`, `content_id`, `update_time`
     </sql>
 
     <sql id="insertFields">
@@ -20,6 +20,7 @@
         <result column="content_type" jdbcType="INTEGER" property="contentType"/>
         <result column="content_id" jdbcType="BIGINT" property="contentId"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
     </resultMap>
 
     <select id="getMessageByFromIdAndToId" resultMap="MessageDao">
@@ -39,5 +40,17 @@
         insert into message (<include refid="insertFields"/>)
         values(#{fromId}, #{toId}, #{type}, #{contentType}, #{contentId})
     </insert>
+
+    <select id="listMessage" resultMap="MessageDao">
+        select `from_id`, `type`, `content_type`, `update_time` from `message`
+        where type = #{type} and `update_time` &lt; #{updateTime} and
+        (from_id = #{fromId} and to_id = #{toId}
+        <if test="type == 0">
+            or from_id = #{toId} and to_id = #{fromId}
+        </if>
+        )
+        order by update_time
+        limit 0, #{count};
+    </select>
 
 </mapper>

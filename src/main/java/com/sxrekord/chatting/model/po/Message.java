@@ -23,6 +23,9 @@ public class Message {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createTime;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private Date updateTime;
+
     public Message() {}
 
     public Message(Long fromId, Long toId, Integer type, Integer contentType, Long contentId) {

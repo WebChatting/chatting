@@ -4,6 +4,7 @@ import com.sxrekord.chatting.model.po.Message;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -33,4 +34,16 @@ public interface MessageDao {
      * @return
      */
     int insertMessage(Message message);
+
+    /**
+     * 列出消息
+     * @param type
+     * @param updateTime
+     * @param fromId
+     * @param toId
+     * @param count
+     * @return
+     */
+    List<Message> listMessage(@Param("type") Integer type, @Param("updateTime") Date updateTime,
+                              @Param("fromId") Long fromId, @Param("toId") Long toId, @Param("count") Integer count);
 }
