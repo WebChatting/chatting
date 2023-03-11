@@ -38,28 +38,7 @@ public class MessageServiceImpl implements MessageService {
         ResponseJson responseJson = new ResponseJson();
         List<Message> messages = messageDao.getMessageByFromIdAndToId(fromId, toId);
 
-        for (Message message : messages) {
-            // 文本消息
-            if (message.getContentType() == 0L) {
-                TextContent textContent = textContentDao.getTextContentById(message.getContentId());
-                responseJson.setData("fromUserId", message.getFromId())
-                    .setData("content", textContent.getContent())
-                    .setData("type", ChatType.SINGLE_SENDING)
-                    .setData("fromAvatarUrl", userDao.getUserById(message.getFromId()).getAvatarPath())
-                    .toString();
-            } else {
-                // 文件消息
-                FileContent fileContent = fileContentDao.getFileContentById(message.getContentId());
-                responseJson.setData("fromUserId", message.getFromId())
-                    .setData("originalFilename", fileContent.getName())
-                    .setData("fileSize", fileContent.getSize())
-                    .setData("fileUrl", fileContent.getPath())
-                    .setData("type", ChatType.FILE_MSG_SINGLE_SENDING)
-                    .setData("fromAvatarUrl", userDao.getUserById(message.getFromId()).getAvatarPath())
-                    .toString();
-            }
-            responseJson.addToMessage();
-        }
+        loadConcreteMessage(responseJson, messages);
         return responseJson.success();
     }
 
@@ -68,39 +47,37 @@ public class MessageServiceImpl implements MessageService {
         ResponseJson responseJson = new ResponseJson();
         List<Message> messages = messageDao.getMessageByToId(groupId);
 
+        loadConcreteMessage(responseJson, messages);
+        return responseJson.success();
+    }
+
+    private void loadConcreteMessage(ResponseJson responseJson, List<Message> messages) {
         for (Message message : messages) {
-            // 文本消息
-            if (message.getContentType() == 0L) {
-                TextContent textContent = textContentDao.getTextContentById(message.getContentId());
-                responseJson.setData("fromUserId", message.getFromId())
-                        .setData("content", textContent.getContent())
-                        .setData("toGroupId", groupId)
-                        .setData("type", ChatType.SINGLE_SENDING)
-                        .setData("fromAvatarUrl", userDao.getUserById(message.getFromId()).getAvatarPath())
-                        .toString();
-            } else {
-                // 文件消息
-                FileContent fileContent = fileContentDao.getFileContentById(message.getContentId());
-                responseJson.setData("fromUserId", message.getFromId())
-                        .setData("originalFilename", fileContent.getName())
-                        .setData("fileSize", fileContent.getSize())
-                        .setData("fileUrl", fileContent.getPath())
-                        .setData("toGroupId", groupId)
-                        .setData("type", ChatType.FILE_MSG_SINGLE_SENDING)
-                        .setData("fromAvatarUrl", userDao.getUserById(message.getFromId()).getAvatarPath())
-                        .toString();
-            }
+            responseJson.setData("fromId", message.getFromId())
+                    .setData("type", message.getType())
+                    .setData("content", message.getType() == 0 ?
+                            textContentDao.getTextContentById(message.getContentId()).getContent() : null)
+                    .setData("fromAvatarUrl", userDao.getUserById(message.getFromId()).getAvatarPath())
+                    .setData("originalFileName", message.getType() == 2 ?
+                            fileContentDao.getFileContentById(message.getContentId()).getName() : null)
+                    .setData("fileSize", message.getType() == 2 ?
+                            fileContentDao.getFileContentById(message.getContentId()).getSize() : null)
+                    .setData("fileUrl", message.getType() == 2 ?
+                            fileContentDao.getFileContentById(message.getContentId()).getPath() : null)
+                    .toString();
             responseJson.addToMessage();
         }
-        return responseJson.success();
     }
 
     @Override
     public ResponseJson loadMessage(Integer type, Date updateTime, Long toId, Integer count, HttpSession session) {
         ResponseJson responseJson = new ResponseJson();
 
-        responseJson.setData("messages",
-                this.messageDao.listMessage(type, updateTime, (long)session.getAttribute(Constant.USER_TOKEN), toId, count));
+        List<Message> messages = this.messageDao.listMessage(type, updateTime,
+                                                            (long)session.getAttribute(Constant.USER_TOKEN),
+                                                            toId, count);
+
+        loadConcreteMessage(responseJson, messages);
         return responseJson.success();
     }
 }
