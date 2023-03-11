@@ -42,7 +42,7 @@ create table if not exists `message` (
     `create_time` timestamp default current_timestamp comment '消息发送时间',
     `update_time` timestamp default current_timestamp on update current_timestamp comment '更新时间',
     primary key `pk_id` (`id`),
-    constraint `fk_from_id` foreign key (`from_id`) references `user` (`id`) on delete cascade
+    constraint `fk_message_from_id` foreign key (`from_id`) references `user` (`id`) on delete cascade
 ) ENGINE=InnoDB DEFAULT charset=utf8mb4;
 
 
@@ -95,7 +95,7 @@ create table if not exists `remark` (
     `create_time` timestamp default current_timestamp comment '创建时间',
     `update_time` timestamp default current_timestamp on update current_timestamp comment '更新时间',
     primary key `pk_id` (`id`),
-    constraint `fk_from_id` foreign key (`from_id`) references `user` (`id`) on delete cascade
+    constraint `fk_remark_from_id` foreign key (`from_id`) references `user` (`id`) on delete cascade
 ) engine=InnoDB auto_increment=501 default charset=utf8mb4 comment="备注表";
 
 set foreign_key_checks = 1;
