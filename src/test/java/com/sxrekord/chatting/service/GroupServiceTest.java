@@ -34,4 +34,15 @@ public class GroupServiceTest {
         System.out.println("test listGroup success");
     }
 
+    @Test
+    public void createGroup() {
+        HttpSession session = new MockHttpSession();
+        session.setAttribute("userId", 502L);
+        System.out.println(groupService.createGroup("testGroup", "test_group_avatar_path", session));
+        session.setAttribute("userId", 504L);
+        System.out.println(groupService.createGroup("testGroup2", "", session));
+
+        System.out.println("test createGroup success");
+    }
+
 }
