@@ -1,11 +1,11 @@
 package com.sxrekord.chatting.service;
 
-import com.sxrekord.chatting.model.po.Group;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.mock.web.MockHttpSession;
 
-import java.util.List;
+import javax.servlet.http.HttpSession;
 
 /**
  * @author Rekord
@@ -21,6 +21,17 @@ public class GroupServiceTest {
         System.out.println(groupService.searchGroup("group"));
 
         System.out.println("test searchGroup success");
+    }
+
+    @Test
+    public void listGroupTest() {
+        HttpSession session = new MockHttpSession();
+        session.setAttribute("userId", 501L);
+        System.out.println(groupService.listGroup(session));
+        session.setAttribute("userId", 503L);
+        System.out.println(groupService.listGroup(session));
+
+        System.out.println("test listGroup success");
     }
 
 }
