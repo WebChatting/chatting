@@ -14,18 +14,16 @@ insert into `group` (`name`, `owner_id`, `avatar_path`) values ('group001', 501,
 insert into relation (`request_id`, `accept_id`, `type`, `status`) values (502, 501, 1, 0);
 insert into relation (`request_id`, `accept_id`, `type`, `status`) values (503, 501, 1, 1);
 insert into relation (`request_id`, `accept_id`, `type`, `status`) values (504, 501, 1, 2);
-insert into relation (`request_id`, `accept_id`, `type`, `status`) values (505, 501, 1, 3);
 
 -- build user relation
 insert into relation (`request_id`, `accept_id`, `type`, `status`) values (501, 502, 0, 0);
 insert into relation (`request_id`, `accept_id`, `type`, `status`) values (501, 503, 0, 1);
 insert into relation (`request_id`, `accept_id`, `type`, `status`) values (501, 504, 0, 2);
-insert into relation (`request_id`, `accept_id`, `type`, `status`) values (501, 505, 0, 3);
 insert into relation (`request_id`, `accept_id`, `type`, `status`) values (502, 503, 0, 1);
 insert into relation (`request_id`, `accept_id`, `type`, `status`) values (502, 504, 0, 2);
-insert into relation (`request_id`, `accept_id`, `type`, `status`) values (502, 505, 0, 3);
+insert into relation (`request_id`, `accept_id`, `type`, `status`) values (502, 505, 0, 0);
 insert into relation (`request_id`, `accept_id`, `type`, `status`) values (503, 504, 0, 0);
-insert into relation (`request_id`, `accept_id`, `type`, `status`) values (503, 505, 0, 3);
+insert into relation (`request_id`, `accept_id`, `type`, `status`) values (503, 505, 0, 1);
 insert into relation (`request_id`, `accept_id`, `type`, `status`) values (504, 505, 0, 1);
 
 -- insert text message
