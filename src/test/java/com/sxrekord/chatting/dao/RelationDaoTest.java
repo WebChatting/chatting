@@ -24,4 +24,13 @@ public class RelationDaoTest {
         System.out.println("test insertRelation success");
     }
 
+    @Test
+    public void testUpdateRelation() {
+        int feedback = relationDao.updateRelation(new Relation(501L, 503L, 0, 2));
+        Assert.isTrue(feedback == 1, "test updateRelation error");
+        feedback = relationDao.updateRelation(new Relation(504L, 101L, 1, 1));
+        Assert.isTrue(feedback == 1, "test updateRelation error");
+        System.out.println("test updateRelation success");
+    }
+
 }
