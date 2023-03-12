@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.util.Assert;
 
+import java.util.List;
+
 /**
  * @author Rekord
  * @date 2023/3/11 21:45
@@ -33,4 +35,24 @@ public class RelationDaoTest {
         System.out.println("test updateRelation success");
     }
 
+    @Test
+    public void testListRelation() {
+        List<Relation> feedback = null;
+        // 根据ID列出所有好友
+        System.out.println(feedback = relationDao.listRelation(503L, 0, 1, 0));
+        System.out.println(feedback = relationDao.listRelation(503L, 0, 1, 1));
+
+        // 根据ID列出所有加入的群组
+        System.out.println(feedback = relationDao.listRelation(503L, 1, 1, 0));
+
+        // 根据ID列出所有发起的验证（包括好友和群组）
+        System.out.println(feedback = relationDao.listRelation(503L, 0, -1, 0));
+        System.out.println(feedback = relationDao.listRelation(503L, 1, -1, 0));
+
+        // 根据ID列出所有收到的验证（包括好友和群组）
+        System.out.println(feedback = relationDao.listRelation(503L, 0, -1, 1));
+        System.out.println(feedback = relationDao.listRelation(101L, 1, -1, 1));
+
+        System.out.println("test listRelation success");
+    }
 }
