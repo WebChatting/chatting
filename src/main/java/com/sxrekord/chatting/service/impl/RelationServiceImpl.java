@@ -37,10 +37,6 @@ public class RelationServiceImpl implements RelationService {
 
         Object requestId = session.getAttribute(Constant.USER_TOKEN);
         relation.setRequestId((long)requestId);
-        // 根据群ID查询群主ID
-        if (relation.getType() == 1) {
-            relation.setAcceptId(this.groupDao.getGroupById(relation.getAcceptId()).getOwnerId());
-        }
         relationDao.insertRelation(relation);
         return responseJson.success();
     }
@@ -49,34 +45,57 @@ public class RelationServiceImpl implements RelationService {
     public ResponseJson updateRelation(Relation relation, HttpSession session) {
         ResponseJson responseJson = new ResponseJson();
 
-        Object requestId = session.getAttribute(Constant.USER_TOKEN);
-        relation.setRequestId((long)requestId);
-        // 根据群ID查询群主ID
-        if (relation.getType() == 1) {
-            relation.setAcceptId(this.groupDao.getGroupById(relation.getAcceptId()).getOwnerId());
-        }
+        long requestId = (long)session.getAttribute(Constant.USER_TOKEN);
+        relation.setRequestId(requestId);
         relationDao.updateRelation(relation);
         return responseJson.success();
     }
 
     @Override
-    public ResponseJson listRelation(int type, int status, HttpSession session) {
+    public ResponseJson listRelation(int type, int status, int direction, HttpSession session) {
         ResponseJson responseJson = new ResponseJson();
-        Object acceptId = session.getAttribute(Constant.USER_TOKEN);
-        List<Long> ids = relationDao.listRelation(new Relation((long)acceptId, type, status));
-        if (type == 0) {
-            List<User> friends = new ArrayList<>();
-            for (Long id : ids) {
-                friends.add(this.userDao.getUserById(id));
+        long id = (long)session.getAttribute(Constant.USER_TOKEN);
+        List data = new ArrayList();
+
+        if (direction == -1) {
+            for (Relation relation : relationDao.listRelation(id, type, status, 0)) {
+                data.add(userDao.getUserById(relation.getAcceptId()));
             }
-            responseJson.setData("friends", friends);
+
+            for (Relation relation : relationDao.listRelation(id, type, status, 1)) {
+                data.add(userDao.getUserById(relation.getRequestId()));
+            }
+
+            responseJson.setData("friends", data);
         } else {
-            List<Group> groups = new ArrayList<>();
-            for (Long id : ids) {
-                groups.add(this.groupDao.getGroupById(id));
+            for (Relation relation : relationDao.listRelation(id, type, status, direction)) {
+                if (status == 1) {
+                    // 加入的群组
+                    data.add(groupDao.getGroupById(relation.getAcceptId()));
+                } else {
+                    // 验证
+                    if (type == 0) {
+                        if (direction == 0) {
+                            data.add(userDao.getUserById(relation.getAcceptId()));
+                        } else {
+                            data.add(userDao.getUserById(relation.getRequestId()));
+                        }
+                    } else {
+                        if (direction == 0) {
+                            data.add(groupDao.getGroupById(relation.getAcceptId()));
+                        } else {
+                            data.add(userDao.getUserById(relation.getRequestId()));
+                        }
+                    }
+                }
             }
-            responseJson.setData("groups", groups);
+            if (status == 1) {
+                responseJson.setData("groups", data);
+            } else {
+                responseJson.setData("validations", data);
+            }
         }
+
         return responseJson.success();
     }
 

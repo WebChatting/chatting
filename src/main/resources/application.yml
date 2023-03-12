@@ -65,7 +65,10 @@ file:
     avatar:
       location: D:/dev/repo/chatting/avatar/
       default: default_user_avatar.jpg
-
+  group:
+    avatar:
+      location: D:/dev/repo/chatting/avatar/
+      default: default_group_avatar.jpg
 
 netty:
   server:

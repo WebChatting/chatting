@@ -11,21 +11,19 @@ insert into user (`username`, `password`, `avatar_path`) values ('member005', '0
 -- 1. create group (the group is a keyword)
 insert into `group` (`name`, `owner_id`, `avatar_path`) values ('group001', 501, 'avatar/default_group_avatar.jpg');
 -- 2. add user to group
-insert into relation (`request_id`, `accept_id`, `type`, `status`) values (502, 501, 1, 0);
-insert into relation (`request_id`, `accept_id`, `type`, `status`) values (503, 501, 1, 1);
-insert into relation (`request_id`, `accept_id`, `type`, `status`) values (504, 501, 1, 2);
-insert into relation (`request_id`, `accept_id`, `type`, `status`) values (505, 501, 1, 3);
+insert into relation (`request_id`, `accept_id`, `type`, `status`) values (502, 101, 1, 0);
+insert into relation (`request_id`, `accept_id`, `type`, `status`) values (503, 101, 1, 1);
+insert into relation (`request_id`, `accept_id`, `type`, `status`) values (504, 101, 1, 2);
 
 -- build user relation
 insert into relation (`request_id`, `accept_id`, `type`, `status`) values (501, 502, 0, 0);
 insert into relation (`request_id`, `accept_id`, `type`, `status`) values (501, 503, 0, 1);
 insert into relation (`request_id`, `accept_id`, `type`, `status`) values (501, 504, 0, 2);
-insert into relation (`request_id`, `accept_id`, `type`, `status`) values (501, 505, 0, 3);
 insert into relation (`request_id`, `accept_id`, `type`, `status`) values (502, 503, 0, 1);
 insert into relation (`request_id`, `accept_id`, `type`, `status`) values (502, 504, 0, 2);
-insert into relation (`request_id`, `accept_id`, `type`, `status`) values (502, 505, 0, 3);
+insert into relation (`request_id`, `accept_id`, `type`, `status`) values (502, 505, 0, 0);
 insert into relation (`request_id`, `accept_id`, `type`, `status`) values (503, 504, 0, 0);
-insert into relation (`request_id`, `accept_id`, `type`, `status`) values (503, 505, 0, 3);
+insert into relation (`request_id`, `accept_id`, `type`, `status`) values (503, 505, 0, 1);
 insert into relation (`request_id`, `accept_id`, `type`, `status`) values (504, 505, 0, 1);
 
 -- insert text message

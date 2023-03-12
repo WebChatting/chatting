@@ -33,26 +33,29 @@
 
     <insert id="insertRelation" parameterType="Relation" keyProperty="id">
         insert into relation (`request_id`, `accept_id`, `type`, `status`)
-        values (#{requestId}, #{acceptId}, #{type}, #{status});
+        values (#{requestId}, #{acceptId}, #{type}, 0);
     </insert>
 
     <update id="updateRelation" parameterType="Relation" keyProperty="id">
         update relation
         set status = #{status}
-        where type = #{type} and ((request_id = #{requestId} and accept_id = #{acceptId})
-        <if test="type == 0">
-            or (request_id = #{acceptId} and accept_id = #{requestId})
-        </if>
-        );
+        where type = #{type} and request_id = #{requestId} and accept_id = #{acceptId};
     </update>
 
-    <select id="listRelation" resultType="java.lang.Long">
-        select request_id from relation
-        where type = #{type} and status = #{status} and accept_id = #{acceptId}
-        <if test="type == 0 and status == 1">
-            union
-            select accept_id from relation
-            where type = #{type} and status = #{status} and request_id = #{acceptId};
+    <select id="listRelation" resultMap="RelationDao">
+        select * from relation
+        where type = #{type} and
+        <choose>
+            <when test="direction == 0">
+                request_id = #{id}
+            </when>
+            <otherwise>
+                accept_id = #{id}
+            </otherwise>
+        </choose>
+        <if test="status != -1">
+            and status = #{status}
         </if>
+        ;
     </select>
 </mapper>

@@ -6,6 +6,7 @@ import com.sxrekord.chatting.model.vo.ResponseJson;
 import com.sxrekord.chatting.service.GroupService;
 import com.sxrekord.chatting.util.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
@@ -20,11 +21,14 @@ public class GroupServiceImpl implements GroupService {
     @Autowired
     GroupDao groupDao;
 
+    @Value("${file.group.avatar.default}")
+    private String group_avatar_default;
+
     @Override
     public ResponseJson searchGroup(String name) {
         ResponseJson responseJson = new ResponseJson();
 
-        List<Group> groups = groupDao.searchGroupByName("%" + name + "%");
+        List<Group> groups = groupDao.searchGroupByName(name);
         responseJson.setData("groups", groups).success();
         return responseJson;
     }
@@ -56,7 +60,7 @@ public class GroupServiceImpl implements GroupService {
         if (ownerId == null) {
             return responseJson.error("请先登录！");
         }
-        groupDao.insertGroup(new Group(name, (long)ownerId, avatarPath));
+        groupDao.insertGroup(new Group(name, (long)ownerId, avatarPath.trim().length() > 0 ? avatarPath : group_avatar_default));
         responseJson.success();
         return responseJson;
     }

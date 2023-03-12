@@ -30,7 +30,7 @@
         select
         <include refid="selectFields"/>
         from `group`
-        where name like #{name};
+        where name like concat('%', #{name}, '%');
     </select>
 
     <select id="listGroupByOwnerId" parameterType="java.lang.Long" resultMap="GroupDao">

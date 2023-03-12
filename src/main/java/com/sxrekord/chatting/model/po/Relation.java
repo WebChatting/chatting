@@ -16,9 +16,29 @@ public class Relation {
 
     public Relation() {}
 
+    public Relation(Long requestId, Long acceptId, Integer type, Integer status) {
+        this(requestId, acceptId, type);
+        this.status = status;
+    }
+
+    public Relation(Long requestId, Long acceptId, Integer type) {
+        this(requestId, acceptId);
+        this.type = type;
+        this.status = 0;
+    }
+
+    public Relation(Long requestId, Long acceptId) {
+        this.requestId = requestId;
+        this.acceptId = acceptId;
+    }
+
     public Relation(Long acceptId, Integer type, Integer status) {
+        this(acceptId, type);
+        this.status = status;
+    }
+
+    public Relation(Long acceptId, Integer type) {
         this.acceptId = acceptId;
         this.type = type;
-        this.status = status;
     }
 }
