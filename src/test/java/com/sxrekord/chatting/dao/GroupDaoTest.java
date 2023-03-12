@@ -25,4 +25,12 @@ public class GroupDaoTest {
         System.out.println("test searchGroupByName success");
     }
 
+    @Test
+    public void testListGroupByOwnerId() {
+        List<Group> feedback = null;
+        System.out.println(feedback = groupDao.listGroupByOwnerId(501L));
+        Assert.isTrue(feedback != null, "test listGroupByOwnerId error");
+        System.out.println("test listGroupByOwnerId success");
+    }
+
 }
