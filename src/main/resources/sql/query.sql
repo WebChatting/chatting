@@ -17,7 +17,7 @@ where owner_id = 501;
 
 -- 根据id查询所有加入的群组
 select * from `group`
-where owner_id = (
+where id = (
 	select accept_id from relation
 	where type = 1 and status = 1 and request_id = 503
 );
@@ -62,7 +62,10 @@ where type = 1 and request_id = 501;
 
 -- 查询所有我收到的群组验证信息
 select * from relation
-where type = 1 and accept_id = 501;
+where type = 1 and accept_id in
+(select id from `group`
+where owner_id = 501)
+;
 
 
 
