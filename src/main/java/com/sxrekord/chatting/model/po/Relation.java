@@ -32,6 +32,11 @@ public class Relation {
         this.acceptId = acceptId;
     }
 
+    public Relation(Long acceptId, Integer type, Integer status) {
+        this(acceptId, type);
+        this.status = status;
+    }
+
     public Relation(Long acceptId, Integer type) {
         this.acceptId = acceptId;
         this.type = type;
