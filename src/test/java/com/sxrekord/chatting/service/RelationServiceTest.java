@@ -1,5 +1,6 @@
 package com.sxrekord.chatting.service;
 
+import com.sxrekord.chatting.model.po.Relation;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -36,6 +37,17 @@ public class RelationServiceTest {
         System.out.println(relationService.listRelation(1, -1, 1, session));
 
         System.out.println("test listRelation success");
+    }
+
+    @Test
+    public void testCreateRelation() {
+        HttpSession session = new MockHttpSession();
+        session.setAttribute("userId", 501L);
+        System.out.println(relationService.createRelation(new Relation(505L, 0), session));
+        session.setAttribute("userId", 505L);
+        System.out.println(relationService.createRelation(new Relation(101L, 1), session));
+
+        System.out.println("test createRelation success");
     }
 
 }
