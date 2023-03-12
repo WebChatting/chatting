@@ -33,7 +33,7 @@
 
     <insert id="insertRelation" parameterType="Relation" keyProperty="id">
         insert into relation (`request_id`, `accept_id`, `type`, `status`)
-        values (#{requestId}, #{acceptId}, #{type}, #{status});
+        values (#{requestId}, #{acceptId}, #{type}, 0);
     </insert>
 
     <update id="updateRelation" parameterType="Relation" keyProperty="id">
