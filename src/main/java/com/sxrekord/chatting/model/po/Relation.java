@@ -32,9 +32,8 @@ public class Relation {
         this.acceptId = acceptId;
     }
 
-    public Relation(Long acceptId, Integer type, Integer status) {
+    public Relation(Long acceptId, Integer type) {
         this.acceptId = acceptId;
         this.type = type;
-        this.status = status;
     }
 }

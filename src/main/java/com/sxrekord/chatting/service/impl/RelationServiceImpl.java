@@ -37,10 +37,6 @@ public class RelationServiceImpl implements RelationService {
 
         Object requestId = session.getAttribute(Constant.USER_TOKEN);
         relation.setRequestId((long)requestId);
-        // 根据群ID查询群主ID
-        if (relation.getType() == 1) {
-            relation.setAcceptId(this.groupDao.getGroupById(relation.getAcceptId()).getOwnerId());
-        }
         relationDao.insertRelation(relation);
         return responseJson.success();
     }
