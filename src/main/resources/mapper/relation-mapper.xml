@@ -42,6 +42,13 @@
         where type = #{type} and request_id = #{requestId} and accept_id = #{acceptId};
     </update>
 
+    <delete id="deleteRelation" parameterType="Relation">
+        delete from relation
+        where type = #{type} and
+        (request_id = #{requestId} and accept_id = #{acceptId} or
+        request_id = #{acceptId} and accept_id = #{requestId});
+    </delete>
+
     <select id="listRelation" resultMap="RelationDao">
         select * from relation
         where type = #{type} and

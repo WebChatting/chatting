@@ -48,6 +48,11 @@ public interface RelationDao {
     int updateRelation(Relation relation);
 
     /**
+     * 删除关系
+     */
+    int deleteRelation(Relation relation);
+
+    /**
      * 列出关系
      * @param id
      * @param type

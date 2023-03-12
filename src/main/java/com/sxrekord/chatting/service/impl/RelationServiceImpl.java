@@ -47,7 +47,12 @@ public class RelationServiceImpl implements RelationService {
 
         long requestId = (long)session.getAttribute(Constant.USER_TOKEN);
         relation.setRequestId(requestId);
-        relationDao.updateRelation(relation);
+        if (relation.getStatus() == 3) {
+            relationDao.deleteRelation(relation);
+        } else {
+            relationDao.updateRelation(relation);
+        }
+
         return responseJson.success();
     }
 
