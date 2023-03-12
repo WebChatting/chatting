@@ -31,5 +31,5 @@ public interface RelationService {
      * @param status
      * @return
      */
-    ResponseJson listRelation(int type, int status, HttpSession session);
+    ResponseJson listRelation(int type, int status, int direction, HttpSession session);
 }

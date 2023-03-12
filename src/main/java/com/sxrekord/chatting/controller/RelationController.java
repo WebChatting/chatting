@@ -33,7 +33,8 @@ public class RelationController {
 
     @GetMapping(value = "list")
     @ResponseBody
-    public ResponseJson list(@RequestParam int type, int status, HttpSession session) {
-        return relationService.listRelation(type, status, session);
+    public ResponseJson list(@RequestParam int type, @RequestParam int status,
+                             @RequestParam int direction, HttpSession session) {
+        return relationService.listRelation(type, status, direction, session);
     }
 }
