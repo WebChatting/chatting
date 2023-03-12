@@ -39,11 +39,7 @@
     <update id="updateRelation" parameterType="Relation" keyProperty="id">
         update relation
         set status = #{status}
-        where type = #{type} and ((request_id = #{requestId} and accept_id = #{acceptId})
-        <if test="type == 0">
-            or (request_id = #{acceptId} and accept_id = #{requestId})
-        </if>
-        );
+        where type = #{type} and request_id = #{requestId} and accept_id = #{acceptId};
     </update>
 
     <select id="listRelation" resultType="java.lang.Long">
