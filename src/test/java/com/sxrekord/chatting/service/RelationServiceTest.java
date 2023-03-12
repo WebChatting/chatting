@@ -50,4 +50,13 @@ public class RelationServiceTest {
         System.out.println("test createRelation success");
     }
 
+    @Test
+    public void testUpdateRelation() {
+        HttpSession session = new MockHttpSession();
+        session.setAttribute("userId", 502L);
+        System.out.println(relationService.updateRelation(new Relation(504L, 0, 1), session));
+        System.out.println(relationService.updateRelation(new Relation(101L, 1, 1), session));
+
+        System.out.println("test updateRelation success");
+    }
 }
