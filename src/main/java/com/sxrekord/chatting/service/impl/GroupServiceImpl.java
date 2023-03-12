@@ -24,7 +24,7 @@ public class GroupServiceImpl implements GroupService {
     public ResponseJson searchGroup(String name) {
         ResponseJson responseJson = new ResponseJson();
 
-        List<Group> groups = groupDao.searchGroupByName("%" + name + "%");
+        List<Group> groups = groupDao.searchGroupByName(name);
         responseJson.setData("groups", groups).success();
         return responseJson;
     }
