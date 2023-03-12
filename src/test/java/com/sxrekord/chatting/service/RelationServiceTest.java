@@ -57,6 +57,9 @@ public class RelationServiceTest {
         System.out.println(relationService.updateRelation(new Relation(504L, 0, 1), session));
         System.out.println(relationService.updateRelation(new Relation(101L, 1, 1), session));
 
+        // 删除关系（特殊更新）
+        System.out.println(relationService.updateRelation(new Relation(501L, 0, 3), session));
+
         System.out.println("test updateRelation success");
     }
 }
