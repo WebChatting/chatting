@@ -49,8 +49,12 @@ public interface RelationDao {
 
     /**
      * 列出关系
-     * @param relation
+     * @param id
+     * @param type
+     * @param status
+     * @param direction
      * @return
      */
-    List<Long> listRelation(Relation relation);
+    List<Relation> listRelation(@Param("id") Long id, @Param("type") Integer type,
+                                @Param("status") Integer status, @Param("direction") Integer direction);
 }

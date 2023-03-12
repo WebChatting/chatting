@@ -42,13 +42,20 @@
         where type = #{type} and request_id = #{requestId} and accept_id = #{acceptId};
     </update>
 
-    <select id="listRelation" resultType="java.lang.Long">
-        select request_id from relation
-        where type = #{type} and status = #{status} and accept_id = #{acceptId}
-        <if test="type == 0 and status == 1">
-            union
-            select accept_id from relation
-            where type = #{type} and status = #{status} and request_id = #{acceptId};
+    <select id="listRelation" resultMap="RelationDao">
+        select * from relation
+        where type = #{type} and
+        <choose>
+            <when test="direction == 0">
+                request_id = #{id}
+            </when>
+            <otherwise>
+                accept_id = #{id}
+            </otherwise>
+        </choose>
+        <if test="status != -1">
+            and status = #{status}
         </if>
+        ;
     </select>
 </mapper>
