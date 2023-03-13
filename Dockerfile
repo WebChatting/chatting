@@ -1,4 +1,4 @@
-FROM maven:latest AS deps
+FROM maven:latest AS builder
 
 VOLUME /root/.m2
 
@@ -6,10 +6,7 @@ WORKDIR /workdir
 
 COPY pom.xml .
 
-# download dependencies in seperate stage for caching
 RUN mvn dependency:resolve
-
-FROM deps AS builder
 
 COPY src src
 
