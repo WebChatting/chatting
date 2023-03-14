@@ -65,7 +65,7 @@ public class MessageServiceImpl implements MessageService {
                     .setData("fileUrl", message.getType() == 2 ?
                             fileContentDao.getFileContentById(message.getContentId()).getPath() : null)
                     .toString();
-            responseJson.addToMessage();
+            responseJson.addToCollection("messages");
         }
     }
 

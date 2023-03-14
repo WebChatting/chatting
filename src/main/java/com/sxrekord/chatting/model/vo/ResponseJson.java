@@ -65,13 +65,13 @@ public class ResponseJson extends HashMap<String, Object> {
         return this;
     }
 
-    public ResponseJson addToMessage() {
-        List<Map<String, Object>> messages = (List<Map<String, Object>>)get("messages");
-        if (messages == null) {
-            messages = new ArrayList<>();
-            put("messages", messages);
+    public ResponseJson addToCollection(String collectionName) {
+        List<Map<String, Object>> collections = (List<Map<String, Object>>)get(collectionName);
+        if (collections == null) {
+            collections = new ArrayList<>();
+            put(collectionName, collections);
         }
-        messages.add((Map<String, Object>)get("data"));
+        collections.add((Map<String, Object>)get("data"));
         remove("data");
         return this;
     }

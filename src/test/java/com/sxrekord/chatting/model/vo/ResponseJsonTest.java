@@ -28,18 +28,18 @@ public class ResponseJsonTest {
     }
 
     @Test
-    public void addToMessageTest() {
+    public void addToCollectionTest() {
         responseJson.setData("field1", "field1")
-            .setData("field2", "field2")
-            .setData("field3", "field3")
-            .toString();
-        responseJson.addToMessage();
+                .setData("field2", "field2")
+                .setData("field3", "field3")
+                .toString();
+        responseJson.addToCollection("messages");
 
         responseJson.setData("field4", "field4")
                 .setData("field5", "field5")
                 .setData("field6", "field6")
                 .toString();
-        responseJson.addToMessage();
+        responseJson.addToCollection("messages");
 
         Assert.isTrue(((List<Map<String, Object>>)responseJson.get("messages")).size() == 2, "addToMessage error!");
         System.out.println(responseJson);
