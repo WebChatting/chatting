@@ -21,7 +21,7 @@ public class GroupServiceImpl implements GroupService {
     @Autowired
     GroupDao groupDao;
 
-    @Value("${file.group.avatar.default}")
+    @Value("${file.default.group}")
     private String group_avatar_default;
 
     @Override
