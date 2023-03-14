@@ -37,8 +37,7 @@
         select
         <include refid="selectFields"/>
         from user
-<!--        where username = #{0} and password = #{1}-->
-        where username = #{username} and password = #{password}
+        where username = #{username} and password = #{password};
     </select>
 
     <select id="getUserByUsername" parameterType="java.lang.String" resultMap="UserDao">
