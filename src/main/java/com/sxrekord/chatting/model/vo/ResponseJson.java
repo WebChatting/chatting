@@ -76,6 +76,16 @@ public class ResponseJson extends HashMap<String, Object> {
         return this;
     }
 
+    public ResponseJson setCollectionToData(String collectionName) {
+        List<Map<String, Object>> collections = (List<Map<String, Object>>)get(collectionName);
+        if (collections == null) {
+            return this;
+        }
+        this.setData(collectionName, collections);
+        remove(collectionName);
+        return this;
+    }
+
     public ResponseJson setStatus(int status) {
         put("status", status);
         return this;
