@@ -20,7 +20,7 @@ import java.util.UUID;
 @Service
 public class FileServiceImpl implements FileService {
 
-    private final static String SERVER_URL_PREFIX = "http://localhost:8088/chatting/UploadFile";
+    private final static String SERVER_URL_PREFIX = "upload";
     @Value("${file.upload.location}")
     private String FILE_STORE_PATH;
     
@@ -49,7 +49,7 @@ public class FileServiceImpl implements FileService {
         return new ResponseJson().success()
                 .setData("originalFilename", originalFilename)
                 .setData("fileSize", fileSize)
-                .setData("fileUrl", SERVER_URL_PREFIX  + "\\" + filename);
+                .setData("fileUrl", SERVER_URL_PREFIX + '/' + filename);
     }
 
     private String getRandomUUID() {
