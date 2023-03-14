@@ -64,44 +64,62 @@ public class RelationServiceImpl implements RelationService {
 
         if (direction == -1) {
             for (Relation relation : relationDao.listRelation(id, type, status, 0)) {
-                data.add(userDao.getUserById(relation.getAcceptId()));
+                wrapUser(responseJson, userDao.getUserById(relation.getAcceptId()), type, status);
             }
 
             for (Relation relation : relationDao.listRelation(id, type, status, 1)) {
-                data.add(userDao.getUserById(relation.getRequestId()));
+                wrapUser(responseJson, userDao.getUserById(relation.getRequestId()), type, status);
             }
 
-            responseJson.setData("friends", data);
         } else {
             for (Relation relation : relationDao.listRelation(id, type, status, direction)) {
                 if (status == 1) {
                     // 加入的群组
-                    data.add(groupDao.getGroupById(relation.getAcceptId()));
+                    wrapGroup(responseJson, groupDao.getGroupById(relation.getAcceptId()), type, status);
                 } else {
                     // 验证
                     if (type == 0) {
                         if (direction == 0) {
-                            data.add(userDao.getUserById(relation.getAcceptId()));
+                            wrapUser(responseJson, userDao.getUserById(relation.getAcceptId()), type, status);
                         } else {
-                            data.add(userDao.getUserById(relation.getRequestId()));
+                            wrapUser(responseJson, userDao.getUserById(relation.getRequestId()), type, status);
                         }
                     } else {
                         if (direction == 0) {
-                            data.add(groupDao.getGroupById(relation.getAcceptId()));
+                            wrapGroup(responseJson, groupDao.getGroupById(relation.getAcceptId()), type, status);
                         } else {
-                            data.add(userDao.getUserById(relation.getRequestId()));
+                            wrapUser(responseJson, userDao.getUserById(relation.getRequestId()), type, status);
                         }
                     }
                 }
             }
-            if (status == 1) {
-                responseJson.setData("groups", data);
-            } else {
-                responseJson.setData("validations", data);
-            }
+//            if (status == 1) {
+//                responseJson.setData("groups", data);
+//            } else {
+//                responseJson.setData("validations", data);
+//            }
         }
 
-        return responseJson.success();
+        return responseJson.setCollectionToData("relations").success();
     }
 
+    private void wrapUser(ResponseJson responseJson, User user, int type, int status) {
+        wrapResult(responseJson, user.getId(), type, user.getUsername(), user.getAvatarPath(), status, 0);
+    }
+
+    private void wrapGroup(ResponseJson responseJson, Group group, int type, int status) {
+        wrapResult(responseJson, group.getId(), type, group.getName(), group.getAvatarPath(), status, 0);
+    }
+
+    private void wrapResult(ResponseJson responseJson, Long id, Integer type,
+                            String name, String avatarPath, Integer status, Integer online) {
+        responseJson.setData("id", id)
+                .setData("type", type)
+                .setData("name", name)
+                .setData("avatarPath", avatarPath)
+                .setData("status", status)
+                .setData("online", online);
+
+        responseJson.addToCollection("relations");
+    }
 }
