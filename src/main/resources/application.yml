@@ -4,10 +4,6 @@ server:
     context-path: /chatting
 
 spring:
-  mvc:
-    view:
-      suffix: .html
-      prefix: /views/
   servlet:
     multipart:
       max-file-size: 100MB
