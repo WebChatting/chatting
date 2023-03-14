@@ -46,15 +46,11 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .excludePathPatterns(uriConfig.getExcludeUri());
     }
 
-    @Value("${file.upload.location}")
-    private String uploadLocation;
-    @Value("${file.user.avatar.location}")
-    private String avatarLocation;
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
 //        /UploadFile/xxx --> ${uploadLocation}/xxx
-        registry.addResourceHandler("/UploadFile/**").addResourceLocations("file:" + uploadLocation);
-        registry.addResourceHandler("/avatar/**").addResourceLocations("file:" + avatarLocation);
+//        registry.addResourceHandler("/UploadFile/**").addResourceLocations("file:" + uploadLocation);
+//        registry.addResourceHandler("/avatar/**").addResourceLocations("file:" + avatarLocation);
 
 //        /UploadFile/xxx --> classpath:/UploadFile/xxx
 //        registry.addResourceHandler("/UploadFile/**").addResourceLocations("classpath:/UploadFile/");

@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private GroupDao groupDao;
 
-    @Value("${file.user.avatar.default}")
+    @Value("${file.default.user}")
     private String user_avatar_default;
 
     @Override
