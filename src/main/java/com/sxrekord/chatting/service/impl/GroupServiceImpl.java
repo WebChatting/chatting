@@ -5,6 +5,7 @@ import com.sxrekord.chatting.model.po.Group;
 import com.sxrekord.chatting.model.vo.ResponseJson;
 import com.sxrekord.chatting.service.GroupService;
 import com.sxrekord.chatting.util.Constant;
+import com.sxrekord.chatting.util.WrapEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -46,8 +47,10 @@ public class GroupServiceImpl implements GroupService {
         }
         session.getAttribute(Constant.USER_TOKEN);
         List<Group> groups = groupDao.listGroupByOwnerId((long)ownerId);
-        responseJson.setData("groups", groups).success();
-        return responseJson;
+        for (Group group : groups) {
+            WrapEntity.wrapGroup(responseJson, group, 1, 1);
+        }
+        return responseJson.setCollectionToData("relations").success();
     }
 
     @Override
