@@ -20,7 +20,7 @@ insert into relation (`request_id`, `accept_id`, `type`, `status`) values (501, 
 -- build user relation
 insert into relation (`request_id`, `accept_id`, `type`, `status`) values (501, 502, 0, 0);
 insert into relation (`request_id`, `accept_id`, `type`, `status`) values (501, 503, 0, 1);
-insert into relation (`request_id`, `accept_id`, `type`, `status`) values (501, 504, 0, 2);
+insert into relation (`request_id`, `accept_id`, `type`, `status`) values (504, 501, 0, 2);
 insert into relation (`request_id`, `accept_id`, `type`, `status`) values (502, 503, 0, 1);
 insert into relation (`request_id`, `accept_id`, `type`, `status`) values (502, 504, 0, 2);
 insert into relation (`request_id`, `accept_id`, `type`, `status`) values (502, 505, 0, 0);
