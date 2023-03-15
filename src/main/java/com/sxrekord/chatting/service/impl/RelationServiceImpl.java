@@ -12,8 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Rekord
@@ -59,7 +57,6 @@ public class RelationServiceImpl implements RelationService {
     public ResponseJson listRelation(int type, int status, int direction, HttpSession session) {
         ResponseJson responseJson = new ResponseJson();
         long id = (long)session.getAttribute(Constant.USER_TOKEN);
-        List data = new ArrayList();
 
         if (direction == -1) {
             for (Relation relation : relationDao.listRelation(id, type, status, 0)) {
