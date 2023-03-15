@@ -3,6 +3,7 @@ package com.sxrekord.chatting.service.impl;
 import com.sxrekord.chatting.dao.GroupDao;
 import com.sxrekord.chatting.dao.RelationDao;
 import com.sxrekord.chatting.dao.UserDao;
+import com.sxrekord.chatting.model.po.Group;
 import com.sxrekord.chatting.model.po.Relation;
 import com.sxrekord.chatting.util.WrapEntity;
 import com.sxrekord.chatting.model.vo.ResponseJson;
@@ -12,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Rekord
@@ -68,7 +71,15 @@ public class RelationServiceImpl implements RelationService {
             }
 
         } else {
-            for (Relation relation : relationDao.listRelation(id, type, status, direction)) {
+            List<Relation> relations = new ArrayList<>();
+            if (type == 1 && direction == 1) {
+                for (Group group : groupDao.listGroupByOwnerId(id)) {
+                    relations.addAll(relationDao.listRelation(group.getId(), type, status, direction));
+                }
+            } else {
+                relations = relationDao.listRelation(id, type, status, direction);
+            }
+            for (Relation relation : relations) {
                 if (status == 1) {
                     // 加入的群组
                     WrapEntity.wrapGroup(responseJson, groupDao.getGroupById(relation.getAcceptId()), type, status);
