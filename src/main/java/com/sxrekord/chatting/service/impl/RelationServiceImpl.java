@@ -87,15 +87,15 @@ public class RelationServiceImpl implements RelationService {
                     // 验证
                     if (type == 0) {
                         if (direction == 0) {
-                            WrapEntity.wrapUser(responseJson, userDao.getUserById(relation.getAcceptId()), type, status);
+                            WrapEntity.wrapUser(responseJson, userDao.getUserById(relation.getAcceptId()), type, relation.getStatus());
                         } else {
-                            WrapEntity.wrapUser(responseJson, userDao.getUserById(relation.getRequestId()), type, status);
+                            WrapEntity.wrapUser(responseJson, userDao.getUserById(relation.getRequestId()), type, relation.getStatus());
                         }
                     } else {
                         if (direction == 0) {
-                            WrapEntity.wrapGroup(responseJson, groupDao.getGroupById(relation.getAcceptId()), type, status);
+                            WrapEntity.wrapGroup(responseJson, groupDao.getGroupById(relation.getAcceptId()), type, relation.getStatus());
                         } else {
-                            WrapEntity.wrapUser(responseJson, userDao.getUserById(relation.getRequestId()), type, status);
+                            WrapEntity.wrapUser(responseJson, userDao.getUserById(relation.getRequestId()), type, relation.getStatus());
                         }
                     }
                 }
