@@ -1,15 +1,9 @@
 package com.sxrekord.chatting.service.impl;
 
-import com.sxrekord.chatting.dao.FileContentDao;
-import com.sxrekord.chatting.dao.MessageDao;
-import com.sxrekord.chatting.dao.TextContentDao;
-import com.sxrekord.chatting.dao.UserDao;
-import com.sxrekord.chatting.model.po.FileContent;
+import com.sxrekord.chatting.dao.*;
 import com.sxrekord.chatting.model.po.Message;
-import com.sxrekord.chatting.model.po.TextContent;
 import com.sxrekord.chatting.model.vo.ResponseJson;
 import com.sxrekord.chatting.service.MessageService;
-import com.sxrekord.chatting.util.ChatType;
 import com.sxrekord.chatting.util.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +22,8 @@ public class MessageServiceImpl implements MessageService {
     MessageDao messageDao;
     @Autowired
     TextContentDao textContentDao;
+    @Autowired
+    ImageContentDao imageContentDao;
     @Autowired
     FileContentDao fileContentDao;
     @Autowired
@@ -57,9 +53,11 @@ public class MessageServiceImpl implements MessageService {
                     .setData("fromId", message.getFromId())
                     .setData("name", userDao.getUserById(message.getFromId()).getUsername())
                     .setData("avatarPath", userDao.getUserById(message.getFromId()).getAvatarPath())
-                    .setData("contentType", message.getType())
-                    .setData("content", message.getType() == 0 ?
-                            textContentDao.getTextContentById(message.getContentId()).getContent() : null)
+                    .setData("contentType", message.getContentType())
+                    .setData("content", message.getContentType() == 0 ?
+                            textContentDao.getTextContentById(message.getContentId()).getContent()
+                            : (message.getContentType() == 1 ? imageContentDao.getImageContentById(message.getContentId()).getPath()
+                            : fileContentDao.getFileContentById(message.getContentId()).getName()))
                     .setData("url", message.getType() == 2 ?
                             fileContentDao.getFileContentById(message.getContentId()).getPath() : null)
                     .toString();
