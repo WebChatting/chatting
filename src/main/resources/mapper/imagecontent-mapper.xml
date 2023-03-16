@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sxrekord.chatting.dao.ImageContentDao">
+    <sql id="selectFields">
+        `id`, `path`
+    </sql>
+    <resultMap id="ImageContentDao" type="ImageContent">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="path" jdbcType="VARCHAR" property="path"/>
+    </resultMap>
+
+    <select id="getImageContentById" parameterType="java.lang.Long" resultMap="ImageContentDao">
+        select <include refid="selectFields"/>
+        from `image_content`
+        where `id` = #{id};
+    </select>
+</mapper>
