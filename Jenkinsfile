@@ -14,6 +14,11 @@ pipeline {
 				sh 'make build'
 			}
 		}
+		stage('Docker Build') {
+			steps {
+				sh 'make docker-build'
+			}
+		}
 		stage('Deploy') {
 			steps {
 				// use "-v chatting-mysql:/var/lib/mysql" to save database
