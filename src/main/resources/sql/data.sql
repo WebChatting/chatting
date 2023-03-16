@@ -45,6 +45,8 @@ insert into message (`from_id`, `to_id`, `type`, `content_type`, `content_id`) v
 
 
 -- insert image message
+insert into image_content (`path`) values ('avatar/default_user_avatar.jpg');
+insert into image_content (`path`) values ('avatar/default_group_avatar.jpg');
 
 -- insert file message
 
