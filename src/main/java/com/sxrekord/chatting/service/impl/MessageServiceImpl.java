@@ -53,16 +53,14 @@ public class MessageServiceImpl implements MessageService {
 
     private void loadConcreteMessage(ResponseJson responseJson, List<Message> messages) {
         for (Message message : messages) {
-            responseJson.setData("fromId", message.getFromId())
-                    .setData("type", message.getType())
+            responseJson.setData("id", message.getId())
+                    .setData("fromId", message.getFromId())
+                    .setData("name", userDao.getUserById(message.getFromId()).getUsername())
+                    .setData("avatarPath", userDao.getUserById(message.getFromId()).getAvatarPath())
+                    .setData("contentType", message.getType())
                     .setData("content", message.getType() == 0 ?
                             textContentDao.getTextContentById(message.getContentId()).getContent() : null)
-                    .setData("fromAvatarUrl", userDao.getUserById(message.getFromId()).getAvatarPath())
-                    .setData("originalFileName", message.getType() == 2 ?
-                            fileContentDao.getFileContentById(message.getContentId()).getName() : null)
-                    .setData("fileSize", message.getType() == 2 ?
-                            fileContentDao.getFileContentById(message.getContentId()).getSize() : null)
-                    .setData("fileUrl", message.getType() == 2 ?
+                    .setData("url", message.getType() == 2 ?
                             fileContentDao.getFileContentById(message.getContentId()).getPath() : null)
                     .toString();
             responseJson.addToCollection("messages");
@@ -78,6 +76,6 @@ public class MessageServiceImpl implements MessageService {
                                                             toId, count);
 
         loadConcreteMessage(responseJson, messages);
-        return responseJson.success();
+        return responseJson.setCollectionToData("messages").success();
     }
 }
