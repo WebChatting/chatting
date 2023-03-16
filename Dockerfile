@@ -1,18 +1,3 @@
-FROM maven:latest AS builder
-
-VOLUME /root/.m2
-
-WORKDIR /workdir
-
-COPY pom.xml .
-
-RUN mvn dependency:resolve
-
-COPY src src
-
-# skip tests because tests require MySQL runtime
-RUN mvn package -DskipTests
-
 FROM mysql:debian
 
 WORKDIR /workdir
@@ -22,7 +7,8 @@ RUN apt-get update
 RUN apt-get install -y --no-install-recommends --no-install-suggests openjdk-17-jre-headless
 RUN rm -rf /var/lib/apt/lists/*
 
-COPY --from=builder /workdir/target/*.jar app.jar
+# run `make build` first
+COPY target/*.jar app.jar
 COPY docker/entrypoint.sh .
 
 # prepare MySQL runtime
