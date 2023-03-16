@@ -5,7 +5,7 @@
 
 <mapper namespace="com.sxrekord.chatting.dao.MessageDao">
     <sql id="selectFields">
-        `from_id`, `type`, `content_type`, `content_id`, `update_time`
+        `id`, `from_id`, `type`, `content_type`, `content_id`, `update_time`
     </sql>
 
     <sql id="insertFields">
