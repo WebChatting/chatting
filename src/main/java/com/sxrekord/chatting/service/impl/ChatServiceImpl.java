@@ -63,12 +63,11 @@ public class ChatServiceImpl implements ChatService{
 
         // 消息持久化到数据库
         Message message = new Message(fromId, toId, type, contentType);
-        if (type == 0) {
+        if (contentType == 0) {
             TextContent textContent = new TextContent(content);
             textContentDao.insertTextContent(textContent);
-            System.out.println("textContent: " + textContent);
             message.setContentId(textContent.getId());
-        } else if (type == 1) {
+        } else if (contentType == 1) {
 
         } else {
             String size = jm.get("size").toString();
