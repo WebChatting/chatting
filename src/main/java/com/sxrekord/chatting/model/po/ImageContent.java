@@ -13,4 +13,8 @@ public class ImageContent {
     private String path;
 
     public ImageContent() {}
+
+    public ImageContent(String path) {
+        this.path = path;
+    }
 }

@@ -3,10 +3,7 @@ package com.sxrekord.chatting.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.sxrekord.chatting.common.WSType;
 import com.sxrekord.chatting.dao.*;
-import com.sxrekord.chatting.model.po.FileContent;
-import com.sxrekord.chatting.model.po.Group;
-import com.sxrekord.chatting.model.po.Message;
-import com.sxrekord.chatting.model.po.TextContent;
+import com.sxrekord.chatting.model.po.*;
 import com.sxrekord.chatting.model.vo.ResponseJson;
 import com.sxrekord.chatting.service.ChatService;
 import com.sxrekord.chatting.util.Constant;
@@ -41,6 +38,8 @@ public class ChatServiceImpl implements ChatService{
     @Autowired
     private TextContentDao textContentDao;
     @Autowired
+    private ImageContentDao imageContentDao;
+    @Autowired
     private FileContentDao fileContentDao;
     
     @Override
@@ -70,7 +69,9 @@ public class ChatServiceImpl implements ChatService{
             textContentDao.insertTextContent(textContent);
             message.setContentId(textContent.getId());
         } else if (contentType == 1) {
-
+            ImageContent imageContent = new ImageContent(content);
+            imageContentDao.insertImageContent(imageContent);
+            message.setContentId(imageContent.getId());
         } else {
             String size = jm.get("size").toString();
             String url = jm.get("url").toString();

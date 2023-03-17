@@ -89,6 +89,12 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<WebSocke
             case TEXT_GROUP_SENDING:
                 chatService.send(param, ctx, 1, 0);
                 break;
+            case IMAGE_SINGLE_SENDING:
+                chatService.send(param, ctx, 0, 1);
+                break;
+            case IMAGE_GROUP_SENDING:
+                chatService.send(param, ctx, 1, 1);
+                break;
             case FILE_SINGLE_SENDING:
                 chatService.send(param, ctx, 0, 2);
                 break;

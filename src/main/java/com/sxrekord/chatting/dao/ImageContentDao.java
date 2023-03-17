@@ -16,4 +16,11 @@ public interface ImageContentDao {
      * @return
      */
     ImageContent getImageContentById(@Param("id") Long id);
+
+    /**
+     * 插入一张图片
+     * @param imageContent
+     * @return
+     */
+    int insertImageContent(ImageContent imageContent);
 }

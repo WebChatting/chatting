@@ -17,4 +17,9 @@
         from `image_content`
         where `id` = #{id};
     </select>
+
+    <insert id="insertImageContent" parameterType="ImageContent" useGeneratedKeys="true" keyProperty="id">
+        insert into `image_content` (`path`)
+        values (#{path});
+    </insert>
 </mapper>
