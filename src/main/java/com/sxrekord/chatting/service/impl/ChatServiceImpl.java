@@ -17,7 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map.Entry;
 
 /**
@@ -125,7 +127,10 @@ public class ChatServiceImpl implements ChatService{
 
 
     private void sendToGroup(Group group, Long fromId, String responseJson) {
-        for (Long userId : relationDao.listUserIdByGroupId(group.getId())) {
+        List<Long> members = new ArrayList<>();
+        members.addAll(relationDao.listUserIdByGroupId(group.getId()));
+        members.add(groupDao.getGroupById(group.getId()).getOwnerId());
+        for (Long userId : members) {
             ChannelHandlerContext toCtx = Constant.onlineUserMap.get(userId);
             if (toCtx != null && !fromId.equals(userId)) {
                 sendMessage(toCtx, responseJson);
