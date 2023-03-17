@@ -1,6 +1,7 @@
 package com.sxrekord.chatting.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.sxrekord.chatting.common.MessageType;
 import com.sxrekord.chatting.common.WSType;
 import com.sxrekord.chatting.dao.*;
 import com.sxrekord.chatting.model.po.*;
@@ -64,15 +65,15 @@ public class ChatServiceImpl implements ChatService{
 
         // 消息持久化到数据库
         Message message = new Message(fromId, toId, type, contentType);
-        if (contentType == 0) {
+        if (contentType == MessageType.TEXT.getId()) {
             TextContent textContent = new TextContent(content);
             textContentDao.insertTextContent(textContent);
             message.setContentId(textContent.getId());
-        } else if (contentType == 1) {
+        } else if (contentType == MessageType.IMAGE.getId()) {
             ImageContent imageContent = new ImageContent(content);
             imageContentDao.insertImageContent(imageContent);
             message.setContentId(imageContent.getId());
-        } else {
+        } else if (contentType == MessageType.FILE.getId()) {
             String size = jm.get("size").toString();
             String url = jm.get("url").toString();
             FileContent fileContent = new FileContent(content, size, url);
