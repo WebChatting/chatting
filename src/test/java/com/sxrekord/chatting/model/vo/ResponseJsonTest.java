@@ -1,6 +1,6 @@
 package com.sxrekord.chatting.model.vo;
 
-import com.sxrekord.chatting.util.ChatType;
+import com.sxrekord.chatting.common.WSType;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.util.Assert;
@@ -21,7 +21,7 @@ public class ResponseJsonTest {
     public void setDataTest() {
         responseJson.setData("fromUserId", 501)
                 .setData("content", "addToMessageTest")
-                .setData("type", ChatType.SINGLE_SENDING)
+                .setData("type", WSType.TEXT_SINGLE_SENDING)
                 .toString();
 
         System.out.println(responseJson);

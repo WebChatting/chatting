@@ -1,6 +1,7 @@
 package com.sxrekord.chatting.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.sxrekord.chatting.common.WSType;
 import com.sxrekord.chatting.dao.*;
 import com.sxrekord.chatting.model.po.FileContent;
 import com.sxrekord.chatting.model.po.Group;
@@ -8,7 +9,6 @@ import com.sxrekord.chatting.model.po.Message;
 import com.sxrekord.chatting.model.po.TextContent;
 import com.sxrekord.chatting.model.vo.ResponseJson;
 import com.sxrekord.chatting.service.ChatService;
-import com.sxrekord.chatting.util.ChatType;
 import com.sxrekord.chatting.util.Constant;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
@@ -49,7 +49,7 @@ public class ChatServiceImpl implements ChatService{
         log.info(userId);
         Constant.onlineUserMap.put(userId, ctx);
         String responseJson = new ResponseJson().success()
-                .setData("type", ChatType.REGISTER)
+                .setData("type", WSType.ONLINE)
                 .toString();
         sendMessage(ctx, responseJson);
         log.info(MessageFormat.format("userId为 {0} 的用户登记到在线用户表，当前在线人数为：{1}"
