@@ -17,9 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map.Entry;
 
 /**
@@ -57,43 +55,47 @@ public class ChatServiceImpl implements ChatService{
     }
 
     @Override
-    public void singleSend(JSONObject param, ChannelHandlerContext ctx) {
-        String fromUserId = param.get("fromUserId").toString();
-        String toUserId = param.get("toUserId").toString();
-        String content = param.get("content").toString();
-        ChannelHandlerContext toUserCtx = Constant.onlineUserMap.get(toUserId);
+    public void send(JSONObject jm, ChannelHandlerContext ctx, Integer type, Integer contentType) {
+        System.out.println("enter send method, type: " + type);
+        Long fromId = Long.parseLong(jm.get("fromId").toString());
+        Long toId = Long.parseLong(jm.get("toId").toString());
+        String content = jm.get("content").toString();
 
-        storeTextMessage(new Message(Long.parseLong(fromUserId), Long.parseLong(toUserId), 0, 0), content);
+        // 消息持久化到数据库
+        Message message = new Message(fromId, toId, type, contentType);
+        if (type == 0) {
+            TextContent textContent = new TextContent(content);
+            textContentDao.insertTextContent(textContent);
+            System.out.println("textContent: " + textContent);
+            message.setContentId(textContent.getId());
+        } else if (type == 1) {
 
-        // 对方不在线不支持发送消息
-        if (toUserCtx != null) {
-            String responseJson = new ResponseJson().success()
-                    .setData("fromUserId", fromUserId)
-                    .setData("content", content)
-                    .setData("type", ChatType.SINGLE_SENDING)
-                    .toString();
-            sendMessage(toUserCtx, responseJson);
+        } else {
+            String size = jm.get("size").toString();
+            String url = jm.get("url").toString();
+            FileContent fileContent = new FileContent(content, size, url);
+            fileContentDao.insertFileContent(fileContent);
+            message.setContentId(fileContent.getId());
+        }
+
+        messageDao.insertMessage(message);
+
+        if (type == 0) {
+            // 拿到对方ID上下文
+            ChannelHandlerContext toUserCtx = Constant.onlineUserMap.get(toId);
+            // 对方在线
+            if (toUserCtx != null) {
+                // 发送消息
+                sendMessage(toUserCtx, jm.toJSONString());
+            }
+        } else {
+            Group group = groupDao.getGroupById(toId);
+            if (group != null) {
+                sendToGroup(group, fromId, jm.toJSONString());
+            }
         }
     }
 
-    @Override
-    public void groupSend(JSONObject param, ChannelHandlerContext ctx) {
-        Long fromUserId = Long.parseLong(param.get("fromUserId").toString());
-        Long toGroupId = Long.parseLong(param.get("toGroupId").toString());
-        String content = param.get("content").toString();
-
-        Group group = groupDao.getGroupById(toGroupId);
-        storeTextMessage(new Message(fromUserId, toGroupId, 1, 0), content);
-        if (group != null) {
-            String responseJson = new ResponseJson().success()
-                    .setData("fromUserId", fromUserId)
-                    .setData("content", content)
-                    .setData("toGroupId", toGroupId)
-                    .setData("type", ChatType.GROUP_SENDING)
-                    .toString();
-            setMembers(group, fromUserId, responseJson);
-        }
-    }
     
     @Override
     public void remove(ChannelHandlerContext ctx) {
@@ -113,53 +115,6 @@ public class ChatServiceImpl implements ChatService{
             }
         }
     }
-
-    @Override
-    public void FileMsgSingleSend(JSONObject param, ChannelHandlerContext ctx) {
-        String fromUserId = param.get("fromUserId").toString();
-        String toUserId = param.get("toUserId").toString();
-        String originalFilename = param.get("originalFilename").toString();
-        String fileSize = param.get("fileSize").toString();
-        String fileUrl = param.get("fileUrl").toString();
-        ChannelHandlerContext toUserCtx = Constant.onlineUserMap.get(toUserId);
-
-        storeFileMessage(new Message(Long.parseLong(fromUserId), Long.parseLong(toUserId), 0, 1),
-                originalFilename, fileSize, fileUrl);
-        if (toUserCtx != null) {
-            String responseJson = new ResponseJson().success()
-                    .setData("fromUserId", fromUserId)
-                    .setData("originalFilename", originalFilename)
-                    .setData("fileSize", fileSize)
-                    .setData("fileUrl", fileUrl)
-                    .setData("type", ChatType.FILE_MSG_SINGLE_SENDING)
-                    .toString();
-            sendMessage(toUserCtx, responseJson);
-        }
-    }
-
-    @Override
-    public void FileMsgGroupSend(JSONObject param, ChannelHandlerContext ctx) {
-        Long fromUserId = Long.parseLong(param.get("fromUserId").toString());
-        Long toGroupId = Long.parseLong(param.get("toGroupId").toString());
-        String originalFilename = param.get("originalFilename").toString();
-        String fileSize = param.get("fileSize").toString();
-        String fileUrl = param.get("fileUrl").toString();
-        Group group = groupDao.getGroupById((long)toGroupId);
-        storeFileMessage(new Message(fromUserId, toGroupId, 1, 1),
-                originalFilename, fileSize, fileUrl);
-        if (group != null) {
-            String responseJson = new ResponseJson().success()
-                    .setData("fromUserId", fromUserId)
-                    .setData("toGroupId", toGroupId)
-                    .setData("originalFilename", originalFilename)
-                    .setData("fileSize", fileSize)
-                    .setData("fileUrl", fileUrl)
-                    .setData("type", ChatType.FILE_MSG_GROUP_SENDING)
-                    .toString();
-            setMembers(group, fromUserId, responseJson);
-
-        }
-    }
     
     @Override
     public void typeError(ChannelHandlerContext ctx) {
@@ -168,53 +123,19 @@ public class ChatServiceImpl implements ChatService{
                 .toString();
         sendMessage(ctx, responseJson);
     }
-    
 
-    
+
+    private void sendToGroup(Group group, Long fromId, String responseJson) {
+        for (Long userId : relationDao.listUserIdByGroupId(group.getId())) {
+            ChannelHandlerContext toCtx = Constant.onlineUserMap.get(userId);
+            if (toCtx != null && !fromId.equals(userId)) {
+                sendMessage(toCtx, responseJson);
+            }
+        }
+    }
+
     private void sendMessage(ChannelHandlerContext ctx, String message) {
         ctx.channel().writeAndFlush(new TextWebSocketFrame(message));
-    }
-
-    private void setMembers(Group group, Long fromUserId, String responseJson) {
-        List<Long> members = relationDao.listUserIdByGroupId(group.getId());
-        group.setMembers(new ArrayList<>(members.size()));
-        for (Long userId : members) {
-            group.getMembers().add(userDao.getUserById(userId));
-        }
-
-        group.getMembers().stream()
-                .forEach(member -> {
-                    ChannelHandlerContext toCtx = Constant.onlineUserMap.get(member.getId());
-                    if (toCtx != null && !fromUserId.equals(member.getId())) {
-                        sendMessage(toCtx, responseJson);
-                    }
-                });
-    }
-
-    /**
-     * 将文字聊天记录存储到数据库中
-     * @param message
-     * @param content
-     */
-    private void storeTextMessage(Message message, String content) {
-        TextContent textContent = new TextContent(content);
-        textContentDao.insertTextContent(textContent);
-        message.setContentId(textContent.getId());
-        messageDao.insertMessage(message);
-    }
-
-    /**
-     * 将文件聊天记录存储到数据库中
-     * @param message
-     * @param name
-     * @param size
-     * @param path
-     */
-    private void storeFileMessage(Message message, String name, String size, String path) {
-        FileContent fileContent = new FileContent(name, size, path);
-        fileContentDao.insertFileContent(fileContent);
-        message.setContentId(fileContent.getId());
-        messageDao.insertMessage(message);
     }
 
 }

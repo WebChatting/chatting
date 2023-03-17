@@ -20,32 +20,13 @@ public interface ChatService {
     public void register(JSONObject param, ChannelHandlerContext ctx);
 
     /**
-     * 向某个用户发送消息
-     * @param param
+     *
+     * @param jm
      * @param ctx
+     * @param type
+     * @param contentType
      */
-    public void singleSend(JSONObject param, ChannelHandlerContext ctx);
-
-    /**
-     * 向某个群发送消息
-     * @param param
-     * @param ctx
-     */
-    public void groupSend(JSONObject param, ChannelHandlerContext ctx);
-
-    /**
-     * 向某个用户发送文件
-     * @param param
-     * @param ctx
-     */
-    public void FileMsgSingleSend(JSONObject param, ChannelHandlerContext ctx);
-
-    /**
-     * 群发文件
-     * @param param
-     * @param ctx
-     */
-    public void FileMsgGroupSend(JSONObject param, ChannelHandlerContext ctx);
+    public void send(JSONObject jm, ChannelHandlerContext ctx, Integer type, Integer contentType);
 
     /**
      * 处理用户下线

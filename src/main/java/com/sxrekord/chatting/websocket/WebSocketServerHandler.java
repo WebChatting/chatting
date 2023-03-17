@@ -2,6 +2,7 @@ package com.sxrekord.chatting.websocket;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.sxrekord.chatting.common.WSType;
 import com.sxrekord.chatting.model.vo.ResponseJson;
 import com.sxrekord.chatting.service.ChatService;
 import com.sxrekord.chatting.util.Constant;
@@ -68,7 +69,6 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<WebSocke
         JSONObject param = null;
         try {
             param = JSONObject.parseObject(request);
-            System.out.println(param);
         } catch (Exception e) {
             sendErrorMessage(ctx, "JSON字符串转换出错！");
             e.printStackTrace();
@@ -78,22 +78,22 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<WebSocke
             return;
         }
 
-        String type = (String) param.get("type");
+        WSType type = WSType.getWSTypeById((Integer)param.get("ws_type"));
         switch (type) {
-            case "REGISTER":
+            case ONLINE:
                 chatService.register(param, ctx);
                 break;
-            case "SINGLE_SENDING":
-                chatService.singleSend(param, ctx);
+            case TEXT_SINGLE_SENDING:
+                chatService.send(param, ctx, 0, 0);
                 break;
-            case "GROUP_SENDING":
-                chatService.groupSend(param, ctx);
+            case TEXT_GROUP_SENDING:
+                chatService.send(param, ctx, 1, 0);
                 break;
-            case "FILE_MSG_SINGLE_SENDING":
-                chatService.FileMsgSingleSend(param, ctx);
+            case FILE_SINGLE_SENDING:
+                chatService.send(param, ctx, 0, 2);
                 break;
-            case "FILE_MSG_GROUP_SENDING":
-                chatService.FileMsgGroupSend(param, ctx);
+            case FILE_GROUP_SENDING:
+                chatService.send(param, ctx, 1, 2);
                 break;
             default:
                 chatService.typeError(ctx);
