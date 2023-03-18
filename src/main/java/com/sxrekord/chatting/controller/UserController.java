@@ -42,8 +42,8 @@ public class UserController {
 
     @RequestMapping(value = "update", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseJson update(String username, String password, String avatarPath, HttpSession session) {
-        return userService.updateUser(username, password, avatarPath, session);
+    public ResponseJson update(@RequestParam String name, @RequestParam String password, @RequestParam String avatarPath, HttpSession session) {
+        return userService.updateUser(name, password, avatarPath, session);
     }
 
     @RequestMapping(value = "search", method = RequestMethod.GET)
