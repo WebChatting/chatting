@@ -61,34 +61,14 @@ public class ChatServiceImpl implements ChatService{
         System.out.println("enter send method, type: " + type);
         Long fromId = Long.parseLong(jm.get("fromId").toString());
         Long toId = Long.parseLong(jm.get("toId").toString());
-        String content = jm.get("content").toString();
 
-        // 消息持久化到数据库
-        Message message = new Message(fromId, toId, type, contentType);
-        if (contentType == MessageType.TEXT.getId()) {
-            TextContent textContent = new TextContent(content);
-            textContentDao.insertTextContent(textContent);
-            message.setContentId(textContent.getId());
-        } else if (contentType == MessageType.IMAGE.getId()) {
-            ImageContent imageContent = new ImageContent(content);
-            imageContentDao.insertImageContent(imageContent);
-            message.setContentId(imageContent.getId());
-        } else if (contentType == MessageType.FILE.getId()) {
-            String size = jm.get("size").toString();
-            String url = jm.get("url").toString();
-            FileContent fileContent = new FileContent(content, size, url);
-            fileContentDao.insertFileContent(fileContent);
-            message.setContentId(fileContent.getId());
-        }
-
-        messageDao.insertMessage(message);
+        storeMessage(jm, fromId, toId, type, contentType);
 
         if (type == 0) {
             // 拿到对方ID上下文
             ChannelHandlerContext toUserCtx = Constant.onlineUserMap.get(toId);
             // 对方在线
             if (toUserCtx != null) {
-                // 发送消息
                 sendMessage(toUserCtx, jm.toJSONString());
             }
         } else {
@@ -127,6 +107,30 @@ public class ChatServiceImpl implements ChatService{
         sendMessage(ctx, responseJson);
     }
 
+
+    // 消息持久化到数据库
+    private void storeMessage(JSONObject jm, Long fromId, Long toId, Integer type, Integer contentType) {
+        String content = jm.get("content").toString();
+
+        Message message = new Message(fromId, toId, type, contentType);
+        if (contentType == MessageType.TEXT.getId()) {
+            TextContent textContent = new TextContent(content);
+            textContentDao.insertTextContent(textContent);
+            message.setContentId(textContent.getId());
+        } else if (contentType == MessageType.IMAGE.getId()) {
+            ImageContent imageContent = new ImageContent(content);
+            imageContentDao.insertImageContent(imageContent);
+            message.setContentId(imageContent.getId());
+        } else if (contentType == MessageType.FILE.getId()) {
+            String size = jm.get("size").toString();
+            String url = jm.get("url").toString();
+            FileContent fileContent = new FileContent(content, size, url);
+            fileContentDao.insertFileContent(fileContent);
+            message.setContentId(fileContent.getId());
+        }
+
+        messageDao.insertMessage(message);
+    }
 
     private void sendToGroup(Group group, Long fromId, String responseJson) {
         List<Long> members = new ArrayList<>();
