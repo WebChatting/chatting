@@ -48,7 +48,7 @@ public class UserController {
 
     @RequestMapping(value = "search", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseJson search(@RequestParam String username) {
-        return userService.searchUser(username);
+    public ResponseJson search(@RequestParam String name) {
+        return userService.searchUser(name);
     }
 }
