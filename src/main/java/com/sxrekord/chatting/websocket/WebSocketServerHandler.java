@@ -81,7 +81,7 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<WebSocke
         WSType type = WSType.getWSTypeById((Integer)param.get("ws_type"));
         switch (type) {
             case ONLINE:
-                chatService.register(param, ctx);
+                chatService.online(param, ctx);
                 break;
             case TEXT_SINGLE_SENDING:
                 chatService.send(param, ctx, 0, 0);
@@ -112,7 +112,7 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<WebSocke
      */
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        chatService.remove(ctx);
+        chatService.offline(ctx);
     }
    
     /**

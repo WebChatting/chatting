@@ -44,7 +44,7 @@ public class ChatServiceImpl implements ChatService{
     private FileContentDao fileContentDao;
     
     @Override
-    public void register(JSONObject param, ChannelHandlerContext ctx) {
+    public void online(JSONObject param, ChannelHandlerContext ctx) {
         String userId = param.get("userId").toString();
         log.info(userId);
         Constant.onlineUserMap.put(userId, ctx);
@@ -54,6 +54,25 @@ public class ChatServiceImpl implements ChatService{
         sendMessage(ctx, responseJson);
         log.info(MessageFormat.format("userId为 {0} 的用户登记到在线用户表，当前在线人数为：{1}"
                 , userId, Constant.onlineUserMap.size()));
+    }
+
+    @Override
+    public void offline(ChannelHandlerContext ctx) {
+        Iterator<Entry<String, ChannelHandlerContext>> iterator =
+                Constant.onlineUserMap.entrySet().iterator();
+        while(iterator.hasNext()) {
+            Entry<String, ChannelHandlerContext> entry = iterator.next();
+            if (entry.getValue() == ctx) {
+                log.info("正在移除握手实例...");
+                Constant.webSocketHandshakerMap.remove(ctx.channel().id().asLongText());
+                log.info(MessageFormat.format("已移除握手实例，当前握手实例总数为：{0}"
+                        , Constant.webSocketHandshakerMap.size()));
+                iterator.remove();
+                log.info(MessageFormat.format("userId为 {0} 的用户已退出聊天，当前在线人数为：{1}"
+                        , entry.getKey(), Constant.onlineUserMap.size()));
+                break;
+            }
+        }
     }
 
     @Override
@@ -75,26 +94,6 @@ public class ChatServiceImpl implements ChatService{
             Group group = groupDao.getGroupById(toId);
             if (group != null) {
                 sendToGroup(group, fromId, jm.toJSONString());
-            }
-        }
-    }
-
-    
-    @Override
-    public void remove(ChannelHandlerContext ctx) {
-        Iterator<Entry<String, ChannelHandlerContext>> iterator = 
-                Constant.onlineUserMap.entrySet().iterator();
-        while(iterator.hasNext()) {
-            Entry<String, ChannelHandlerContext> entry = iterator.next();
-            if (entry.getValue() == ctx) {
-                log.info("正在移除握手实例...");
-                Constant.webSocketHandshakerMap.remove(ctx.channel().id().asLongText());
-                log.info(MessageFormat.format("已移除握手实例，当前握手实例总数为：{0}"
-                        , Constant.webSocketHandshakerMap.size()));
-                iterator.remove();
-                log.info(MessageFormat.format("userId为 {0} 的用户已退出聊天，当前在线人数为：{1}"
-                        , entry.getKey(), Constant.onlineUserMap.size()));
-                break;
             }
         }
     }

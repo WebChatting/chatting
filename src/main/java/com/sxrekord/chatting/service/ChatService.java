@@ -13,11 +13,17 @@ import org.springframework.stereotype.Service;
 public interface ChatService {
 
     /**
-     * 登记上线用户
+     * 处理用户上线
      * @param param
      * @param ctx
      */
-    public void register(JSONObject param, ChannelHandlerContext ctx);
+    public void online(JSONObject param, ChannelHandlerContext ctx);
+
+    /**
+     * 处理用户下线
+     * @param ctx
+     */
+    public void offline(ChannelHandlerContext ctx);
 
     /**
      *
@@ -27,12 +33,6 @@ public interface ChatService {
      * @param contentType
      */
     public void send(JSONObject jm, ChannelHandlerContext ctx, Integer type, Integer contentType);
-
-    /**
-     * 处理用户下线
-     * @param ctx
-     */
-    public void remove(ChannelHandlerContext ctx);
 
     /**
      * 封装并发送“类型不存在”错误
