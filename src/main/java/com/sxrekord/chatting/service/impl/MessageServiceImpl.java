@@ -53,6 +53,7 @@ public class MessageServiceImpl implements MessageService {
                     .setData("fromId", message.getFromId())
                     .setData("name", userDao.getUserById(message.getFromId()).getUsername())
                     .setData("avatarPath", userDao.getUserById(message.getFromId()).getAvatarPath())
+                    .setData("updateTime", message.getUpdateTime())
                     .setData("contentType", message.getContentType())
                     .setData("content", message.getContentType() == 0 ?
                             textContentDao.getTextContentById(message.getContentId()).getContent()
