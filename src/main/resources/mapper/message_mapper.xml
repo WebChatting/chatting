@@ -23,19 +23,6 @@
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
     </resultMap>
 
-    <select id="getMessageByFromIdAndToId" resultMap="MessageDao">
-        select <include refid="selectFields"/> from message
-        where type = 0 and ((from_id = #{fromId} and to_id = #{toId})
-        or (from_id = #{toId} and to_id = #{fromId}))
-        order by create_time;
-    </select>
-
-    <select id="getMessageByToId" resultMap="MessageDao">
-        select <include refid="selectFields"/> from message
-        where type = 1 and to_id = #{toId}
-        order by create_time;
-    </select>
-
     <insert id="insertMessage" parameterType="Message" keyProperty="messageId">
         insert into message (<include refid="insertFields"/>)
         values(#{fromId}, #{toId}, #{type}, #{contentType}, #{contentId})

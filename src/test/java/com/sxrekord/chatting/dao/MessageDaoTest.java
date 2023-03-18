@@ -28,13 +28,6 @@ public class MessageDaoTest {
     MessageDao messageDao;
 
     @Test
-    public void getMessageTest() {
-        List<Message> messages = messageDao.getMessageByFromIdAndToId(501L, 502L);
-        Assert.isTrue(messages != null, "getMessage error!");
-        System.out.println("get message success");
-    }
-
-    @Test
     public void insertMessageTest() {
         int feedback = 0;
         TextContent textContent = new TextContent("text message");

@@ -21,19 +21,6 @@ public class MessageController {
     @Autowired
     MessageService messageService;
 
-    @PostMapping("get_user_message")
-    @ResponseBody
-    public ResponseJson getFriendMessage(@RequestParam Long fromId,
-                              @RequestParam Long toId) {
-        return messageService.getFriendMessage(fromId, toId);
-    }
-
-    @PostMapping("get_group_message")
-    @ResponseBody
-    public ResponseJson getGroupMessage(@RequestParam Long groupId) {
-        return messageService.getGroupMessage(groupId);
-    }
-
     @PostMapping(value = "load")
     @ResponseBody
     public ResponseJson load(@RequestParam("type") Integer type,

@@ -14,7 +14,6 @@ public class Group {
     private String name;
     private Long ownerId;
     private String avatarPath;
-    private List<User> members;
 
     public Group() {}
 

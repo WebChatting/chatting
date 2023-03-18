@@ -13,20 +13,6 @@ import java.util.List;
 @Mapper
 public interface RelationDao {
     /**
-     * 根据用户ID查询所有好友
-     * @param id
-     * @return
-     */
-    List<Long> listUserIdByUserId(@Param("id") Long id);
-
-    /**
-     * 根据用户ID查询所有群组
-     * @param id
-     * @return
-     */
-    List<Long> listGroupIdByUserId(@Param("id") Long id);
-
-    /**
      * 根据群组ID查询所有用户
      * @param id
      * @return

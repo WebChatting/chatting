@@ -13,21 +13,6 @@ import java.util.List;
  */
 @Mapper
 public interface MessageDao {
-
-    /**
-     * 通过fromID和toId查询消息
-     * @param fromId
-     * @param toId
-     * @return
-     */
-    List<Message> getMessageByFromIdAndToId(@Param("fromId") Long fromId, @Param("toId") Long toId);
-
-    /**
-     * 通过toID查询消息
-     * @param toId
-     * @return
-     */
-    List<Message> getMessageByToId(@Param("toId") Long toId);
     /**
      * 保存消息
      * @param message

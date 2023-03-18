@@ -13,19 +13,6 @@
         <result column="status" jdbcType="INTEGER" property="status"/>
     </resultMap>
 
-    <select id="listUserIdByUserId" resultType="java.lang.Long">
-        select request_id from relation
-        where type = 0 and accept_id = #{id}
-        union
-        select accept_id from relation
-        where type = 0 and request_id = #{id};
-    </select>
-
-    <select id="listGroupIdByUserId" resultType="java.lang.Long">
-        select accept_id from relation
-        where type = 1 and request_id = #{id};
-    </select>
-
     <select id="listUserIdByGroupId" resultType="java.lang.Long">
         select request_id from relation
         where type = 1 and accept_id = #{id};

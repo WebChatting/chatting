@@ -11,21 +11,6 @@ import java.util.Date;
  */
 public interface MessageService {
     /**
-     * 获取好友历史消息
-     * @param fromId
-     * @param toId
-     * @return
-     */
-    ResponseJson getFriendMessage(Long fromId, Long toId);
-
-    /**
-     * 获取群组历史消息
-     * @param groupId
-     * @return
-     */
-    ResponseJson getGroupMessage(Long groupId);
-
-    /**
      * 加载历史消息
      * @param type
      * @param updateTime

@@ -22,20 +22,6 @@ public class MessageServiceTest {
     MessageService messageService;
 
     @Test
-    public void getFriendMessageTest() {
-        ResponseJson responseJson = messageService.getFriendMessage(501L, 502L);
-        Assert.isTrue(responseJson != null, "get friendMessage fail");
-        System.out.println(responseJson);
-    }
-
-    @Test
-    public void getGroupMessageTest() {
-        ResponseJson responseJson = messageService.getGroupMessage(101L);
-        Assert.isTrue(responseJson != null, "get groupMessage fail");
-        System.out.println(responseJson);
-    }
-
-    @Test
     public void loadMessageTest() {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());

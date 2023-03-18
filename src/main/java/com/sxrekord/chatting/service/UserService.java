@@ -36,13 +36,6 @@ public interface UserService {
     ResponseJson logoutUser(HttpSession session);
 
     /**
-     * 获取用户信息
-     * @param id
-     * @return
-     */
-    ResponseJson getUser(Long id);
-
-    /**
      * 更新用户信息
      * @param username
      * @param password

@@ -29,24 +29,6 @@ public class MessageServiceImpl implements MessageService {
     @Autowired
     UserDao userDao;
 
-    @Override
-    public ResponseJson getFriendMessage(Long fromId, Long toId) {
-        ResponseJson responseJson = new ResponseJson();
-        List<Message> messages = messageDao.getMessageByFromIdAndToId(fromId, toId);
-
-        loadConcreteMessage(responseJson, messages);
-        return responseJson.success();
-    }
-
-    @Override
-    public ResponseJson getGroupMessage(Long groupId) {
-        ResponseJson responseJson = new ResponseJson();
-        List<Message> messages = messageDao.getMessageByToId(groupId);
-
-        loadConcreteMessage(responseJson, messages);
-        return responseJson.success();
-    }
-
     private void loadConcreteMessage(ResponseJson responseJson, List<Message> messages) {
         for (Message message : messages) {
             responseJson.setData("id", message.getId())

@@ -1,7 +1,5 @@
 package com.sxrekord.chatting.service.impl;
 
-import com.sxrekord.chatting.dao.GroupDao;
-import com.sxrekord.chatting.dao.RelationDao;
 import com.sxrekord.chatting.dao.UserDao;
 import com.sxrekord.chatting.model.po.User;
 import com.sxrekord.chatting.model.vo.ResponseJson;
@@ -14,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
 import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,10 +23,6 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserDao userDao;
-    @Autowired
-    private RelationDao relationDao;
-    @Autowired
-    private GroupDao groupDao;
 
     @Value("${file.default.user}")
     private String user_avatar_default;
@@ -77,31 +70,6 @@ public class UserServiceImpl implements UserService {
         session.removeAttribute(Constant.USER_TOKEN);
         log.info(MessageFormat.format("userId为 {0} 的用户已注销登录！", userId));
         return responseJson.success();
-    }
-
-    @Override
-    public ResponseJson getUser(Long id) {
-        ResponseJson responseJson = new ResponseJson();
-        User user = userDao.getUserById(id);
-        if (user == null) {
-            responseJson.error("用户未登录！");
-        } else {
-            List<Long> friendList = relationDao.listUserIdByUserId(user.getId());
-            user.setFriendList(new ArrayList<>(friendList.size()));
-            for (Long userId : friendList) {
-                user.getFriendList().add(userDao.getUserById(userId));
-            }
-            List<Long> groupList = relationDao.listGroupIdByUserId(user.getId());
-            user.setGroupList(new ArrayList<>(groupList.size()));
-            for (Long groupId : groupList) {
-                user.getGroupList().add(groupDao.getGroupById(groupId));
-            }
-
-            log.info(user.toString());
-
-            responseJson.success().setData("userInfo", user);
-        }
-        return responseJson;
     }
 
     @Override
