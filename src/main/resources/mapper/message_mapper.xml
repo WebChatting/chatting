@@ -42,6 +42,7 @@
     </insert>
 
     <select id="listMessage" resultMap="MessageDao">
+        select * from (
         select <include refid="selectFields"/> from `message`
         where type = #{type} and `update_time` &lt; #{updateTime} and
         (from_id = #{fromId} and to_id = #{toId}
@@ -49,8 +50,10 @@
             or from_id = #{toId} and to_id = #{fromId}
         </if>
         )
-        order by update_time
-        limit 0, #{count};
+        order by update_time desc
+        limit 0, #{count}
+        ) as ms
+        order by ms.update_time;
     </select>
 
 </mapper>
