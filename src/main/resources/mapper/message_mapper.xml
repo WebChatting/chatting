@@ -32,8 +32,9 @@
         select * from (
         select <include refid="selectFields"/> from `message`
         where type = #{type} and `update_time` &lt; #{updateTime} and
-        (from_id = #{fromId} and to_id = #{toId}
+        (to_id = #{toId}
         <if test="type == 0">
+            and from_id = #{fromId}
             or from_id = #{toId} and to_id = #{fromId}
         </if>
         )
