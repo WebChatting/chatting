@@ -52,4 +52,14 @@
         </if>
         ;
     </select>
+
+    <select id="searchRelation" resultMap="RelationDao">
+        select * from relation
+        where type = #{type} and
+        request_id = #{requestId} and accept_id = #{acceptId}
+        <if test="type == 0">
+            or request_id = #{acceptId} and accept_id = #{requestId}
+        </if>
+        ;
+    </select>
 </mapper>
