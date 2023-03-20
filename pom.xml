@@ -6,7 +6,7 @@
 
     <groupId>com.sxrekord.chatting</groupId>
     <artifactId>chatting-springboot</artifactId>
-    <version>0.1.0</version>
+    <version>0.3.1</version>
     <packaging>jar</packaging>
 
     <name>chatting</name>

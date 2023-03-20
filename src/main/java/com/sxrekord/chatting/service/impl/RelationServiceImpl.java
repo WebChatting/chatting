@@ -105,19 +105,4 @@ public class RelationServiceImpl implements RelationService {
         return responseJson.setCollectionToData("relations").success();
     }
 
-    @Override
-    public ResponseJson queryRelation(int type, long acceptId, HttpSession session) {
-        ResponseJson responseJson = new ResponseJson();
-        Long requestId = (long)session.getAttribute(Constant.USER_TOKEN);
-        Relation relation = relationDao.searchRelation(new Relation(requestId, acceptId, type));
-        if (relation == null) {
-            relation = new Relation(requestId, acceptId, type, -1);
-        }
-        return responseJson.setData("requestId", relation.getRequestId())
-                .setData("acceptId", relation.getAcceptId())
-                .setData("type", relation.getType())
-                .setData("status", relation.getStatus())
-                .success();
-    }
-
 }

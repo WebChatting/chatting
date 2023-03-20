@@ -14,7 +14,7 @@ public interface GroupService {
      * @param name
      * @return
      */
-    ResponseJson searchGroup(String name);
+    ResponseJson searchGroup(String name, HttpSession session);
 
     /**
      * 列出群组

@@ -38,9 +38,4 @@ public class RelationController {
         return relationService.listRelation(type, status, direction, session);
     }
 
-    @GetMapping(value = "query")
-    @ResponseBody
-    public ResponseJson query(@RequestParam int type, @RequestParam long acceptId, HttpSession session) {
-        return relationService.queryRelation(type, acceptId, session);
-    }
 }

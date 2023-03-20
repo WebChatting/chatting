@@ -50,5 +50,5 @@ public interface UserService {
      * @param username
      * @return
      */
-    ResponseJson searchUser(String username);
+    ResponseJson searchUser(String username, HttpSession session);
 }

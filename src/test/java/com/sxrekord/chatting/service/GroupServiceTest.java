@@ -18,7 +18,10 @@ public class GroupServiceTest {
 
     @Test
     public void searchGroupTest() {
-        System.out.println(groupService.searchGroup("group"));
+        HttpSession session = new MockHttpSession();
+        session.setAttribute("userId", 501L);
+        System.out.println(groupService.searchGroup("group", session));
+        System.out.println(groupService.searchGroup("", session));
 
         System.out.println("test searchGroup success");
     }

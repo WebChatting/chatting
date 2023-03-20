@@ -33,9 +33,4 @@ public interface RelationService {
      */
     ResponseJson listRelation(int type, int status, int direction, HttpSession session);
 
-    /**
-     * 查询关系状态
-     * @return
-     */
-    ResponseJson queryRelation(int type, long acceptId, HttpSession session);
 }

@@ -23,8 +23,8 @@ public class GroupController {
 
     @RequestMapping(value = "search", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseJson search(@RequestParam String name) {
-        return this.groupService.searchGroup(name);
+    public ResponseJson search(@RequestParam String name, HttpSession session) {
+        return this.groupService.searchGroup(name, session);
     }
 
     @RequestMapping(value = "list", method = RequestMethod.GET)

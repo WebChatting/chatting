@@ -1,10 +1,13 @@
 package com.sxrekord.chatting.service.impl;
 
+import com.sxrekord.chatting.dao.RelationDao;
 import com.sxrekord.chatting.dao.UserDao;
+import com.sxrekord.chatting.model.po.Relation;
 import com.sxrekord.chatting.model.po.User;
 import com.sxrekord.chatting.model.vo.ResponseJson;
 import com.sxrekord.chatting.service.UserService;
 import com.sxrekord.chatting.util.Constant;
+import com.sxrekord.chatting.util.WrapEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,6 +26,8 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserDao userDao;
+    @Autowired
+    private RelationDao relationDao;
 
     @Value("${file.default.user}")
     private String user_avatar_default;
@@ -88,12 +93,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseJson searchUser(String username) {
+    public ResponseJson searchUser(String username, HttpSession session) {
         ResponseJson responseJson = new ResponseJson();
         // 调用dao层
         List<User> users = userDao.searchUserByUsername("%" + username + "%");
-        responseJson.setData("users", users).success();
-        return responseJson;
+        Long requestId = (long)session.getAttribute(Constant.USER_TOKEN);
+        for (User user : users) {
+            if (user.getId().equals(requestId)) continue;
+            Relation relation = relationDao.searchRelation(new Relation(requestId, user.getId(), 0));
+            WrapEntity.wrapSearchResultForUser(responseJson, user, relation == null ? -1 : relation.getStatus());
+        }
+        return responseJson.setCollectionToData("results").success();
     }
 
 }

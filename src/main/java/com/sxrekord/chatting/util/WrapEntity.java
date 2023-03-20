@@ -28,4 +28,20 @@ public class WrapEntity {
 
         responseJson.addToCollection("relations");
     }
+
+    public static void wrapSearchResultForUser(ResponseJson responseJson, User user, Integer status) {
+        wrapSearchResult(responseJson, user.getId(), user.getAvatarPath(), user.getUsername(), status);
+    }
+
+    public static void wrapSearchResultForGroup(ResponseJson responseJson, Group group, Integer status) {
+        wrapSearchResult(responseJson, group.getId(), group.getAvatarPath(), group.getName(), status);
+    }
+
+    private static void wrapSearchResult(ResponseJson responseJson, Long id, String avatarPath, String name, Integer status) {
+        responseJson.setData("id", id)
+                .setData("avatarPath", avatarPath)
+                .setData("name", name)
+                .setData("status", status)
+                .addToCollection("results");
+    }
 }

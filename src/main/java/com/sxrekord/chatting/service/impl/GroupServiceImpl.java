@@ -1,7 +1,9 @@
 package com.sxrekord.chatting.service.impl;
 
 import com.sxrekord.chatting.dao.GroupDao;
+import com.sxrekord.chatting.dao.RelationDao;
 import com.sxrekord.chatting.model.po.Group;
+import com.sxrekord.chatting.model.po.Relation;
 import com.sxrekord.chatting.model.vo.ResponseJson;
 import com.sxrekord.chatting.service.GroupService;
 import com.sxrekord.chatting.util.Constant;
@@ -21,16 +23,24 @@ import java.util.List;
 public class GroupServiceImpl implements GroupService {
     @Autowired
     GroupDao groupDao;
+    @Autowired
+    RelationDao relationDao;
 
     @Value("${file.default.group}")
     private String group_avatar_default;
 
     @Override
-    public ResponseJson searchGroup(String name) {
+    public ResponseJson searchGroup(String name, HttpSession session) {
         ResponseJson responseJson = new ResponseJson();
 
+        Long requestId = (long)session.getAttribute(Constant.USER_TOKEN);
         List<Group> groups = groupDao.searchGroupByName(name);
-        responseJson.setData("groups", groups).success();
+        for (Group group : groups) {
+            Relation relation = relationDao.searchRelation(new Relation(requestId, group.getId(), 1));
+            WrapEntity.wrapSearchResultForGroup(responseJson, group, relation == null ?
+                    (group.getOwnerId().equals(requestId) ? 1 : -1) : relation.getStatus());
+        }
+        responseJson.setCollectionToData("results").success();
         return responseJson;
     }
 
