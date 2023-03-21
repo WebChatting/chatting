@@ -35,8 +35,11 @@ public class RelationServiceImpl implements RelationService {
     public ResponseJson createRelation(Relation relation, HttpSession session) {
         ResponseJson responseJson = new ResponseJson();
 
-        Object requestId = session.getAttribute(Constant.USER_TOKEN);
-        relation.setRequestId((long)requestId);
+        relation.setRequestId((long)session.getAttribute(Constant.USER_TOKEN));
+        // 说明想建立的关系曾经被拒绝过
+        if (relation.getStatus() == 2) {
+            relationDao.deleteRelation(relation);
+        }
         relationDao.insertRelation(relation);
         return responseJson.success();
     }
