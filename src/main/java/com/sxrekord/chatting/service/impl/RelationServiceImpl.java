@@ -37,7 +37,7 @@ public class RelationServiceImpl implements RelationService {
 
         relation.setRequestId((long)session.getAttribute(Constant.USER_TOKEN));
         // 说明想建立的关系曾经被拒绝过
-        if (relation.getStatus() == 2) {
+        if (relation.getStatus() != null && relation.getStatus() == 2) {
             relationDao.deleteRelation(relation);
         }
         relationDao.insertRelation(relation);
