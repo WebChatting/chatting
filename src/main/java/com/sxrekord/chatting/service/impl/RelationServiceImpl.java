@@ -48,8 +48,7 @@ public class RelationServiceImpl implements RelationService {
     public ResponseJson updateRelation(Relation relation, HttpSession session) {
         ResponseJson responseJson = new ResponseJson();
 
-        long requestId = (long)session.getAttribute(Constant.USER_TOKEN);
-        relation.setRequestId(requestId);
+        relation.setAcceptId((long)session.getAttribute(Constant.USER_TOKEN));
         if (relation.getStatus() == 3) {
             relationDao.deleteRelation(relation);
         } else {
