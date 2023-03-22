@@ -48,7 +48,9 @@ public class RelationServiceImpl implements RelationService {
     public ResponseJson updateRelation(Relation relation, HttpSession session) {
         ResponseJson responseJson = new ResponseJson();
 
-        relation.setAcceptId((long)session.getAttribute(Constant.USER_TOKEN));
+        if (relation.getAcceptId().equals(0L)) {
+            relation.setAcceptId((long)session.getAttribute(Constant.USER_TOKEN));
+        }
         if (relation.getStatus() == 3) {
             relationDao.deleteRelation(relation);
         } else {
@@ -97,7 +99,7 @@ public class RelationServiceImpl implements RelationService {
                         if (direction == 0) {
                             WrapEntity.wrapGroup(responseJson, groupDao.getGroupById(relation.getAcceptId()), type, relation.getStatus());
                         } else {
-                            WrapEntity.wrapUser(responseJson, userDao.getUserById(relation.getRequestId()), type, relation.getStatus());
+                            WrapEntity.wrapUser(responseJson, userDao.getUserById(relation.getRequestId()), relation.getAcceptId(), type, relation.getStatus());
                         }
                     }
                 }

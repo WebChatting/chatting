@@ -9,17 +9,21 @@ import com.sxrekord.chatting.model.vo.ResponseJson;
  * @date 2023/3/15 20:26
  */
 public class WrapEntity {
+    public static void wrapUser(ResponseJson responseJson, User user, Long acceptId, int type, int status) {
+        wrapResult(responseJson, user.getId(), acceptId, type, user.getUsername(), user.getAvatarPath(), status, 0);
+    }
     public static void wrapUser(ResponseJson responseJson, User user, int type, int status) {
-        wrapResult(responseJson, user.getId(), type, user.getUsername(), user.getAvatarPath(), status, 0);
+        wrapUser(responseJson, user, 0L, type, status);
     }
 
     public static void wrapGroup(ResponseJson responseJson, Group group, int type, int status) {
-        wrapResult(responseJson, group.getId(), type, group.getName(), group.getAvatarPath(), status, 0);
+        wrapResult(responseJson, group.getId(), 0L, type, group.getName(), group.getAvatarPath(), status, 0);
     }
 
-    private static void wrapResult(ResponseJson responseJson, Long id, Integer type,
+    private static void wrapResult(ResponseJson responseJson, Long id, Long acceptId, Integer type,
                             String name, String avatarPath, Integer status, Integer online) {
         responseJson.setData("id", id)
+                .setData("acceptId", acceptId)
                 .setData("type", type)
                 .setData("name", name)
                 .setData("avatarPath", avatarPath)
