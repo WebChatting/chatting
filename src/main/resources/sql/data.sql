@@ -6,6 +6,7 @@ insert into user (`username`, `password`, `avatar_path`) values ('member002', '0
 insert into user (`username`, `password`, `avatar_path`) values ('member003', '003', 'avatar/default_user_avatar.jpg');
 insert into user (`username`, `password`, `avatar_path`) values ('member004', '004', 'avatar/default_user_avatar.jpg');
 insert into user (`username`, `password`, `avatar_path`) values ('member005', '005', 'avatar/default_user_avatar.jpg');
+insert into user (`username`, `password`, `avatar_path`) values ('member006', '006', 'avatar/default_user_avatar.jpg');
 
 -- create group
 -- 1. create group (the group is a keyword)
@@ -27,6 +28,7 @@ insert into relation (`request_id`, `accept_id`, `type`, `status`) values (502, 
 insert into relation (`request_id`, `accept_id`, `type`, `status`) values (503, 504, 0, 0);
 insert into relation (`request_id`, `accept_id`, `type`, `status`) values (503, 505, 0, 1);
 insert into relation (`request_id`, `accept_id`, `type`, `status`) values (504, 505, 0, 1);
+insert into relation (`request_id`, `accept_id`, `type`, `status`) values (506, 501, 0, 0);
 
 -- insert text message
 insert into text_content (`content`) values ('hi');
