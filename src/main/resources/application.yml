@@ -58,8 +58,8 @@ file:
   upload:
     location: D:/dev/repo/chatting-vue/public/upload/
   default:
-    user: default_user_avatar.jpg
-    group: default_group_avatar.jpg
+    user: avatar/default_user_avatar.jpg
+    group: avatar/default_group_avatar.jpg
 
 netty:
   server:
