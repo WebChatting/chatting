@@ -39,4 +39,11 @@ public interface GroupDao {
      * @return
      */
     int insertGroup(Group group);
+
+    /**
+     * 根据id删除群组
+     * @param id
+     * @return
+     */
+    int deleteGroup(@Param("id") Long id);
 }

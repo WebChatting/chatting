@@ -48,8 +48,20 @@ public class RelationServiceImpl implements RelationService {
     public ResponseJson updateRelation(Relation relation, HttpSession session) {
         ResponseJson responseJson = new ResponseJson();
 
+        long id = (long)session.getAttribute(Constant.USER_TOKEN);
         if (relation.getAcceptId().equals(0L)) {
-            relation.setAcceptId((long)session.getAttribute(Constant.USER_TOKEN));
+            relation.setAcceptId(id);
+        }
+        if (relation.getRequestId().equals(0L)) {
+            relation.setRequestId(id);
+        }
+        // 删除自己的群组
+        if (relation.getType() == 1
+                && groupDao.getGroupById(relation.getAcceptId()).getOwnerId().equals(relation.getRequestId())) {
+            // 删除所有群友关系
+            relationDao.deleteRelationByTypeAndAcceptId(1, relation.getAcceptId());
+            // 删除群组
+            groupDao.deleteGroup(relation.getAcceptId());
         }
         if (relation.getStatus() == 3) {
             relationDao.deleteRelation(relation);

@@ -43,4 +43,9 @@
         insert into `group` (<include refid="insertFields"/>)
         values (#{name}, #{ownerId}, #{avatarPath});
     </insert>
+
+    <delete id="deleteGroup" parameterType="java.lang.Long">
+        delete from `group`
+        where id = #{id};
+    </delete>
 </mapper>

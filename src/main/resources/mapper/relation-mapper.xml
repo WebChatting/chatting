@@ -39,6 +39,12 @@
         );
     </delete>
 
+    <delete id="deleteRelationByTypeAndAcceptId">
+        delete from `relation`
+        where type = #{type}
+        and accept_id = #{acceptId};
+    </delete>
+
     <select id="listRelation" resultMap="RelationDao">
         select * from relation
         where type = #{type} and

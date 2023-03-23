@@ -39,6 +39,14 @@ public interface RelationDao {
     int deleteRelation(Relation relation);
 
     /**
+     * 根据类型和接受者id删除关系
+     * @param type
+     * @param acceptId
+     * @return
+     */
+    int deleteRelationByTypeAndAcceptId(@Param("type") Integer type, @Param("acceptId") Long acceptId);
+
+    /**
      * 列出关系
      * @param id
      * @param type
