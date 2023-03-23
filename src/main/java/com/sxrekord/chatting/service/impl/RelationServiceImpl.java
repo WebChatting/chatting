@@ -52,7 +52,7 @@ public class RelationServiceImpl implements RelationService {
         if (relation.getAcceptId().equals(0L)) {
             relation.setAcceptId(id);
         }
-        if (relation.getRequestId().equals(0L)) {
+        if (relation.getRequestId() != null && relation.getRequestId().equals(0L)) {
             relation.setRequestId(id);
         }
         // 删除自己的群组
