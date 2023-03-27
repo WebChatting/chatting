@@ -45,15 +45,14 @@ public class ChatServiceImpl implements ChatService{
     
     @Override
     public void online(JSONObject param, ChannelHandlerContext ctx) {
-        String userId = param.get("userId").toString();
-        log.info(userId);
-        Constant.onlineUserMap.put(userId, ctx);
+        String id = param.get("id").toString();
+        Constant.onlineUserMap.put(id, ctx);
         String responseJson = new ResponseJson().success()
                 .setData("type", WSType.ONLINE)
                 .toString();
         sendMessage(ctx, responseJson);
         log.info(MessageFormat.format("userId为 {0} 的用户登记到在线用户表，当前在线人数为：{1}"
-                , userId, Constant.onlineUserMap.size()));
+                , id, Constant.onlineUserMap.size()));
     }
 
     @Override

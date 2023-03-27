@@ -83,6 +83,9 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<WebSocke
             case ONLINE:
                 chatService.online(param, ctx);
                 break;
+            case OFFLINE:
+                chatService.offline(ctx);
+                break;
             case TEXT_SINGLE_SENDING:
                 chatService.send(param, ctx, 0, 0);
                 break;
