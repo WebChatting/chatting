@@ -50,7 +50,7 @@ public class ChatServiceImpl implements ChatService{
         String responseJson = new ResponseJson().success()
                 .setData("type", WSType.ONLINE)
                 .toString();
-        sendMessage(ctx, responseJson);
+//        sendMessage(ctx, responseJson);
         log.info(MessageFormat.format("当前握手实例总数为：{0}", Constant.webSocketHandshakerMap.size()));
         log.info(MessageFormat.format("id为 {0} 的用户登记到在线用户表，当前在线人数为：{1}"
                 , id, Constant.onlineUserMap.size()));
@@ -84,7 +84,7 @@ public class ChatServiceImpl implements ChatService{
 
         if (type == 0) {
             // 拿到对方ID上下文
-            ChannelHandlerContext toUserCtx = Constant.onlineUserMap.get(toId);
+            ChannelHandlerContext toUserCtx = Constant.onlineUserMap.get(toId.toString());
             // 对方在线
             if (toUserCtx != null) {
                 sendMessage(toUserCtx, jm.toJSONString());
