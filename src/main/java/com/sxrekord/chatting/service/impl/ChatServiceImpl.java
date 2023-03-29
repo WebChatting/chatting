@@ -128,6 +128,7 @@ public class ChatServiceImpl implements ChatService{
         }
 
         messageDao.insertMessage(message);
+        jm.put("id", message.getId());
     }
 
     private void sendToGroup(Group group, Long fromId, String responseJson) {

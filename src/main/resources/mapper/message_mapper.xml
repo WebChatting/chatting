@@ -23,7 +23,7 @@
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
     </resultMap>
 
-    <insert id="insertMessage" parameterType="Message" keyProperty="messageId">
+    <insert id="insertMessage" parameterType="Message" useGeneratedKeys="true" keyProperty="id">
         insert into message (<include refid="insertFields"/>)
         values(#{fromId}, #{toId}, #{type}, #{contentType}, #{contentId})
     </insert>
