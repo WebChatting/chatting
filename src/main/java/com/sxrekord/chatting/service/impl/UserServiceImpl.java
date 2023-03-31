@@ -36,7 +36,7 @@ public class UserServiceImpl implements UserService {
     public ResponseJson registerUser(String username, String password) {
         ResponseJson responseJson = new ResponseJson();
         if (userDao.getUserByUsername(username) == null) {
-            userDao.insertUser(new User(username, password, user_avatar_default));
+            userDao.insert(new User(username, password, user_avatar_default));
             responseJson.success("注册成功");
         } else {
             responseJson.error("用户名已存在");
@@ -87,7 +87,7 @@ public class UserServiceImpl implements UserService {
         if (userId == null) {
             return responseJson.error("请先登录！");
         }
-        userDao.updateUser(new User((long)userId, username, password, avatarPath));
+        userDao.updateById(new User((long)userId, username, password, avatarPath));
         responseJson.success("信息更新成功");
         return responseJson;
     }

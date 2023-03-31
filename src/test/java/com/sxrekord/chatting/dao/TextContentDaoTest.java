@@ -18,15 +18,15 @@ public class TextContentDaoTest {
     @Test
     public void insertTextContentTest() {
         TextContent textContent = new TextContent("test statement");
-        textContentDao.insertTextContent(textContent);
+        textContentDao.insert(textContent);
         Assert.isTrue(textContent.getId() != null, "insert textContent fail!");
         System.out.println(textContent);
     }
 
     @Test
     public void getTextContentTest() {
-        System.out.println(textContentDao.getTextContentById(1001L));
-        System.out.println(textContentDao.getTextContentById(1002L));
-        System.out.println(textContentDao.getTextContentById(5002L));
+        System.out.println(textContentDao.selectById(1001L));
+        System.out.println(textContentDao.selectById(1002L));
+        System.out.println(textContentDao.selectById(5002L));
     }
 }

@@ -20,15 +20,15 @@ public class FileContentDaoTest {
     @Test
     public void insertFileContentTest() {
         FileContent fileContent = new FileContent("法语成绩单.pdf", "165.6KB", "/UploadFile/b88cbb8786604ea6bcba0be61743de5e.pdf");
-        fileContentDao.insertFileContent(fileContent);
+        fileContentDao.insert(fileContent);
         Assert.isTrue(fileContent.getId() != null, "insert fileContent fail!");
         System.out.println(fileContent);
     }
 
     @Test
     public void getFileContentTest() {
-        System.out.println(fileContentDao.getFileContentById(1001L));
-        System.out.println(fileContentDao.getFileContentById(1002L));
-        System.out.println(fileContentDao.getFileContentById(5002L));
+        System.out.println(fileContentDao.selectById(1001L));
+        System.out.println(fileContentDao.selectById(1002L));
+        System.out.println(fileContentDao.selectById(5002L));
     }
 }

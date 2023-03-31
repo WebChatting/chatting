@@ -5,10 +5,6 @@
 
 <mapper namespace="com.sxrekord.chatting.dao.UserDao">
 
-    <sql id="insertFields">
-        username, password, avatar_path
-    </sql>
-
     <sql id="selectFields">
         id, username, password, avatar_path
     </sql>
@@ -19,19 +15,6 @@
         <result column="password" jdbcType="VARCHAR" property="password"/>
         <result column="avatar_path" jdbcType="VARCHAR" property="avatarPath"/>
     </resultMap>
-
-    <select id="getUserById" parameterType="java.lang.Long" resultMap="UserDao">
-        select
-        <include refid="selectFields"/>
-        from user
-        where id = #{id}
-    </select>
-
-<!--    keyProperty 用于指定主键在 POJO 中对应的属性名，需要配合数据库的自增主键来使用。-->
-    <insert id="insertUser" parameterType="User" keyProperty="id">
-        insert into user (<include refid="insertFields"/>)
-        values(#{username}, #{password}, #{avatarPath})
-    </insert>
 
     <select id="getUserByUsernameAndPassword" resultMap="UserDao">
         select

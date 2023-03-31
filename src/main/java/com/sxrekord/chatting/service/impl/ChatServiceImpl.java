@@ -90,7 +90,7 @@ public class ChatServiceImpl implements ChatService{
                 sendMessage(toUserCtx, jm.toJSONString());
             }
         } else {
-            Group group = groupDao.getGroupById(toId);
+            Group group = groupDao.selectById(toId);
             if (group != null) {
                 sendToGroup(group, fromId, jm.toJSONString());
             }
@@ -113,28 +113,28 @@ public class ChatServiceImpl implements ChatService{
         Message message = new Message(fromId, toId, type, contentType);
         if (contentType == MessageType.TEXT.getId()) {
             TextContent textContent = new TextContent(content);
-            textContentDao.insertTextContent(textContent);
+            textContentDao.insert(textContent);
             message.setContentId(textContent.getId());
         } else if (contentType == MessageType.IMAGE.getId()) {
             ImageContent imageContent = new ImageContent(content);
-            imageContentDao.insertImageContent(imageContent);
+            imageContentDao.insert(imageContent);
             message.setContentId(imageContent.getId());
         } else if (contentType == MessageType.FILE.getId()) {
             String size = jm.get("size").toString();
             String url = jm.get("url").toString();
             FileContent fileContent = new FileContent(content, size, url);
-            fileContentDao.insertFileContent(fileContent);
+            fileContentDao.insert(fileContent);
             message.setContentId(fileContent.getId());
         }
 
-        messageDao.insertMessage(message);
+        messageDao.insert(message);
         jm.put("id", message.getId());
     }
 
     private void sendToGroup(Group group, Long fromId, String responseJson) {
         List<Long> members = new ArrayList<>();
         members.addAll(relationDao.listUserIdByGroupId(group.getId()));
-        members.add(groupDao.getGroupById(group.getId()).getOwnerId());
+        members.add(groupDao.selectById(group.getId()).getOwnerId());
         for (Long userId : members) {
             ChannelHandlerContext toCtx = Constant.onlineUserMap.get(userId);
             if (toCtx != null && !fromId.equals(userId)) {

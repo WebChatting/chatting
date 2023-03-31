@@ -8,23 +8,12 @@
         id, name, owner_id, avatar_path
     </sql>
 
-    <sql id="insertFields">
-        name, owner_id, avatar_path
-    </sql>
-
     <resultMap id="GroupDao" type="Group">
         <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="name" jdbcType="VARCHAR" property="name"/>
         <result column="avatar_path" jdbcType="VARCHAR" property="avatarPath"/>
         <result column="owner_id" jdbcType="INTEGER" property="ownerId"/>
     </resultMap>
-
-    <select id="getGroupById" parameterType="java.lang.Long" resultMap="GroupDao">
-        select
-        <include refid="selectFields"/>
-        from `group`
-        where id = #{id}
-    </select>
 
     <select id="searchGroupByName" parameterType="java.lang.String" resultMap="GroupDao">
         select
@@ -39,13 +28,5 @@
         from `group`
         where owner_id = #{ownerId};
     </select>
-    <insert id="insertGroup" parameterType="Group" keyProperty="id">
-        insert into `group` (<include refid="insertFields"/>)
-        values (#{name}, #{ownerId}, #{avatarPath});
-    </insert>
 
-    <delete id="deleteGroup" parameterType="java.lang.Long">
-        delete from `group`
-        where id = #{id};
-    </delete>
 </mapper>

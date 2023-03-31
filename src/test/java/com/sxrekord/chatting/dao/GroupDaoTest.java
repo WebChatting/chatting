@@ -36,7 +36,7 @@ public class GroupDaoTest {
     @Test
     public void testInsertGroup() {
         int feedback = 0;
-        feedback = groupDao.insertGroup(new Group("group_for_test", 502L, "test_group_avatar_path"));
+        feedback = groupDao.insert(new Group("group_for_test", 502L, "test_group_avatar_path"));
         Assert.isTrue(feedback == 1, "test insertGroup error");
         System.out.println("test insertGroup success");
     }

@@ -33,16 +33,16 @@ public class MessageServiceImpl implements MessageService {
         for (Message message : messages) {
             responseJson.setData("id", message.getId())
                     .setData("fromId", message.getFromId())
-                    .setData("name", userDao.getUserById(message.getFromId()).getUsername())
-                    .setData("avatarPath", userDao.getUserById(message.getFromId()).getAvatarPath())
+                    .setData("name", userDao.selectById(message.getFromId()).getUsername())
+                    .setData("avatarPath", userDao.selectById(message.getFromId()).getAvatarPath())
                     .setData("updateTime", message.getUpdateTime())
                     .setData("contentType", message.getContentType())
                     .setData("content", message.getContentType() == 0 ?
-                            textContentDao.getTextContentById(message.getContentId()).getContent()
-                            : (message.getContentType() == 1 ? imageContentDao.getImageContentById(message.getContentId()).getPath()
-                            : fileContentDao.getFileContentById(message.getContentId()).getName()))
+                            textContentDao.selectById(message.getContentId()).getContent()
+                            : (message.getContentType() == 1 ? imageContentDao.selectById(message.getContentId()).getPath()
+                            : fileContentDao.selectById(message.getContentId()).getName()))
                     .setData("url", message.getType() == 2 ?
-                            fileContentDao.getFileContentById(message.getContentId()).getPath() : null)
+                            fileContentDao.selectById(message.getContentId()).getPath() : null)
                     .toString();
             responseJson.addToCollection("messages");
         }

@@ -5,31 +5,4 @@
 
 <mapper namespace="com.sxrekord.chatting.dao.FileContentDao">
 
-    <sql id="selectFields">
-        id, name, size, path
-    </sql>
-
-    <sql id="insertFields">
-        name, size, path
-    </sql>
-
-    <resultMap id="FileContentDao" type="FileContent">
-        <id column="id" jdbcType="BIGINT" property="id"/>
-        <result column="name" jdbcType="VARCHAR" property="name"/>
-        <result column="size" jdbcType="VARCHAR" property="size"/>
-        <result column="path" jdbcType="VARCHAR" property="path"/>
-    </resultMap>
-
-    <select id="getFileContentById" parameterType="java.lang.Long" resultMap="FileContentDao">
-        select
-        <include refid="selectFields"/>
-        from file_content
-        where id = #{id}
-    </select>
-
-    <insert id="insertFileContent" parameterType="FileContent" useGeneratedKeys="true" keyProperty="id">
-        insert into file_content (<include refid="insertFields"/>)
-        values(#{name}, #{size}, #{path})
-    </insert>
-
 </mapper>
