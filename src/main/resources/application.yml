@@ -48,11 +48,12 @@ spring:
       schema-locations: classpath:sql/schema.sql
       data-locations: classpath:sql/data.sql
 
-mybatis:
+mybatis-plus:
   mapper-locations: classpath:mapper/*
   type-aliases-package: com.sxrekord.chatting.model.po
   configuration:
     map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 file:
   upload:
