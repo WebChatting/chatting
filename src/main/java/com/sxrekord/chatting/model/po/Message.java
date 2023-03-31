@@ -1,5 +1,6 @@
 package com.sxrekord.chatting.model.po;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -11,6 +12,7 @@ import java.util.Date;
  * @date 2022/9/12 16:20
  */
 @Data
+@TableName("message")
 public class Message {
     private Long id;
     private Long fromId;

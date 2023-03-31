@@ -1,5 +1,6 @@
 package com.sxrekord.chatting.model.po;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.List;
  * @date 2022/9/12 12:14
  */
 @Data
+@TableName("user")
 public class User {
     private Long id;
     private String username;

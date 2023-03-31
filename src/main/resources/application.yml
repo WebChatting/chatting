@@ -54,6 +54,9 @@ mybatis-plus:
   configuration:
     map-underscore-to-camel-case: true
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      id-type: auto # 设置统一的主键生成策略, auto 表示使用数据库的自增策略
 
 file:
   upload:

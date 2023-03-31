@@ -1,5 +1,6 @@
 package com.sxrekord.chatting.model.po;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 /**
@@ -8,6 +9,7 @@ import lombok.Data;
  */
 
 @Data
+@TableName("image_content")
 public class ImageContent {
     private Long id;
     private String path;

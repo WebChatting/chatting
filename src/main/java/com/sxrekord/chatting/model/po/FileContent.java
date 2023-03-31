@@ -1,5 +1,6 @@
 package com.sxrekord.chatting.model.po;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 /**
@@ -7,6 +8,7 @@ import lombok.Data;
  * @date 2022/9/12 16:22
  */
 @Data
+@TableName("file_content")
 public class FileContent {
     private Long id;
     private String name;
