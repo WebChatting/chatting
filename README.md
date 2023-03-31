@@ -48,10 +48,6 @@ datasource:
 	make run
 	```
 
-## Optimize
-### Database
-see [query.sql](src/main/resources/sql/query.sql).
-
 ## ToDo
 
 - [x] refactor backend with SpringBoot
