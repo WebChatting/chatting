@@ -3,7 +3,6 @@ package com.sxrekord.chatting.dao;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.sxrekord.chatting.model.po.FileContent;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
 
 /**
  * @author Rekord
