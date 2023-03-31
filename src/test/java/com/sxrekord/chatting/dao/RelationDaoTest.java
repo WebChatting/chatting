@@ -18,6 +18,15 @@ public class RelationDaoTest {
     RelationDao relationDao;
 
     @Test
+    public void testInsertRelation() {
+        int feedback = relationDao.insertRelation(new Relation(501L, 505L, 0));
+        Assert.isTrue(feedback == 1, "test insertRelation error");
+        feedback = relationDao.insertRelation(new Relation(505L, 101L, 1));
+        Assert.isTrue(feedback == 1, "test insertRelation error");
+        System.out.println("test insertRelation success");
+    }
+
+    @Test
     public void testUpdateRelation() {
         int feedback = relationDao.updateRelation(new Relation(501L, 503L, 0, 2));
         Assert.isTrue(feedback == 1, "test updateRelation error");
