@@ -1,5 +1,6 @@
 package com.sxrekord.chatting.dao;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.sxrekord.chatting.model.po.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -11,20 +12,7 @@ import java.util.List;
  * @date 2022/9/12 12:17
  */
 @Mapper
-public interface UserDao {
-    /**
-     * 插入用户
-     * @param user
-     * @return
-     */
-    int insertUser(User user);
-
-    /**
-     * 根据用户ID查询用户
-     * @param id
-     * @return
-     */
-    User getUserById(@Param("id") long id);
+public interface UserDao extends BaseMapper<User> {
 
     /**
      * 根据用户名和密码查询用户
@@ -40,13 +28,6 @@ public interface UserDao {
      * @return
      */
     User getUserByUsername(@Param("username") String username);
-
-    /**
-     * 更新用户信息
-     * @param user
-     * @return
-     */
-    int updateUser(User user);
 
     /**
      * 根据用户名查找用户

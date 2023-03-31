@@ -73,7 +73,7 @@ public class GroupServiceImpl implements GroupService {
         if (ownerId == null) {
             return responseJson.error("请先登录！");
         }
-        groupDao.insertGroup(new Group(name, (long)ownerId, avatarPath.trim().length() > 0 ? avatarPath : group_avatar_default));
+        groupDao.insert(new Group(name, (long)ownerId, avatarPath.trim().length() > 0 ? avatarPath : group_avatar_default));
         responseJson.success();
         return responseJson;
     }

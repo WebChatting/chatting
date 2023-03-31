@@ -14,7 +14,7 @@ import java.util.Collections;
  */
 @SpringBootTest
 public class FastAutoGeneratorTest {
-    @Test
+//    @Test
     public void testAutoGenerator() {
         FastAutoGenerator
                 .create("jdbc:mysql://localhost:3306/chatting?serverTimezone=UTC&useUnicode=true&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true",

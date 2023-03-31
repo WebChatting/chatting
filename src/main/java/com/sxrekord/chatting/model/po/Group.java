@@ -10,7 +10,7 @@ import java.util.List;
  * @date 2022/9/12 16:03
  */
 @Data
-@TableName("group")
+@TableName("`group`")
 public class Group {
     private Long id;
     private String name;

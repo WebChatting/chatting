@@ -5,29 +5,4 @@
 
 <mapper namespace="com.sxrekord.chatting.dao.TextContentDao">
 
-    <sql id="selectFields">
-        id, content
-    </sql>
-
-    <sql id="insertFields">
-        content
-    </sql>
-
-    <resultMap id="TextContentDao" type="TextContent">
-        <id column="id" jdbcType="BIGINT" property="id"/>
-        <result column="content" jdbcType="VARCHAR" property="content"/>
-    </resultMap>
-
-    <select id="getTextContentById" parameterType="java.lang.Long" resultMap="TextContentDao">
-        select
-        <include refid="selectFields"/>
-        from text_content
-        where id = #{id}
-    </select>
-
-    <insert id="insertTextContent" parameterType="TextContent" useGeneratedKeys="true" keyProperty="id">
-        insert into text_content (<include refid="insertFields"/>)
-        values(#{content})
-    </insert>
-
 </mapper>

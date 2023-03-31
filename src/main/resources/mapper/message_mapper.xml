@@ -8,10 +8,6 @@
         `id`, `from_id`, `type`, `content_type`, `content_id`, `update_time`
     </sql>
 
-    <sql id="insertFields">
-        from_id, to_id, type, content_type, content_id
-    </sql>
-
     <resultMap id="MessageDao" type="Message">
         <id column="id" jdbcType="BIGINT" property="id"/>
         <result column="from_id" jdbcType="BIGINT" property="fromId"/>
@@ -22,11 +18,6 @@
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
     </resultMap>
-
-    <insert id="insertMessage" parameterType="Message" useGeneratedKeys="true" keyProperty="id">
-        insert into message (<include refid="insertFields"/>)
-        values(#{fromId}, #{toId}, #{type}, #{contentType}, #{contentId})
-    </insert>
 
     <select id="listMessage" resultMap="MessageDao">
         select * from (

@@ -1,5 +1,6 @@
 package com.sxrekord.chatting.dao;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.sxrekord.chatting.model.po.Message;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -12,13 +13,7 @@ import java.util.List;
  * @date 2022/9/13 17:02
  */
 @Mapper
-public interface MessageDao {
-    /**
-     * 保存消息
-     * @param message
-     * @return
-     */
-    int insertMessage(Message message);
+public interface MessageDao extends BaseMapper<Message> {
 
     /**
      * 列出消息

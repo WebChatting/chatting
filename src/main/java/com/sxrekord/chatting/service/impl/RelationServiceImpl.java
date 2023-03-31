@@ -57,11 +57,11 @@ public class RelationServiceImpl implements RelationService {
         }
         // 删除自己的群组
         if (relation.getType() == 1
-                && groupDao.getGroupById(relation.getAcceptId()).getOwnerId().equals(relation.getRequestId())) {
+                && groupDao.selectById(relation.getAcceptId()).getOwnerId().equals(relation.getRequestId())) {
             // 删除所有群友关系
             relationDao.deleteRelationByTypeAndAcceptId(1, relation.getAcceptId());
             // 删除群组
-            groupDao.deleteGroup(relation.getAcceptId());
+            groupDao.deleteById(relation.getAcceptId());
         }
         if (relation.getStatus() == 3) {
             relationDao.deleteRelation(relation);
@@ -79,11 +79,11 @@ public class RelationServiceImpl implements RelationService {
 
         if (direction == -1) {
             for (Relation relation : relationDao.listRelation(id, type, status, 0)) {
-                WrapEntity.wrapUser(responseJson, userDao.getUserById(relation.getAcceptId()), type, status);
+                WrapEntity.wrapUser(responseJson, userDao.selectById(relation.getAcceptId()), type, status);
             }
 
             for (Relation relation : relationDao.listRelation(id, type, status, 1)) {
-                WrapEntity.wrapUser(responseJson, userDao.getUserById(relation.getRequestId()), type, status);
+                WrapEntity.wrapUser(responseJson, userDao.selectById(relation.getRequestId()), type, status);
             }
 
         } else {
@@ -98,20 +98,20 @@ public class RelationServiceImpl implements RelationService {
             for (Relation relation : relations) {
                 if (status == 1) {
                     // 加入的群组
-                    WrapEntity.wrapGroup(responseJson, groupDao.getGroupById(relation.getAcceptId()), type, status);
+                    WrapEntity.wrapGroup(responseJson, groupDao.selectById(relation.getAcceptId()), type, status);
                 } else {
                     // 验证
                     if (type == 0) {
                         if (direction == 0) {
-                            WrapEntity.wrapUser(responseJson, userDao.getUserById(relation.getAcceptId()), type, relation.getStatus());
+                            WrapEntity.wrapUser(responseJson, userDao.selectById(relation.getAcceptId()), type, relation.getStatus());
                         } else {
-                            WrapEntity.wrapUser(responseJson, userDao.getUserById(relation.getRequestId()), type, relation.getStatus());
+                            WrapEntity.wrapUser(responseJson, userDao.selectById(relation.getRequestId()), type, relation.getStatus());
                         }
                     } else {
                         if (direction == 0) {
-                            WrapEntity.wrapGroup(responseJson, groupDao.getGroupById(relation.getAcceptId()), type, relation.getStatus());
+                            WrapEntity.wrapGroup(responseJson, groupDao.selectById(relation.getAcceptId()), type, relation.getStatus());
                         } else {
-                            WrapEntity.wrapUser(responseJson, userDao.getUserById(relation.getRequestId()), relation.getAcceptId(), type, relation.getStatus());
+                            WrapEntity.wrapUser(responseJson, userDao.selectById(relation.getRequestId()), relation.getAcceptId(), type, relation.getStatus());
                         }
                     }
                 }
