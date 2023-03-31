@@ -58,6 +58,11 @@ mybatis-plus:
     db-config:
       id-type: auto # 设置统一的主键生成策略, auto 表示使用数据库的自增策略
 
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  pageSizeZero: true
+
 file:
   upload:
     location: D:/dev/repo/chatting-vue/public/upload/
