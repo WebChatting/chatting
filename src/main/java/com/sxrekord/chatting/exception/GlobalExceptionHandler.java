@@ -4,16 +4,13 @@ import com.sxrekord.chatting.model.vo.ResponseJson;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
-import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import java.util.List;
+import javax.security.auth.login.AccountExpiredException;
 import java.util.stream.Collectors;
 
 /**
@@ -32,7 +29,7 @@ public class GlobalExceptionHandler {
     static {
         ERROR = new ResponseJson(HttpStatus.INTERNAL_SERVER_ERROR).setMsg("系统出错,请稍候再试");
     }
-    
+
     /**
      * 描述：默认异常提示
      * @param exception
@@ -40,52 +37,16 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ResponseJson defaultErrorHandler(Exception exception) {
+    public ResponseJson defaultExceptionHandler(Exception exception) {
         log.error(exception.getMessage(), exception);
         return ERROR;
     }
-    
-    /**
-     * 描述：参数不合法默认异常提示
-     * @param exception
-     * @return
-     */
-    @ExceptionHandler(IllegalArgumentException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ResponseJson securityExceptionHandler(Exception exception) {
-        return new ResponseJson(HttpStatus.INTERNAL_SERVER_ERROR).setMsg(exception.getMessage());
-    }
-    
-    /**
-     * 描述：表单数据格式不正确异常提示
-     * @param exception
-     * @return
-     */
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseJson illegalParamExceptionHandler(MethodArgumentNotValidException exception) {
-        List<FieldError> errors = exception.getBindingResult().getFieldErrors();
-        String tips = "参数不合法";
-        ResponseJson result = new ResponseJson(HttpStatus.BAD_REQUEST);
-        if (!errors.isEmpty()) {
-            List<String> list = errors.stream()
-                    .map(error -> error.getField() + error.getDefaultMessage())
-                    .collect(Collectors.toList());
-            result.put("details", list);
-        }
-        result.setMsg(tips);
-        return result;
-    }
 
-    /**
-     * 描述：表单数据缺失异常提示
-     * @param exception
-     * @return
-     */
-    @ExceptionHandler(MissingServletRequestParameterException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseJson servletRequestParameterExceptionHandler(MissingServletRequestParameterException exception) {
-        return new ResponseJson(HttpStatus.BAD_REQUEST).setMsg(exception.getMessage());
+    @ExceptionHandler(AccountExpiredException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ResponseJson authenticationExceptionHandler(AccountExpiredException e) {
+        log.error(e.getMessage());
+        return new ResponseJson(-1).setMsg("authentication failure");
     }
 
     /**

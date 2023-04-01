@@ -75,5 +75,5 @@ netty:
     port: 3333
 
 config:
-  exclude-uri: [ /register, /upload, /login, /admin/** ]
-  include-uri: [ /chatroom/** ]
+  exclude-uri: [ /user/register, /user/login, /upload, /admin/** ]
+  include-uri: [ /** ]

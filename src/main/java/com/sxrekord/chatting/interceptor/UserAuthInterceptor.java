@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.security.auth.login.AccountExpiredException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -22,10 +23,7 @@ public class UserAuthInterceptor implements HandlerInterceptor{
         HttpSession session = request.getSession();
         Object userToken = session.getAttribute(Constant.USER_TOKEN);
         if (userToken == null) {
-//            JsonMsgHelper.writeJson(response, new ResponseJson(HttpStatus.FORBIDDEN).setMsg("请登录"),
-//                    HttpStatus.FORBIDDEN);
-            response.sendRedirect("/chatting/login");
-            return false;
+            throw new AccountExpiredException("session失效");
         }
         return true;
     }
