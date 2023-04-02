@@ -11,6 +11,7 @@ import com.sxrekord.chatting.service.RelationService;
 import com.sxrekord.chatting.util.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
@@ -73,6 +74,7 @@ public class RelationServiceImpl implements RelationService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ResponseJson listRelation(int type, int status, int direction, HttpSession session) {
         ResponseJson responseJson = new ResponseJson();
         long id = (long)session.getAttribute(Constant.USER_TOKEN);

@@ -7,6 +7,7 @@ import com.sxrekord.chatting.service.MessageService;
 import com.sxrekord.chatting.util.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpSession;
 import java.util.Date;
@@ -49,6 +50,7 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ResponseJson loadMessage(Integer type, Date updateTime, Long toId, Integer count, HttpSession session) {
         ResponseJson responseJson = new ResponseJson();
 

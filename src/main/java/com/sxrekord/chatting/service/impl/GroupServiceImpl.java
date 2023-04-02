@@ -11,6 +11,7 @@ import com.sxrekord.chatting.util.WrapEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -30,6 +31,7 @@ public class GroupServiceImpl implements GroupService {
     private String group_avatar_default;
 
     @Override
+    @Transactional(readOnly = true)
     public ResponseJson searchGroup(String name, HttpSession session) {
         ResponseJson responseJson = new ResponseJson();
 
@@ -45,6 +47,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ResponseJson listGroup(HttpSession session) {
         ResponseJson responseJson = new ResponseJson();
 

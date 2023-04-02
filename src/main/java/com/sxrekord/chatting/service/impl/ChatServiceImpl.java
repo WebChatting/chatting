@@ -105,8 +105,14 @@ public class ChatServiceImpl implements ChatService{
         sendMessage(ctx, responseJson);
     }
 
-
-    // 消息持久化到数据库
+    /**
+     * 消息持久化到数据库
+     * @param jm
+     * @param fromId
+     * @param toId
+     * @param type
+     * @param contentType
+     */
     private void storeMessage(JSONObject jm, Long fromId, Long toId, Integer type, Integer contentType) {
         String content = jm.get("content").toString();
 

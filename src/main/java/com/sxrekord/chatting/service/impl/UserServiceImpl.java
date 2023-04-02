@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpSession;
 import java.text.MessageFormat;
@@ -45,6 +46,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ResponseJson loginUser(String username, String password, HttpSession session) {
         ResponseJson responseJson = new ResponseJson();
         User user = userDao.getUserByUsernameAndPassword(username, password);
@@ -93,6 +95,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ResponseJson searchUser(String username, HttpSession session) {
         ResponseJson responseJson = new ResponseJson();
         // 调用dao层
