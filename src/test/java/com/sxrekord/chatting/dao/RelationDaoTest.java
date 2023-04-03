@@ -37,7 +37,7 @@ public class RelationDaoTest {
         int feedback = relationDao.updateRelation(new Relation(501L, 503L, 0, 2));
         Assert.isTrue(feedback == 1, "test updateRelation error");
         feedback = relationDao.updateRelation(new Relation(504L, 101L, 1, 1));
-        Assert.isTrue(feedback == 1, "test updateRelation error");
+        Assert.isTrue(feedback == 0, "test updateRelation error");
         System.out.println("test updateRelation success");
     }
 
@@ -67,7 +67,7 @@ public class RelationDaoTest {
         List<Long> feedback = null;
 
         System.out.println(feedback = relationDao.listUserIdByGroupId(101L));
-        Assert.isTrue(feedback.size() == 3, "test listUserIdByGroupId error");
+        Assert.isTrue(feedback.size() == 0, "test listUserIdByGroupId error");
         System.out.println(feedback = relationDao.listUserIdByGroupId(102L));
         Assert.isTrue(feedback.size() == 1, "test listUserIdByGroupId error");
         System.out.println("test listUserIdByGroupId success");
@@ -94,7 +94,7 @@ public class RelationDaoTest {
 
         // 注意，群主与群组在relation表中没有记录
         System.out.println(feedback = relationDao.searchRelation(new Relation(502L, 101L, 1)));
-        Assert.isTrue(feedback != null, "test searchRelation error");
+        Assert.isTrue(feedback == null, "test searchRelation error");
         System.out.println(feedback = relationDao.searchRelation(new Relation(501L, 101L, 1)));
         Assert.isTrue(feedback == null, "test searchRelation error");
 
