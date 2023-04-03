@@ -1,12 +1,9 @@
 package com.sxrekord.chatting.dao;
 
-import com.sxrekord.chatting.model.po.FileContent;
 import com.sxrekord.chatting.model.po.Message;
-import com.sxrekord.chatting.model.po.TextContent;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.util.Assert;
 
 import java.util.Calendar;
@@ -20,10 +17,6 @@ import java.util.List;
 @SpringBootTest
 public class MessageDaoTest {
 
-    @Autowired
-    FileContentDao fileContentDao;
-    @Autowired
-    TextContentDao textContentDao;
     @Autowired
     MessageDao messageDao;
 

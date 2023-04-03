@@ -13,7 +13,7 @@ import java.util.List;
 @Mapper
 public interface RelationDao {
     /**
-     * 根据群组ID查询所有用户
+     * 根据群组ID查询所有用户（不包括群主）
      * @param id
      * @return
      */

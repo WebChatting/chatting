@@ -18,12 +18,18 @@ public class RelationDaoTest {
     RelationDao relationDao;
 
     @Test
-    public void testInsertRelation() {
+    public void testInsertAndDeleteRelation() {
         int feedback = relationDao.insertRelation(new Relation(501L, 505L, 0));
         Assert.isTrue(feedback == 1, "test insertRelation error");
+        feedback = relationDao.deleteRelation(new Relation(501L, 505L, 0));
+        Assert.isTrue(feedback == 1, "test deleteRelation error");
+
         feedback = relationDao.insertRelation(new Relation(505L, 101L, 1));
         Assert.isTrue(feedback == 1, "test insertRelation error");
-        System.out.println("test insertRelation success");
+        feedback = relationDao.deleteRelation(new Relation(505L, 101L, 1));
+        Assert.isTrue(feedback == 1, "test deleteRelation error");
+
+        System.out.println("test insertRelation and deleteRelation success");
     }
 
     @Test
@@ -54,5 +60,44 @@ public class RelationDaoTest {
         System.out.println(feedback = relationDao.listRelation(101L, 1, -1, 1));
 
         System.out.println("test listRelation success");
+    }
+
+    @Test
+    public void testListUserIdByGroupId() {
+        List<Long> feedback = null;
+
+        System.out.println(feedback = relationDao.listUserIdByGroupId(101L));
+        Assert.isTrue(feedback.size() == 3, "test listUserIdByGroupId error");
+        System.out.println(feedback = relationDao.listUserIdByGroupId(102L));
+        Assert.isTrue(feedback.size() == 1, "test listUserIdByGroupId error");
+        System.out.println("test listUserIdByGroupId success");
+    }
+
+    @Test
+    public void testDeleteRelationByTypeAndAcceptId() {
+        int feedback = relationDao.deleteRelationByTypeAndAcceptId(1, 101L);
+        Assert.isTrue(feedback == 3, "test deleteRelationByTypeAndAcceptId error");
+        feedback = relationDao.deleteRelationByTypeAndAcceptId(0, 501L);
+        Assert.isTrue(feedback == 2, "test deleteRelationByTypeAndAcceptId error");
+
+        System.out.println("test deleteRelationByTypeAndAcceptId success");
+    }
+
+    @Test
+    public void testSearchRelation() {
+        Relation feedback = null;
+
+        System.out.println(feedback = relationDao.searchRelation(new Relation(501L, 505L, 0)));
+        Assert.isTrue(feedback == null, "test searchRelation error");
+        System.out.println(feedback = relationDao.searchRelation(new Relation(501L, 502L, 0)));
+        Assert.isTrue(feedback != null, "test searchRelation error");
+
+        // 注意，群主与群组在relation表中没有记录
+        System.out.println(feedback = relationDao.searchRelation(new Relation(502L, 101L, 1)));
+        Assert.isTrue(feedback != null, "test searchRelation error");
+        System.out.println(feedback = relationDao.searchRelation(new Relation(501L, 101L, 1)));
+        Assert.isTrue(feedback == null, "test searchRelation error");
+
+        System.out.println("test searchRelation success");
     }
 }
