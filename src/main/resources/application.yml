@@ -7,7 +7,7 @@ spring:
   redis:
     host: 127.0.0.1 #指定redis所在的host
     port: 6379  #指定redis的端口
-    password: 123456  #设置redis密码
+    password: webchatting  #设置redis密码
     lettuce:
       pool:
         max-active: 8 #最大连接数
