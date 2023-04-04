@@ -17,6 +17,13 @@ jobs:
           mysql database: 'chatting'
           mysql user: 'webchatting'
           mysql password: 'webchatting'
+      - name: Set up Redis
+        uses: supercharge/redis-github-action@1.5.0
+        with:
+          redis-image: redis
+          redis-version: latest
+          redis-port: 6379
+          redis-container-name: redis
       - uses: actions/checkout@v3
       - name: Set up JDK 11
         uses: actions/setup-java@v3
