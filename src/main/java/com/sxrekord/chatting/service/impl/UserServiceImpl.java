@@ -6,7 +6,7 @@ import com.sxrekord.chatting.model.po.Relation;
 import com.sxrekord.chatting.model.po.User;
 import com.sxrekord.chatting.model.vo.ResponseJson;
 import com.sxrekord.chatting.service.UserService;
-import com.sxrekord.chatting.util.Constant;
+import com.sxrekord.chatting.common.Constant;
 import com.sxrekord.chatting.util.WrapEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,7 +102,9 @@ public class UserServiceImpl implements UserService {
         List<User> users = userDao.searchUserByUsername("%" + username + "%");
         Long requestId = (long)session.getAttribute(Constant.USER_TOKEN);
         for (User user : users) {
-            if (user.getId().equals(requestId)) continue;
+            if (user.getId().equals(requestId)) {
+                continue;
+            }
             Relation relation = relationDao.searchRelation(new Relation(requestId, user.getId(), 0));
             WrapEntity.wrapSearchResultForUser(responseJson, user, relation == null ? -1 : relation.getStatus());
         }

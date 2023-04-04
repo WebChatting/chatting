@@ -8,7 +8,7 @@ import com.sxrekord.chatting.model.po.Relation;
 import com.sxrekord.chatting.util.WrapEntity;
 import com.sxrekord.chatting.model.vo.ResponseJson;
 import com.sxrekord.chatting.service.RelationService;
-import com.sxrekord.chatting.util.Constant;
+import com.sxrekord.chatting.common.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

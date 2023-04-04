@@ -1,6 +1,6 @@
 package com.sxrekord.chatting.websocket;
 
-import com.sxrekord.chatting.util.Constant;
+import com.sxrekord.chatting.common.Constant;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFuture;

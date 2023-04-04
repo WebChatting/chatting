@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.sxrekord.chatting.common.WSType;
 import com.sxrekord.chatting.model.vo.ResponseJson;
 import com.sxrekord.chatting.service.ChatService;
-import com.sxrekord.chatting.util.Constant;
+import com.sxrekord.chatting.common.Constant;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;

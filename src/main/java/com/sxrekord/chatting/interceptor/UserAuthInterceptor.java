@@ -1,6 +1,6 @@
 package com.sxrekord.chatting.interceptor;
 
-import com.sxrekord.chatting.util.Constant;
+import com.sxrekord.chatting.common.Constant;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;

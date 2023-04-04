@@ -6,7 +6,7 @@ import com.sxrekord.chatting.model.po.Group;
 import com.sxrekord.chatting.model.po.Relation;
 import com.sxrekord.chatting.model.vo.ResponseJson;
 import com.sxrekord.chatting.service.GroupService;
-import com.sxrekord.chatting.util.Constant;
+import com.sxrekord.chatting.common.Constant;
 import com.sxrekord.chatting.util.WrapEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
