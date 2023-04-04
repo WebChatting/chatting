@@ -67,40 +67,27 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseJson logoutUser(HttpSession session) {
         ResponseJson responseJson = new ResponseJson();
-        if (session == null) {
-            return responseJson.error("请传入session！");
-        }
         Object userId = session.getAttribute(Constant.USER_TOKEN);
-        if (userId == null) {
-            return responseJson.error("请先登录！");
-        }
+
         session.removeAttribute(Constant.USER_TOKEN);
         log.info(MessageFormat.format("userId为 {0} 的用户已注销登录！", userId));
         return responseJson.success();
     }
 
     @Override
-    public ResponseJson updateUser(String username, String password, String avatarPath, HttpSession session) {
+    public ResponseJson updateUser(String username, String password, String avatarPath, Long userId) {
         ResponseJson responseJson = new ResponseJson();
-        if (session == null) {
-            return responseJson.error("请传入session！");
-        }
-        Object userId = session.getAttribute(Constant.USER_TOKEN);
-        if (userId == null) {
-            return responseJson.error("请先登录！");
-        }
-        userDao.updateById(new User((long)userId, username, password, avatarPath));
+        userDao.updateById(new User(userId, username, password, avatarPath));
         responseJson.success("信息更新成功");
         return responseJson;
     }
 
     @Override
     @Transactional(readOnly = true)
-    public ResponseJson searchUser(String username, HttpSession session) {
+    public ResponseJson searchUser(String username, Long requestId) {
         ResponseJson responseJson = new ResponseJson();
         // 调用dao层
         List<User> users = userDao.searchUserByUsername("%" + username + "%");
-        Long requestId = (long)session.getAttribute(Constant.USER_TOKEN);
         for (User user : users) {
             if (user.getId().equals(requestId)) {
                 continue;

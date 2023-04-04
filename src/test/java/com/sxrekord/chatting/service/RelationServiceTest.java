@@ -19,22 +19,19 @@ public class RelationServiceTest {
 
     @Test
     public void testListRelation() {
-        HttpSession session = new MockHttpSession();
-        session.setAttribute("userId", 503L);
         // 列出所有好友
-        System.out.println(relationService.listRelation(0, 1, -1, session));
+        System.out.println(relationService.listRelation(0, 1, -1, 503L));
 
         // 列出所有加入的群组
-        System.out.println(relationService.listRelation(1, 1, 0, session));
+        System.out.println(relationService.listRelation(1, 1, 0, 503L));
 
         // 列出所有发起的验证
-        System.out.println(relationService.listRelation(0, -1, 0, session));
-        System.out.println(relationService.listRelation(1, -1, 0, session));
+        System.out.println(relationService.listRelation(0, -1, 0, 503L));
+        System.out.println(relationService.listRelation(1, -1, 0, 503L));
 
         // 列出所有收到的验证
-        System.out.println(relationService.listRelation(0, -1, 1, session));
-        session.setAttribute("userId", 101L);
-        System.out.println(relationService.listRelation(1, -1, 1, session));
+        System.out.println(relationService.listRelation(0, -1, 1, 503L));
+        System.out.println(relationService.listRelation(1, -1, 1, 101L));
 
         System.out.println("test listRelation success");
     }
@@ -42,23 +39,19 @@ public class RelationServiceTest {
     @Test
     public void testCreateRelation() {
         HttpSession session = new MockHttpSession();
-        session.setAttribute("userId", 501L);
-        System.out.println(relationService.createRelation(new Relation(505L, 0), session));
-        session.setAttribute("userId", 505L);
-        System.out.println(relationService.createRelation(new Relation(101L, 1), session));
+        System.out.println(relationService.createRelation(new Relation(505L, 0), 501L));
+        System.out.println(relationService.createRelation(new Relation(101L, 1), 505L));
 
         System.out.println("test createRelation success");
     }
 
     @Test
     public void testUpdateRelation() {
-        HttpSession session = new MockHttpSession();
-        session.setAttribute("userId", 502L);
-        System.out.println(relationService.updateRelation(new Relation(504L, 0, 1), session));
-        System.out.println(relationService.updateRelation(new Relation(101L, 1, 1), session));
+        System.out.println(relationService.updateRelation(new Relation(504L, 0, 1), 502L));
+        System.out.println(relationService.updateRelation(new Relation(101L, 1, 1), 502L));
 
         // 删除关系（特殊更新）
-        System.out.println(relationService.updateRelation(new Relation(501L, 0, 3), session));
+        System.out.println(relationService.updateRelation(new Relation(501L, 0, 3), 502L));
 
         System.out.println("test updateRelation success");
     }

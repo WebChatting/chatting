@@ -1,6 +1,5 @@
 package com.sxrekord.chatting.service;
 
-import com.sxrekord.chatting.model.po.User;
 import com.sxrekord.chatting.model.vo.ResponseJson;
 
 import javax.servlet.http.HttpSession;
@@ -43,12 +42,12 @@ public interface UserService {
      * @param session
      * @return
      */
-    ResponseJson updateUser(String username, String password, String avatarPath, HttpSession session);
+    ResponseJson updateUser(String username, String password, String avatarPath, Long userId);
 
     /**
      * 查询用户
      * @param username
      * @return
      */
-    ResponseJson searchUser(String username, HttpSession session);
+    ResponseJson searchUser(String username, Long userId);
 }

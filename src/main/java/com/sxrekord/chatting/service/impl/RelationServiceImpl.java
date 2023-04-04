@@ -5,15 +5,13 @@ import com.sxrekord.chatting.dao.RelationDao;
 import com.sxrekord.chatting.dao.UserDao;
 import com.sxrekord.chatting.model.po.Group;
 import com.sxrekord.chatting.model.po.Relation;
-import com.sxrekord.chatting.util.WrapEntity;
 import com.sxrekord.chatting.model.vo.ResponseJson;
 import com.sxrekord.chatting.service.RelationService;
-import com.sxrekord.chatting.common.Constant;
+import com.sxrekord.chatting.util.WrapEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,10 +31,10 @@ public class RelationServiceImpl implements RelationService {
     UserDao userDao;
 
     @Override
-    public ResponseJson createRelation(Relation relation, HttpSession session) {
+    public ResponseJson createRelation(Relation relation, Long userId) {
         ResponseJson responseJson = new ResponseJson();
 
-        relation.setRequestId((long)session.getAttribute(Constant.USER_TOKEN));
+        relation.setRequestId(userId);
         // 说明想建立的关系曾经被拒绝过
         if (relation.getStatus() != null && relation.getStatus() == 2) {
             relationDao.deleteRelation(relation);
@@ -46,10 +44,9 @@ public class RelationServiceImpl implements RelationService {
     }
 
     @Override
-    public ResponseJson updateRelation(Relation relation, HttpSession session) {
+    public ResponseJson updateRelation(Relation relation, Long id) {
         ResponseJson responseJson = new ResponseJson();
 
-        long id = (long)session.getAttribute(Constant.USER_TOKEN);
         if (relation.getAcceptId().equals(0L)) {
             relation.setAcceptId(id);
         }
@@ -75,9 +72,8 @@ public class RelationServiceImpl implements RelationService {
 
     @Override
     @Transactional(readOnly = true)
-    public ResponseJson listRelation(int type, int status, int direction, HttpSession session) {
+    public ResponseJson listRelation(int type, int status, int direction, Long id) {
         ResponseJson responseJson = new ResponseJson();
-        long id = (long)session.getAttribute(Constant.USER_TOKEN);
 
         if (direction == -1) {
             for (Relation relation : relationDao.listRelation(id, type, status, 0)) {

@@ -1,5 +1,6 @@
 package com.sxrekord.chatting.service;
 
+import com.sxrekord.chatting.common.Constant;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,10 +19,12 @@ public class UserServiceTest {
 
     @Test
     public void login() {
-        System.out.println(userService.loginUser("member001", "001", null));
-        System.out.println(userService.loginUser("test1", "test1", null));
-        System.out.println(userService.loginUser("test2", "test1", null));
-        System.out.println(userService.loginUser("not_exists", "not_exists", null));
+        HttpSession httpSession = new MockHttpSession();
+
+        System.out.println(userService.loginUser("member001", "001", httpSession));
+        System.out.println(userService.loginUser("test1", "test1", httpSession));
+        System.out.println(userService.loginUser("test2", "test1", httpSession));
+        System.out.println(userService.loginUser("not_exists", "not_exists", httpSession));
     }
 
     @Test
@@ -34,24 +37,22 @@ public class UserServiceTest {
 
     @Test
     public void logout() {
-        System.out.println(userService.logoutUser(null));
+        HttpSession httpSession = new MockHttpSession();
+        httpSession.setAttribute(Constant.USER_TOKEN, 501L);
+        System.out.println(userService.logoutUser(httpSession));
     }
 
     @Test
     public void update() {
         register();
-        HttpSession httpSession = new MockHttpSession();
-        httpSession.setAttribute("userId", 506L);
-        System.out.println(userService.updateUser("test_test", "test_test", "avatar/default_user_avatar.jpg", httpSession));
+        System.out.println(userService.updateUser("test_test", "test_test", "avatar/default_user_avatar.jpg", 506L));
     }
 
     @Test
     public void search() {
         register();
-        HttpSession httpSession = new MockHttpSession();
-        httpSession.setAttribute("userId", 506L);
-        System.out.println(userService.searchUser("test", httpSession));
-        System.out.println(userService.searchUser("3", httpSession));
-        System.out.println(userService.searchUser("", httpSession));
+        System.out.println(userService.searchUser("test", 506L));
+        System.out.println(userService.searchUser("3", 506L));
+        System.out.println(userService.searchUser("", 506L));
     }
 }

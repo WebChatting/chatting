@@ -2,8 +2,6 @@ package com.sxrekord.chatting.service;
 
 import com.alibaba.fastjson.JSONObject;
 import io.netty.channel.ChannelHandlerContext;
-import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Service;
 
 
 /**

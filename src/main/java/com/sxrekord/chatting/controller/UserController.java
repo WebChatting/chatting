@@ -1,5 +1,6 @@
 package com.sxrekord.chatting.controller;
 
+import com.sxrekord.chatting.common.Constant;
 import com.sxrekord.chatting.model.vo.ResponseJson;
 import com.sxrekord.chatting.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,12 +44,12 @@ public class UserController {
     @RequestMapping(value = "update", method = RequestMethod.POST)
     @ResponseBody
     public ResponseJson update(@RequestParam String name, @RequestParam String password, @RequestParam String avatarPath, HttpSession session) {
-        return userService.updateUser(name, password, avatarPath, session);
+        return userService.updateUser(name, password, avatarPath, (Long)session.getAttribute(Constant.USER_TOKEN));
     }
 
     @RequestMapping(value = "search", method = RequestMethod.GET)
     @ResponseBody
     public ResponseJson search(@RequestParam String name, HttpSession session) {
-        return userService.searchUser(name, session);
+        return userService.searchUser(name, (Long)session.getAttribute(Constant.USER_TOKEN));
     }
 }

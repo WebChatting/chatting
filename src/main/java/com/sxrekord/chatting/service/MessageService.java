@@ -2,7 +2,6 @@ package com.sxrekord.chatting.service;
 
 import com.sxrekord.chatting.model.vo.ResponseJson;
 
-import javax.servlet.http.HttpSession;
 import java.util.Date;
 
 /**
@@ -16,8 +15,8 @@ public interface MessageService {
      * @param updateTime
      * @param toId
      * @param count
-     * @param session
+     * @param userId
      * @return
      */
-    ResponseJson loadMessage(Integer type, Date updateTime, Long toId, Integer count, HttpSession session);
+    ResponseJson loadMessage(Integer type, Date updateTime, Long toId, Integer count, Long userId);
 }

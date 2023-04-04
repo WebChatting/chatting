@@ -3,9 +3,6 @@ package com.sxrekord.chatting.service;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.mock.web.MockHttpSession;
-
-import javax.servlet.http.HttpSession;
 
 /**
  * @author Rekord
@@ -18,32 +15,24 @@ public class GroupServiceTest {
 
     @Test
     public void searchGroupTest() {
-        HttpSession session = new MockHttpSession();
-        session.setAttribute("userId", 501L);
-        System.out.println(groupService.searchGroup("group", session));
-        System.out.println(groupService.searchGroup("", session));
+        System.out.println(groupService.searchGroup("group", 501L));
+        System.out.println(groupService.searchGroup("", 501L));
 
         System.out.println("test searchGroup success");
     }
 
     @Test
     public void listGroupTest() {
-        HttpSession session = new MockHttpSession();
-        session.setAttribute("userId", 501L);
-        System.out.println(groupService.listGroup(session));
-        session.setAttribute("userId", 503L);
-        System.out.println(groupService.listGroup(session));
+        System.out.println(groupService.listGroup(501L));
+        System.out.println(groupService.listGroup(503L));
 
         System.out.println("test listGroup success");
     }
 
     @Test
     public void createGroup() {
-        HttpSession session = new MockHttpSession();
-        session.setAttribute("userId", 502L);
-        System.out.println(groupService.createGroup("testGroup", "test_group_avatar_path", session));
-        session.setAttribute("userId", 504L);
-        System.out.println(groupService.createGroup("testGroup2", "", session));
+        System.out.println(groupService.createGroup("testGroup", "test_group_avatar_path", 502L));
+        System.out.println(groupService.createGroup("testGroup2", "", 504L));
 
         System.out.println("test createGroup success");
     }

@@ -17,7 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class Constant {
 
-    public static final String USER_TOKEN = "userId";
+    public static final String USER_TOKEN = "CHATTING:USER:ID";
     
     public static Map<String, WebSocketServerHandshaker> webSocketHandshakerMap = 
             new ConcurrentHashMap<>();

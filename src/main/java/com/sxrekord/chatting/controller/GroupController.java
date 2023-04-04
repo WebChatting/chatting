@@ -1,5 +1,6 @@
 package com.sxrekord.chatting.controller;
 
+import com.sxrekord.chatting.common.Constant;
 import com.sxrekord.chatting.model.vo.ResponseJson;
 import com.sxrekord.chatting.service.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,13 +25,13 @@ public class GroupController {
     @RequestMapping(value = "search", method = RequestMethod.GET)
     @ResponseBody
     public ResponseJson search(@RequestParam String name, HttpSession session) {
-        return this.groupService.searchGroup(name, session);
+        return this.groupService.searchGroup(name, (Long)session.getAttribute(Constant.USER_TOKEN));
     }
 
     @RequestMapping(value = "list", method = RequestMethod.GET)
     @ResponseBody
     public ResponseJson list(HttpSession session) {
-        return this.groupService.listGroup(session);
+        return this.groupService.listGroup((Long)session.getAttribute(Constant.USER_TOKEN));
     }
 
     @RequestMapping(value = "add", method = RequestMethod.POST)
@@ -38,6 +39,6 @@ public class GroupController {
     public ResponseJson add(@RequestParam String name,
                             @RequestParam String avatarPath,
                             HttpSession session) {
-        return this.groupService.createGroup(name, avatarPath, session);
+        return this.groupService.createGroup(name, avatarPath, (Long)session.getAttribute(Constant.USER_TOKEN));
     }
 }

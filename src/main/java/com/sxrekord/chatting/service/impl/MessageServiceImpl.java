@@ -4,12 +4,10 @@ import com.sxrekord.chatting.dao.*;
 import com.sxrekord.chatting.model.po.Message;
 import com.sxrekord.chatting.model.vo.ResponseJson;
 import com.sxrekord.chatting.service.MessageService;
-import com.sxrekord.chatting.common.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpSession;
 import java.util.Date;
 import java.util.List;
 
@@ -51,12 +49,11 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     @Transactional(readOnly = true)
-    public ResponseJson loadMessage(Integer type, Date updateTime, Long toId, Integer count, HttpSession session) {
+    public ResponseJson loadMessage(Integer type, Date updateTime, Long toId, Integer count, Long userId) {
         ResponseJson responseJson = new ResponseJson();
 
         List<Message> messages = this.messageDao.listMessage(type, updateTime,
-                                                            (long)session.getAttribute(Constant.USER_TOKEN),
-                                                            toId, count);
+                                                            userId, toId, count);
 
         loadConcreteMessage(responseJson, messages);
         return responseJson.setCollectionToData("messages").success();

@@ -1,5 +1,6 @@
 package com.sxrekord.chatting.controller;
 
+import com.sxrekord.chatting.common.Constant;
 import com.sxrekord.chatting.model.vo.ResponseJson;
 import com.sxrekord.chatting.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,6 @@ public class MessageController {
                              @RequestParam("updateTime") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date updateTime,
                              @RequestParam("toId") Long toId, @RequestParam("count") Integer count,
                              HttpSession session) {
-        return messageService.loadMessage(type, updateTime, toId, count, session);
+        return messageService.loadMessage(type, updateTime, toId, count, (Long)session.getAttribute(Constant.USER_TOKEN));
     }
 }

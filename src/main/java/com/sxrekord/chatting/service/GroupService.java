@@ -2,8 +2,6 @@ package com.sxrekord.chatting.service;
 
 import com.sxrekord.chatting.model.vo.ResponseJson;
 
-import javax.servlet.http.HttpSession;
-
 /**
  * @author Rekord
  * @date 2023/3/9 20:37
@@ -14,14 +12,21 @@ public interface GroupService {
      * @param name
      * @return
      */
-    ResponseJson searchGroup(String name, HttpSession session);
+    ResponseJson searchGroup(String name, Long userId);
 
     /**
      * 列出群组
-     * @param session
+     * @param userId
      * @return
      */
-    ResponseJson listGroup(HttpSession session);
+    ResponseJson listGroup(Long userId);
 
-    ResponseJson createGroup(String name, String avatarPath, HttpSession session);
+    /**
+     * 创建群组
+     * @param name
+     * @param avatarPath
+     * @param userId
+     * @return
+     */
+    ResponseJson createGroup(String name, String avatarPath, Long userId);
 }
