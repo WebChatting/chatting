@@ -32,8 +32,6 @@ jobs:
           distribution: 'adopt'
           architecture: x64
           cache: maven
-      - name: Replace service name
-        run: bash ./scripts/replace-service-name.sh
       - name: Build with Maven
         run: mvn --batch-mode --update-snapshots package
       - run: mkdir staging && cp target/*.jar staging
