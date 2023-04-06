@@ -1,19 +1,17 @@
 @echo off
 
-docker stop redis >NUL 2>&1
-docker rm redis >NUL 2>&1
+call :stopContainer redis
 echo Starting Redis container...
 docker run --name redis ^
     -p 6379:6379 ^
     -v "%cd\data\db\redis\data:/data" ^
     -d redis redis-server
 if errorlevel 1 (
-    echo Failed to start Redis container.
+    call :outputErrorMsg redis
     exit /b 1
 )
 
-docker stop mysql >NUL 2>&1
-docker rm mysql >NUL 2>&1
+call :stopContainer mysql
 echo Starting MySQL container...
 docker run --name mysql ^
     -p 3306:3306 ^
@@ -26,7 +24,9 @@ docker run --name mysql ^
     -d mysql ^
     --default-authentication-plugin=mysql_native_password
 if errorlevel 1 (
-    echo Failed to start MySQL container.
+    call :outputErrorMsg mysql
+    call :stopContainer redis
+    call :stopContainer mysql
     exit /b 1
 )
 
@@ -35,3 +35,19 @@ echo Containers started successfully.
 timeout /t 5 /nobreak
 
 mvn clean spring-boot:run
+exit /b
+
+:stopContainer
+echo Stopping %1 container...
+docker stop "%1" >NUL 2>&1
+docker rm "%1" >NUL 2>&1
+exit /b
+
+
+:outputErrorMsg
+SET "string=%~1"
+SET "firstLetter=%string:~0,1%"
+SET "remainingLetters=%string:~1%"
+SET "capitalized=%firstLetter:~0,1%%firstLetter:~1,1%^%remainingLetters%"
+echo echo Failed to start %capitalized% container.
+exit /b
