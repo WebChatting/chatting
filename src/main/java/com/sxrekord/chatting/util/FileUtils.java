@@ -151,4 +151,16 @@ public class FileUtils {
         }
     }
 
+    public static boolean removeFile(String filePath) {
+        File file = new File(filePath);
+
+        if (file.delete()) {
+            System.out.println(file.getName() + " is deleted!");
+        } else {
+            System.out.println("Delete failed!");
+            return false;
+        }
+        return true;
+    }
+
 }

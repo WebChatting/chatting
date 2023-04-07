@@ -1,5 +1,7 @@
 package com.sxrekord.chatting.task;
 
+import com.sxrekord.chatting.util.FileUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.SchedulingConfigurer;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
@@ -14,6 +16,8 @@ import org.springframework.stereotype.Component;
 @EnableScheduling
 public class FileTask implements SchedulingConfigurer {
 
+    @Value("${file.upload.location}")
+    private String FILE_STORE_PATH;
 
     @Override
     public void configureTasks(ScheduledTaskRegistrar scheduledTaskRegistrar) {
@@ -26,6 +30,7 @@ public class FileTask implements SchedulingConfigurer {
     }
 
     public void cleanExpiredFile() {
+//        FileUtils.removeFile(FILE_STORE_PATH);
         System.out.println("hello world schedule!");
     }
 }
