@@ -17,7 +17,7 @@ pipeline {
 		stage('Deploy') {
 			steps {
 				// use "-v chatting-mysql:/var/lib/mysql" to save database
-				sh 'make run'
+				sh 'docker-compose up -d'
 			}
 		}
 	}
