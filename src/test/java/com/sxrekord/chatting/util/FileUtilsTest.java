@@ -20,4 +20,12 @@ public class FileUtilsTest {
         System.out.println("test removeFile success");
     }
 
+    @Test
+    public void testCheckFileEquality() {
+        boolean feedback = FileUtils.checkFileEquality("C:\\Users\\Administrator\\Downloads\\设备故障明细2023-4-6.xlsx",
+                "C:\\Users\\Administrator\\Downloads\\设备故障明细2023-4-6 - 副本.xlsx");
+
+        System.out.println("test checkFileEquality success");
+    }
+
 }

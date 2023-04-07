@@ -7,6 +7,9 @@ import java.io.RandomAccessFile;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileChannel.MapMode;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.security.MessageDigest;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 
@@ -163,4 +166,20 @@ public class FileUtils {
         return true;
     }
 
+    /**
+     * 检查两个文件是否一致
+     * @param filePath1
+     * @param filePath2
+     * @return
+     */
+    public static boolean checkFileEquality(String filePath1, String filePath2) {
+        try {
+            byte[] file2Bytes = Files.readAllBytes(Path.of(filePath2));
+            byte[] file1Bytes = Files.readAllBytes(Path.of(filePath1));
+            return MessageDigest.isEqual(file1Bytes, file2Bytes);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }
