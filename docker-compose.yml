@@ -1,0 +1,51 @@
+version: "3.9"
+services:
+  chatting:
+    image: webchatting/chatting
+    container_name: chatting
+    build: .
+    ports:
+      - "8088:8088"
+      - "3333:3333"
+    networks:
+      - chatting-network
+    restart: always
+    depends_on:
+      - mysql
+      - redis
+
+  redis:
+    image: "redis"
+    container_name: chatting-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - "./data/db/redis:/data"
+    networks:
+      - chatting-network
+    command: redis-server
+    restart: always
+
+  mysql:
+    image: mysql
+    container_name: chatting-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: 'root' # mandatory 
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'no'
+      MYSQL_DATABASE: 'chatting'
+      MYSQL_USER: 'webchatting'
+      MYSQL_PASSWORD: 'webchatting'
+    ports:
+      - "3306:3306"
+    volumes:
+      - "./data/db/mysql:/var/lib/mysql"
+      # - ./src/main/resources/sql/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+      # - ./src/main/resources/sql/data.sql:/docker-entrypoint-initdb.d/data.sql
+    networks:
+      - chatting-network
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+  
+networks:
+  chatting-network:
+    driver: bridge

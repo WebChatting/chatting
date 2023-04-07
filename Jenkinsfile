@@ -14,15 +14,10 @@ pipeline {
 				sh 'make build'
 			}
 		}
-		stage('Docker Build') {
-			steps {
-				sh 'make docker-build'
-			}
-		}
 		stage('Deploy') {
 			steps {
 				// use "-v chatting-mysql:/var/lib/mysql" to save database
-				sh 'docker run -d -p 3333:3333 -p 8088:8088 --name chatting --restart unless-stopped webchatting/chatting'
+				sh 'docker-compose up -d'
 			}
 		}
 	}

@@ -1,4 +1,5 @@
 mybatis-plus-generator/
+/data/
 /**/query.sql
 
 !.mvn/wrapper/maven-wrapper.jar
