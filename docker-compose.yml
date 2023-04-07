@@ -9,6 +9,7 @@ services:
       - "3333:3333"
     networks:
       - chatting-network
+    restart: always
     depends_on:
       - mysql
       - redis
