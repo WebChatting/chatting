@@ -21,9 +21,11 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Autowired
     private UriConfig uriConfig;
-
     @Autowired
     UserAuthInterceptor userAuthInterceptor;
+
+    @Value("${file.upload.location}")
+    private String FILE_STORE_PATH;
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
@@ -49,10 +51,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
 //        /UploadFile/xxx --> ${uploadLocation}/xxx
-//        registry.addResourceHandler("/UploadFile/**").addResourceLocations("file:" + uploadLocation);
-//        registry.addResourceHandler("/avatar/**").addResourceLocations("file:" + avatarLocation);
+        registry.addResourceHandler("/upload/**").addResourceLocations("file:" + FILE_STORE_PATH);
 
 //        /UploadFile/xxx --> classpath:/UploadFile/xxx
-//        registry.addResourceHandler("/UploadFile/**").addResourceLocations("classpath:/UploadFile/");
+//        registry.addResourceHandler("/upload/**").addResourceLocations("classpath:/upload/");
     }
 }

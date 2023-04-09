@@ -1,4 +1,4 @@
-package com.sxrekord.chatting;
+package com.sxrekord.chatting.util;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
