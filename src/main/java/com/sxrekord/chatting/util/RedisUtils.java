@@ -7,11 +7,13 @@ package com.sxrekord.chatting.util;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.connection.RedisServerCommands;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 
@@ -197,4 +199,95 @@ public class RedisUtils {
         }
     }
 
+    /**
+     * Get the total number of available keys in currently selected database.
+     * @return
+     */
+    public int getSize() {
+        Long size = (Long)redisTemplate.execute(RedisServerCommands::dbSize);
+        return size.intValue();
+    }
+
+    /**
+     * 获取过期时间
+     * @param key
+     * @return The command returns -2 if the key does not exist.
+     *         The command returns -1 if the key exists but has no associated expire.
+     */
+    public long getExpire(String key) {
+        return redisTemplate.getExpire(key, TimeUnit.SECONDS);
+    }
+
+    /**
+     * 获取map类型值
+     * @param key
+     * @param item
+     * @return
+     */
+    public Object hGet(String key, String item) {
+        return this.redisTemplate.opsForHash().get(key, item);
+    }
+
+    /**
+     * 获取map所有key
+     * @param key
+     * @return
+     */
+    public Map<Object, Object> hmGet(String key) {
+        return this.redisTemplate.opsForHash().entries(key);
+    }
+
+    /**
+     * 设置map值
+     * @param key
+     * @param map
+     * @return
+     */
+    public boolean hmSet(String key, Map<String, Object> map) {
+        try {
+            redisTemplate.opsForHash().putAll(key, map);
+            return true;
+        } catch (Exception e) {
+            log.error("redis 设置map异常" + e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean hmSet(String key, Map<String, Object> map, long time) {
+        try {
+            this.redisTemplate.opsForHash().putAll(key, map);
+            if (time > 0L) {
+                redisTemplate.expire(key, time, TimeUnit.SECONDS);
+            }
+
+            return true;
+        } catch (Exception e) {
+            log.error("redis 设置map异常" + e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean hSet(String key, String item, Object value) {
+        try {
+            this.redisTemplate.opsForHash().put(key, item, value);
+            return true;
+        } catch (Exception e) {
+            log.error("redis 设置map异常" + e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean hSet(String key, String item, Object value, long time) {
+        try {
+            this.redisTemplate.opsForHash().put(key, item, value);
+            if (time > 0L) {
+                redisTemplate.expire(key, time, TimeUnit.SECONDS);
+            }
+
+            return true;
+        } catch (Exception e) {
+            log.error("redis 设置map异常" + e.getMessage());
+            return false;
+        }
+    }
 }
