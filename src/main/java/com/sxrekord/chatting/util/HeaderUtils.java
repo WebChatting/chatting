@@ -18,7 +18,11 @@ public class HeaderUtils {
         return request.getHeader("Authorization");
     }
 
+    public static String getValidAuthorizationHeader(HttpServletRequest request) {
+        return getAuthorizationHeader(request).substring(authorizationPrefix.length());
+    }
+
     public static Long getUserId(HttpServletRequest request) {
-        return JwtTokenUtils.parseUserId(getAuthorizationHeader(request).substring(authorizationPrefix.length()));
+        return JwtTokenUtils.parseUserId(getValidAuthorizationHeader(request));
     }
 }

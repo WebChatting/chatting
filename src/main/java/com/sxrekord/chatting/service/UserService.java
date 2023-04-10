@@ -2,7 +2,7 @@ package com.sxrekord.chatting.service;
 
 import com.sxrekord.chatting.model.vo.ResponseJson;
 
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author Rekord
@@ -22,24 +22,22 @@ public interface UserService {
      * 用户登录
      * @param username
      * @param password
-     * @param session
      * @return
      */
-    ResponseJson loginUser(String username, String password, HttpSession session);
+    ResponseJson loginUser(String username, String password, HttpServletResponse response);
 
     /**
      * 用户登出
-     * @param session
+     * @param token
      * @return
      */
-    ResponseJson logoutUser(HttpSession session);
+    ResponseJson logoutUser(String token);
 
     /**
      * 更新用户信息
      * @param username
      * @param password
      * @param avatarPath
-     * @param session
      * @return
      */
     ResponseJson updateUser(String username, String password, String avatarPath, Long userId);
