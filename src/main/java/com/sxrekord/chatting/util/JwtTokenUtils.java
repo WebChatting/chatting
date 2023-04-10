@@ -82,18 +82,41 @@ public class JwtTokenUtils {
         }
     }
 
+    /**
+     * 更新过期时间
+     * @param token
+     * @return
+     */
     public static String refreshAccessToken(String token) {
+        return refreshAccessToken(token, new Date(System.currentTimeMillis() + EXPIRATION_TIME));
+    }
+
+    /**
+     * 将token过期
+     * @param token
+     * @return
+     */
+    public static String expireAccessToken(String token) {
+        return refreshAccessToken(token, new Date(System.currentTimeMillis() - EXPIRATION_TIME));
+    }
+
+    /**
+     * 从token中解析出userId
+     * @param token
+     * @return
+     */
+    public static Long parseUserId(String token) {
+        return (Long)parseAccessToken(token).get("userId");
+    }
+
+    private static String refreshAccessToken(String token, Date expirationTime) {
         return Jwts.builder()
                 .setHeader(headers)
                 .setClaims(parseAccessToken(token))
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                .setExpiration(expirationTime)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
-    }
-
-    public static Long parseUserId(String token) {
-        return (Long)parseAccessToken(token).get("userId");
     }
 
     private static Claims parseAccessToken(String token) {
