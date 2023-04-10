@@ -6,7 +6,8 @@ import com.sxrekord.chatting.model.po.Relation;
 import com.sxrekord.chatting.model.po.User;
 import com.sxrekord.chatting.model.vo.ResponseJson;
 import com.sxrekord.chatting.service.UserService;
-import com.sxrekord.chatting.common.Constant;
+import com.sxrekord.chatting.util.HeaderUtils;
+import com.sxrekord.chatting.util.JwtTokenUtils;
 import com.sxrekord.chatting.util.WrapEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletResponse;
 import java.text.MessageFormat;
 import java.util.List;
 
@@ -47,7 +48,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public ResponseJson loginUser(String username, String password, HttpSession session) {
+    public ResponseJson loginUser(String username, String password, HttpServletResponse response) {
         ResponseJson responseJson = new ResponseJson();
         User user = userDao.getUserByUsernameAndPassword(username, password);
         if (user == null) {
@@ -57,20 +58,17 @@ public class UserServiceImpl implements UserService {
                     .setData("username", user.getUsername())
                     .setData("password", user.getPassword())
                     .setData("avatarPath", user.getAvatarPath()).success();
-            if (session != null) {
-                session.setAttribute(Constant.USER_TOKEN, user.getId());
-            }
+            HeaderUtils.setAuthorizationHeader(response, JwtTokenUtils.generateAccessToken(user));
         }
         return responseJson;
     }
 
     @Override
-    public ResponseJson logoutUser(HttpSession session) {
+    public ResponseJson logoutUser(String token) {
         ResponseJson responseJson = new ResponseJson();
-        Object userId = session.getAttribute(Constant.USER_TOKEN);
+        log.info(MessageFormat.format("userId为 {0} 的用户已注销登录！", JwtTokenUtils.parseUserId(token)));
+        // 将该token加入黑名单
 
-        session.removeAttribute(Constant.USER_TOKEN);
-        log.info(MessageFormat.format("userId为 {0} 的用户已注销登录！", userId));
         return responseJson.success();
     }
 

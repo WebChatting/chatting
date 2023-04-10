@@ -1,12 +1,13 @@
 package com.sxrekord.chatting.service;
 
-import com.sxrekord.chatting.common.Constant;
+import com.sxrekord.chatting.model.po.User;
+import com.sxrekord.chatting.util.JwtTokenUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.mock.web.MockHttpSession;
+import org.springframework.mock.web.MockHttpServletResponse;
 
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author Rekord
@@ -19,12 +20,12 @@ public class UserServiceTest {
 
     @Test
     public void login() {
-        HttpSession httpSession = new MockHttpSession();
+        HttpServletResponse response = new MockHttpServletResponse();
 
-        System.out.println(userService.loginUser("member001", "001", httpSession));
-        System.out.println(userService.loginUser("test1", "test1", httpSession));
-        System.out.println(userService.loginUser("test2", "test1", httpSession));
-        System.out.println(userService.loginUser("not_exists", "not_exists", httpSession));
+        System.out.println(userService.loginUser("member001", "001", response));
+        System.out.println(userService.loginUser("test1", "test1", response));
+        System.out.println(userService.loginUser("test2", "test1", response));
+        System.out.println(userService.loginUser("not_exists", "not_exists", response));
     }
 
     @Test
@@ -37,9 +38,9 @@ public class UserServiceTest {
 
     @Test
     public void logout() {
-        HttpSession httpSession = new MockHttpSession();
-        httpSession.setAttribute(Constant.USER_TOKEN, 501L);
-        System.out.println(userService.logoutUser(httpSession));
+        String token = JwtTokenUtils.generateAccessToken(new User(1001L, "forLogoutName",
+                "forLogoutPassword", "forLogoutAvatarPath"));
+        System.out.println(userService.logoutUser(token));
     }
 
     @Test
