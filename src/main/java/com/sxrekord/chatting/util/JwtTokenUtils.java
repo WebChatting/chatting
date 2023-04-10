@@ -1,10 +1,7 @@
 package com.sxrekord.chatting.util;
 
 import com.sxrekord.chatting.model.po.User;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.crypto.KeyGenerator;
@@ -23,7 +20,8 @@ import java.util.Map;
  * @date 2023/4/9 22:32
  */
 @Slf4j
-public class JwtTokenUtil {
+public class JwtTokenUtils {
+    private static final int EXPIRATION_TIME = 30 * 60 * 1000;
     private static final String ISSUER = "Chatting";
 
     /**
@@ -59,7 +57,7 @@ public class JwtTokenUtil {
                 .setSubject(user.getUsername())
                 .setIssuer(ISSUER)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 30 * 60 * 1000))
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -82,6 +80,20 @@ public class JwtTokenUtil {
             // 如果解析或验证失败，则token无效
             return false;
         }
+    }
+
+    public static String refreshAccessToken(String token) {
+        return Jwts.builder()
+                .setHeader(headers)
+                .setClaims(parseAccessToken(token))
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    public static Long parseUserId(String token) {
+        return (Long)parseAccessToken(token).get("userId");
     }
 
     private static Claims parseAccessToken(String token) {

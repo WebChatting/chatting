@@ -11,23 +11,29 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 public class JwtTokenUtilTest {
 
+    private User user = new User(1001L,
+            "JwtTokenUtilTestName", "JwtTokenUtilTestPassword", "avatarPath");
     @Test
     public void testGenerateAccessToken() {
-        String token = JwtTokenUtil.generateAccessToken(new User(1001L,
-                "JwtTokenUtilTestName", "JwtTokenUtilTestPassword", "avatarPath"));
+        String token = JwtTokenUtils.generateAccessToken(user);
     }
 
     @Test
     public void testIsTokenExpired() {
-        String token = JwtTokenUtil.generateAccessToken(new User(1001L,
-                "JwtTokenUtilTestName", "JwtTokenUtilTestPassword", "avatarPath"));
-        assert JwtTokenUtil.isTokenExpired(token) == false;
+        String token = JwtTokenUtils.generateAccessToken(user);
+        assert JwtTokenUtils.isTokenExpired(token) == false;
     }
 
     @Test
     public void testIsSignatureValid() {
-        String token = JwtTokenUtil.generateAccessToken(new User(1001L,
-                "JwtTokenUtilTestName", "JwtTokenUtilTestPassword", "avatarPath"));
-        assert JwtTokenUtil.isSignatureInvalid(token) == false;
+        String token = JwtTokenUtils.generateAccessToken(user);
+        assert JwtTokenUtils.isSignatureInvalid(token) == false;
+    }
+
+    @Test
+    public void testRefreshAccessToken() throws InterruptedException {
+        String token = JwtTokenUtils.generateAccessToken(user);
+        Thread.sleep(3000);
+        String newToken = JwtTokenUtils.refreshAccessToken(token);
     }
 }
