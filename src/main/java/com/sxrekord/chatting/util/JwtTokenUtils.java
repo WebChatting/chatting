@@ -106,7 +106,8 @@ public class JwtTokenUtils {
      * @return
      */
     public static Long parseUserId(String token) {
-        return (Long)parseAccessToken(token).get("userId");
+        Number userId = (Number)parseAccessToken(token).get("userId");
+        return userId.longValue();
     }
 
     private static String refreshAccessToken(String token, Date expirationTime) {
