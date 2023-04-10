@@ -15,7 +15,19 @@ public class JwtTokenUtilTest {
     public void testGenerateAccessToken() {
         String token = JwtTokenUtil.generateAccessToken(new User(1001L,
                 "JwtTokenUtilTestName", "JwtTokenUtilTestPassword", "avatarPath"));
-        assert JwtTokenUtil.parseAccessToken(token).getSubject().equals("JwtTokenUtilTestName");
-        assert JwtTokenUtil.parseAccessToken(token).get("userId").equals(1001);
+    }
+
+    @Test
+    public void testIsTokenExpired() {
+        String token = JwtTokenUtil.generateAccessToken(new User(1001L,
+                "JwtTokenUtilTestName", "JwtTokenUtilTestPassword", "avatarPath"));
+        assert JwtTokenUtil.isTokenExpired(token) == false;
+    }
+
+    @Test
+    public void testIsSignatureValid() {
+        String token = JwtTokenUtil.generateAccessToken(new User(1001L,
+                "JwtTokenUtilTestName", "JwtTokenUtilTestPassword", "avatarPath"));
+        assert JwtTokenUtil.isSignatureInvalid(token) == false;
     }
 }

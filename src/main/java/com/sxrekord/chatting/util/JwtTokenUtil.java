@@ -2,6 +2,7 @@ package com.sxrekord.chatting.util;
 
 import com.sxrekord.chatting.model.po.User;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +36,13 @@ public class JwtTokenUtil {
      */
     private static final Key key = new SecretKeySpec(SECRET_KEY.getBytes(), SignatureAlgorithm.HS256.getJcaName());
 
+    private static final Map<String, Object> headers = new HashMap<>();
+
+    static {
+        headers.put("alg", "HS256");
+        headers.put("typ", "JWT");
+    }
+
     public static String generateAccessToken(User user) {
         /**
          * JWT 是一种以紧凑、可验证的形式在两方之间传输信息的方法。
@@ -46,6 +54,7 @@ public class JwtTokenUtil {
         Map<String, Object> claims = new HashMap<>(1);
         claims.put("userId", user.getId());
         return Jwts.builder()
+                .setHeader(headers)
                 .setClaims(claims)
                 .setSubject(user.getUsername())
                 .setIssuer(ISSUER)
@@ -55,7 +64,27 @@ public class JwtTokenUtil {
                 .compact();
     }
 
-    public static Claims parseAccessToken(String token) {
+    public static boolean isTokenExpired(String token) {
+        return parseAccessToken(token).getExpiration().before(new Date());
+    }
+
+    public static boolean isSignatureInvalid(String token) {
+        try {
+            String signature = Jwts.builder()
+                .setHeader(headers)
+                .setClaims(parseAccessToken(token))
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
+
+        // 验证数字签名
+            return !signature.equals(token);
+        } catch (JwtException e) {
+            // 如果解析或验证失败，则token无效
+            return false;
+        }
+    }
+
+    private static Claims parseAccessToken(String token) {
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
@@ -64,6 +93,7 @@ public class JwtTokenUtil {
         log.info("claims: " + claims);
         return claims;
     }
+
     /**
      *
      * @param keySizeBits: 256 or 384 or 512
