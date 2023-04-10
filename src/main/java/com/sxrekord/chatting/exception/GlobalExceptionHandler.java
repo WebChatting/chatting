@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.security.auth.login.AccountExpiredException;
+import java.security.SignatureException;
 import java.util.stream.Collectors;
 
 /**
@@ -53,6 +54,13 @@ public class GlobalExceptionHandler {
     public ResponseJson authenticationExceptionHandler(AccountExpiredException e) {
         log.error(e.getMessage());
         return new ResponseJson(-1).setMsg("authentication failure");
+    }
+
+    @ExceptionHandler(SignatureException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ResponseJson signatureExceptionHandler(SignatureException e) {
+        log.error(e.getMessage());
+        return new ResponseJson(-1).setMsg("signature invalid");
     }
 
     /**
