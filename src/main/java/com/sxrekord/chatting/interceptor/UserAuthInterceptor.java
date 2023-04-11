@@ -23,14 +23,13 @@ public class UserAuthInterceptor implements HandlerInterceptor{
             throws Exception {
         String authorizationHeader = HeaderUtils.getAuthorizationHeader(request);
         if (authorizationHeader != null && authorizationHeader.startsWith(authorizationHeader)) {
-            String accessToken = authorizationHeader.substring(HeaderUtils.authorizationPrefix.length());
+            String accessToken = HeaderUtils.getValidAuthorizationHeader(request);
             if (JwtTokenUtils.isSignatureInvalid(accessToken)) {
                 throw new SignatureException("signature invalid");
             }
             if (JwtTokenUtils.isTokenExpired(accessToken)) {
                 throw new AccountExpiredException("accessToken expired");
             }
-            HeaderUtils.setAuthorizationHeader(response, JwtTokenUtils.refreshAccessToken(accessToken));
             return true;
         }
         throw new SignatureException("accessToken invalid");
