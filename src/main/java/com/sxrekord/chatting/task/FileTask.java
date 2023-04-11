@@ -1,7 +1,8 @@
 package com.sxrekord.chatting.task;
 
-import com.sxrekord.chatting.util.FileUtils;
-import org.springframework.beans.factory.annotation.Value;
+import com.sxrekord.chatting.service.FileService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.SchedulingConfigurer;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
@@ -13,11 +14,12 @@ import org.springframework.stereotype.Component;
  * @date 2023/4/6 15:11
  */
 @Component
+@Slf4j
 @EnableScheduling
 public class FileTask implements SchedulingConfigurer {
 
-    @Value("${file.upload.location}")
-    private String FILE_STORE_PATH;
+    @Autowired
+    private FileService fileService;
 
     @Override
     public void configureTasks(ScheduledTaskRegistrar scheduledTaskRegistrar) {
@@ -30,7 +32,11 @@ public class FileTask implements SchedulingConfigurer {
     }
 
     public void cleanExpiredFile() {
-//        FileUtils.removeFile(FILE_STORE_PATH);
-        System.out.println("hello world schedule!");
+        log.info("文件开始整理...");
+        // 整理文件
+        fileService.tidyUp();
+        // 清理文件
+        fileService.clean();
+        log.info("文件整理完成。");
     }
 }

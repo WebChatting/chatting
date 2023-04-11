@@ -34,7 +34,7 @@ insert into relation (`request_id`, `accept_id`, `type`, `status`) values (506, 
 insert into text_content (`content`) values ('hi');
 insert into text_content (`content`) values ('hello');
 insert into text_content (`content`) values ("I'm rekord");
-insert into text_content (`content`) values ("I'm KangKang");
+insert into text_content (`content`) values ("Oh, good name!");
 insert into text_content (`content`) values ("hi, I'm member001");
 insert into text_content (`content`) values ("hi, I'm member002");
 
@@ -52,3 +52,4 @@ insert into image_content (`path`) values ('avatar/default_group_avatar.jpg');
 
 -- insert file message
 
+-- insert file

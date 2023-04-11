@@ -12,10 +12,12 @@ create table if not exists `user` (
     `username` varchar(16) unique not null comment '用户账号',
     `password` varchar(16) not null comment '用户密码',
     `avatar_path` varchar(255) not null comment '用户头像存储路径',
+    `file_id` bigint unsigned null comment '文件ID',
     `create_time` timestamp default current_timestamp comment '创建时间',
     `update_time` timestamp default current_timestamp on update current_timestamp comment '更新时间',
     primary key `pk_id` (`id`),
-    unique key `uk_username` (`username`)
+    unique key `uk_username` (`username`),
+    constraint `fk_user_file_id` foreign key (`file_id`) references `file` (`id`)
 ) ENGINE=InnoDB auto_increment=501 DEFAULT charset=utf8mb4;
 
 -- create group table
@@ -24,11 +26,13 @@ create table if not exists `group` (
     `name` varchar(16) unique not null comment '群组名',
     `owner_id` bigint unsigned not null comment '创建者ID',
     `avatar_path` varchar(255) not null comment '群组头像存储路径',
+    `file_id` bigint unsigned null comment '文件ID',
     `create_time` timestamp default current_timestamp comment '创建时间',
     `update_time` timestamp default current_timestamp on update current_timestamp comment '更新时间',
     primary key `pk_id` (`id`),
-    unique key `uk_name` (`name`),
-    constraint `fk_owner_id` foreign key (`owner_id`) references `user` (`id`) on delete cascade
+    unique key `uk_groupname` (`name`),
+    constraint `fk_owner_id` foreign key (`owner_id`) references `user` (`id`) on delete cascade,
+    constraint `fk_group_file_id` foreign key (`file_id`) references `file` (`id`)
 ) ENGINE=InnoDB auto_increment=101 DEFAULT charset=utf8mb4;
 
 -- create message table
@@ -69,21 +73,37 @@ create table if not exists `text_content` (
 
 create table if not exists `file_content` (
 	`id` bigint unsigned not null auto_increment comment '文本消息ID',
-    `name` varchar(255) not null comment '文件名',
-    `size` varchar(12) not null comment '文件大小（带单位）',
-    `path` varchar(255) not null comment '文件存储路径',
-    `create_time` timestamp default current_timestamp comment '创建时间',
-    `update_time` timestamp default current_timestamp on update current_timestamp comment '更新时间',
-    primary key `pk_id` (`id`)
+	`name` varchar(255) not null comment '文件名',
+	`size` varchar(12) not null comment '文件大小（带单位）',
+	`path` varchar(255) not null comment '文件存储路径',
+	`file_id` bigint unsigned null comment '文件ID',
+	`create_time` timestamp default current_timestamp comment '创建时间',
+	`update_time` timestamp default current_timestamp on update current_timestamp comment '更新时间',
+    primary key `pk_id` (`id`),
+    constraint `fk_file_content_file_id` foreign key (`file_id`) references `file` (`id`)
 ) engine=InnoDB auto_increment=1001 default charset=utf8mb4;
 
 create table if not exists `image_content` (
 	`id` bigint unsigned not null auto_increment comment '图片消息ID',
     `path` varchar(255) not null comment '图片存储路径',
+    `file_id` bigint unsigned null comment '文件ID',
     `create_time` timestamp default current_timestamp comment '创建时间',
     `update_time` timestamp default current_timestamp on update current_timestamp comment '更新时间',
-    primary key `pk_id` (`id`)
+    primary key `pk_id` (`id`),
+    constraint `fk_image_content_file_id` foreign key (`file_id`) references `file` (`id`)
 ) engine=InnoDB auto_increment=1001 default charset=utf8mb4;
+
+create table if not exists `file` (
+	`id` bigint unsigned not null auto_increment comment '文件ID',
+	`size` varchar(12) not null comment '文件大小（带单位）',
+    `path` varchar(255) not null comment '图片存储路径',
+    `expire_policy` int unsigned default 0 comment '过期政策(0过期且没有与任何表相关联，1过期但与文件内容表相关联，2不过期)',
+    `expire_time` timestamp default (CURRENT_TIMESTAMP + INTERVAL 7 DAY) comment '过期时间，仅当expire_policy为1时有效',
+	`create_time` timestamp default current_timestamp comment '创建时间',
+	`update_time` timestamp default current_timestamp on update current_timestamp comment '更新时间',
+	primary key `pk_id` (`id`),
+    unique key `uk_filepath` (`path`)
+) engine=InnoDB auto_increment=1001 default charset=utf8mb4 comment="文件表";
 
 create table if not exists `remark` (
 	`id` bigint unsigned not null auto_increment comment '备注ID',

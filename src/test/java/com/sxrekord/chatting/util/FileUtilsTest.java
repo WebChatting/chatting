@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
+
 /**
  * @author Rekord
  * @date 2023/4/7 9:59
@@ -28,4 +29,8 @@ public class FileUtilsTest {
         System.out.println("test checkFileEquality success");
     }
 
+    @Test
+    public void testCalculateFileHash() throws Exception {
+        System.out.println(FileUtils.calculateFileHash("C:\\Users\\rekord\\Downloads\\笔记代码.zip"));
+    }
 }
