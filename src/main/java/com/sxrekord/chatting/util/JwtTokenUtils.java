@@ -63,7 +63,11 @@ public class JwtTokenUtils {
     }
 
     public static boolean isTokenExpired(String token) {
-        return parseAccessToken(token).getExpiration().before(new Date());
+        try {
+            return parseAccessToken(token).getExpiration().before(new Date());
+        } catch (ExpiredJwtException e) {
+            return true;
+        }
     }
 
     public static boolean isSignatureInvalid(String token) {
