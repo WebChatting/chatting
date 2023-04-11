@@ -14,4 +14,14 @@ public interface FileService {
      * @return
      */
     ResponseJson upload(MultipartFile file);
+
+    /**
+     * 整理文件
+     */
+    void tidyUp();
+
+    /**
+     * 清理过期文件
+     */
+    void clean();
 }
