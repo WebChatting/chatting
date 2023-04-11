@@ -1,6 +1,7 @@
 mybatis-plus-generator/
 /data/
 /**/query.sql
+src/main/java/com/sxrekord/chatting/controller/AdminController.java
 
 !.mvn/wrapper/maven-wrapper.jar
 
