@@ -53,7 +53,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ResponseJson authenticationExceptionHandler(AccountExpiredException e) {
         log.error(e.getMessage());
-        return new ResponseJson(-1).setMsg("authentication failure");
+        return new ResponseJson(402).setMsg("authentication failure");
     }
 
     @ExceptionHandler(SignatureException.class)
