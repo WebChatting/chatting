@@ -1,7 +1,9 @@
 package com.sxrekord.chatting.model.po;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author Rekord
@@ -9,17 +11,23 @@ import lombok.Data;
  */
 @Data
 @TableName("file_content")
+@NoArgsConstructor
 public class FileContent {
     private Long id;
     private String name;
     private String size;
     private String path;
-
-    public FileContent() {}
+    @TableField("file_id")
+    private Long fileId;
 
     public FileContent(String name, String size, String path) {
         this.name = name;
         this.size = size;
         this.path = path;
+    }
+
+    public FileContent(Long id, Long fileId) {
+        this.id = id;
+        this.fileId = fileId;
     }
 }
