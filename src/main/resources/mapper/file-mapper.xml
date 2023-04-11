@@ -6,7 +6,8 @@
 <mapper namespace="com.sxrekord.chatting.dao.FileDao">
     <update id="updateExpirePolicy" parameterType="File" keyProperty="id">
         update `file`
-        set expire_policy = #{expirePolicy}
+        set expire_policy = #{expirePolicy},
+        expire_time = GREATEST(expire_time, DATE_ADD(#{expireTime}, INTERVAL 7 DAY))
         where `id` = #{id};
     </update>
 </mapper>

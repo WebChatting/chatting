@@ -88,34 +88,38 @@ public class FileServiceImpl implements FileService {
         List<com.sxrekord.chatting.model.po.File> files = fileDao.selectList(null);
 
         // 处理永不过期的文件
-        List<IdAndPathAndFileId> userAvatarPath = userDao
+        List<FileAssociation> userAvatarPath = userDao
                 .selectList(Wrappers.<User>lambdaQuery()
-                .select(User::getId, User::getAvatarPath, User::getFileId))
+                .select(User::getId, User::getAvatarPath, User::getFileId, User::getUpdateTime))
                 .stream()
-                .map(user -> new IdAndPathAndFileId(user.getId(), user.getAvatarPath(), user.getFileId()))
+                .map(user -> new FileAssociation(user.getId(), user.getAvatarPath(),
+                        user.getFileId(), user.getUpdateTime()))
                 .collect(Collectors.toList());
         handleFileAssociation(userAvatarPath, files, 1, 0);
-        List<IdAndPathAndFileId> groupAvatarPath = groupDao
+        List<FileAssociation> groupAvatarPath = groupDao
                 .selectList(Wrappers.<Group>lambdaQuery()
-                .select(Group::getId, Group::getAvatarPath, Group::getFileId))
+                .select(Group::getId, Group::getAvatarPath, Group::getFileId, Group::getUpdateTime))
                 .stream()
-                .map(group -> new IdAndPathAndFileId(group.getId(), group.getAvatarPath(), group.getFileId()))
+                .map(group -> new FileAssociation(group.getId(), group.getAvatarPath(),
+                        group.getFileId(), group.getUpdateTime()))
                 .collect(Collectors.toList());
         handleFileAssociation(groupAvatarPath, files, 1, 1);
-        List<IdAndPathAndFileId> imageContentPath = imageContentDao
+        List<FileAssociation> imageContentPath = imageContentDao
                 .selectList(Wrappers.<ImageContent>lambdaQuery()
-                .select(ImageContent::getId, ImageContent::getPath, ImageContent::getFileId))
+                .select(ImageContent::getId, ImageContent::getPath, ImageContent::getFileId, ImageContent::getUpdateTime))
                 .stream()
-                .map(imageContent -> new IdAndPathAndFileId(imageContent.getId(), imageContent.getPath(), imageContent.getFileId()))
+                .map(imageContent -> new FileAssociation(imageContent.getId(), imageContent.getPath(),
+                        imageContent.getFileId(), imageContent.getUpdateTime()))
                 .collect(Collectors.toList());
         handleFileAssociation(imageContentPath, files, 1, 2);
 
         // 处理可能会过期的文件
-        List<IdAndPathAndFileId> fileContentPath = fileContentDao
+        List<FileAssociation> fileContentPath = fileContentDao
                 .selectList(Wrappers.<FileContent>lambdaQuery()
-                .select(FileContent::getId, FileContent::getPath, FileContent::getFileId))
+                .select(FileContent::getId, FileContent::getPath, FileContent::getFileId, FileContent::getUpdateTime))
                 .stream()
-                .map(fileContent -> new IdAndPathAndFileId(fileContent.getId(), fileContent.getPath(), fileContent.getFileId()))
+                .map(fileContent -> new FileAssociation(fileContent.getId(), fileContent.getPath(),
+                        fileContent.getFileId(), fileContent.getUpdateTime()))
                 .collect(Collectors.toList());
         handleFileAssociation(fileContentPath, files, 0, 3);
     }
@@ -142,17 +146,17 @@ public class FileServiceImpl implements FileService {
     /**
      * 处理不过期文件
      */
-    private void handleFileAssociation(List<IdAndPathAndFileId> nonExpireFiles,
+    private void handleFileAssociation(List<FileAssociation> nonExpireFiles,
                                        List<com.sxrekord.chatting.model.po.File> allFiles,
                                        Integer expirePolicy, Integer type) {
-        for (IdAndPathAndFileId idAndPathAndFileId : nonExpireFiles) {
-            if (idAndPathAndFileId.getFileId() != null) {
+        for (FileAssociation fileAssociation : nonExpireFiles) {
+            if (fileAssociation.getFileId() != null) {
                 continue;
             }
             for (com.sxrekord.chatting.model.po.File file : allFiles) {
-                if (file.getPath().equals(idAndPathAndFileId.getPath())) {
+                if (file.getPath().equals(fileAssociation.getPath())) {
                     // 关联文件表并更新过期政策
-                    Long id = idAndPathAndFileId.getId();
+                    Long id = fileAssociation.getId();
                     Long fileId = file.getId();
                     switch (type) {
                         case 0:
@@ -179,6 +183,7 @@ public class FileServiceImpl implements FileService {
                             System.out.println("未知类型错误");
                     }
                     file.setExpirePolicy(Math.max(1, file.getExpirePolicy()) + expirePolicy);
+                    file.setExpireTime(fileAssociation.getExpireTime());
                     fileDao.updateExpirePolicy(file);
                     break;
                 }
@@ -189,9 +194,10 @@ public class FileServiceImpl implements FileService {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    private class IdAndPathAndFileId {
+    private class FileAssociation {
         private Long id;
         private String path;
         private Long fileId;
+        private Date expireTime;
     }
 }

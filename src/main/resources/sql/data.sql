@@ -53,3 +53,5 @@ insert into image_content (`path`) values ('avatar/default_group_avatar.jpg');
 -- insert file message
 
 -- insert file
+insert into `file` (`size`, `path`) values ('8.8KB', 'avatar/default_user_avatar.jpg');
+insert into `file` (`size`, `path`) values ('6.5KB', 'avatar/default_group_avatar.jpg');
