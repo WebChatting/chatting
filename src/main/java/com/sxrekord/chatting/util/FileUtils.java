@@ -1,17 +1,18 @@
 package com.sxrekord.chatting.util;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.RandomAccessFile;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.*;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileChannel.MapMode;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
 import java.util.HashMap;
+import java.util.UUID;
 
 /**
  * <p>
@@ -25,6 +26,8 @@ import java.util.HashMap;
  * @date 2017年11月15日 下午9:05:10
  */
 public class FileUtils {
+    public static final String DOT = ".";
+    public static final String SLASH = "/";
 
     private static final HashMap<String, String> fileTypes = new HashMap<>();
     static { // BOM（Byte Order Mark）文件头字节
@@ -135,10 +138,7 @@ public class FileUtils {
      * @return
      * @throws IOException
      */
-//    remove the warning for a potential resource leak.
-//    @SuppressWarnings("resource")
     public static byte[] toByteArray(String filePath) throws IOException {
-        
         try (FileChannel fc = new RandomAccessFile(filePath, "r").getChannel()) {
             MappedByteBuffer byteBuffer = fc.map(MapMode.READ_ONLY, 0,
                     fc.size()).load();
@@ -181,5 +181,65 @@ public class FileUtils {
             e.printStackTrace();
             return false;
         }
+    }
+
+    /**
+     * 根据文件路径计算文件Hash值
+     * @param filePath
+     * @return
+     * @throws Exception
+     */
+    public static String calculateFileHash(String filePath) {
+        String fileHash = "";
+        try {
+            fileHash = calculateFileHash(new FileInputStream(filePath));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return fileHash;
+    }
+
+    /**
+     * 计算文件Hash值
+     * @param file
+     * @return
+     */
+    public static String calculateFileHash(MultipartFile file) {
+        String fileHash = "";
+        try {
+            fileHash = calculateFileHash((InputStream)file.getInputStream());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return fileHash;
+    }
+
+    private static String calculateFileHash(InputStream inputStream) throws NoSuchAlgorithmException {
+        MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+        try {
+            byte[] buffer = new byte[1024];
+            int bytesRead;
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                messageDigest.update(buffer, 0, bytesRead);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                inputStream.close();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        byte[] hashBytes = messageDigest.digest();
+        StringBuilder sb = new StringBuilder();
+        for (byte b : hashBytes) {
+            sb.append(String.format("%02x", b));
+        }
+        return sb.toString();
+    }
+
+    public static String getRandomUUID() {
+        return UUID.randomUUID().toString().replace("-", "");
     }
 }
