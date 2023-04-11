@@ -129,7 +129,7 @@ public class FileServiceImpl implements FileService {
                 fileDao.deleteById(file.getId());
                 // 删除本地文件
                 FileUtils.removeFile(Paths.get(FILE_STORE_PATH,
-                        file.getPath().substring(SERVER_URL_PREFIX.length() + 1)).toString());
+                        file.getPath().substring(SERVER_URL_PREFIX.length())).toString());
             }
         }
     }
