@@ -1,6 +1,7 @@
 package com.sxrekord.chatting.service.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.sxrekord.chatting.common.ExpirePolicy;
 import com.sxrekord.chatting.common.FileAssociationType;
 import com.sxrekord.chatting.dao.*;
 import com.sxrekord.chatting.model.po.FileContent;
@@ -140,8 +141,8 @@ public class FileServiceImpl implements FileService {
     }
 
     private boolean isRemoveFile(com.sxrekord.chatting.model.po.File file) {
-        return file.getExpirePolicy() == 0
-                || file.getExpirePolicy() == 1 && file.getExpireTime().before(new Date());
+        return file.getExpirePolicy().equals(ExpirePolicy.DIRECT_EXPIRATION)
+                || file.getExpirePolicy().equals(ExpirePolicy.TIMED_EXPIRATION) && file.getExpireTime().before(new Date());
     }
 
     /**
@@ -183,7 +184,7 @@ public class FileServiceImpl implements FileService {
                         default:
                             System.out.println("未知类型错误");
                     }
-                    file.setExpirePolicy(Math.max(1, file.getExpirePolicy()) + expirePolicy);
+                    file.setExpirePolicy(Math.max(ExpirePolicy.TIMED_EXPIRATION, file.getExpirePolicy()) + expirePolicy);
                     file.setExpireTime(fileAssociation.getExpireTime());
                     fileDao.updateExpirePolicy(file);
                     break;
