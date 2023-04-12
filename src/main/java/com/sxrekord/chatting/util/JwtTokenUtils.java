@@ -27,7 +27,7 @@ public class JwtTokenUtils {
     /**
      * generate by using generateKey(256)
      */
-    private static final String SECRET_KEY = "+Dns1uYbRurxFFaK2ItygPLnwiwaEzTpT4IypgVv1Mc=";
+    private static final String SECRET_KEY = generateKey(256);
 
     /**
      * Java Cryptography Architecture (JCA)
