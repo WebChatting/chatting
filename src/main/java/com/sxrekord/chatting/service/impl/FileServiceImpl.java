@@ -1,6 +1,7 @@
 package com.sxrekord.chatting.service.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.sxrekord.chatting.common.FileAssociationType;
 import com.sxrekord.chatting.dao.*;
 import com.sxrekord.chatting.model.po.FileContent;
 import com.sxrekord.chatting.model.po.Group;
@@ -95,7 +96,7 @@ public class FileServiceImpl implements FileService {
                 .map(user -> new FileAssociation(user.getId(), user.getAvatarPath(),
                         user.getFileId(), user.getUpdateTime()))
                 .collect(Collectors.toList());
-        handleFileAssociation(userAvatarPath, files, 1, 0);
+        handleFileAssociation(userAvatarPath, files, 1, FileAssociationType.UserAvatar);
         List<FileAssociation> groupAvatarPath = groupDao
                 .selectList(Wrappers.<Group>lambdaQuery()
                 .select(Group::getId, Group::getAvatarPath, Group::getFileId, Group::getUpdateTime))
@@ -103,7 +104,7 @@ public class FileServiceImpl implements FileService {
                 .map(group -> new FileAssociation(group.getId(), group.getAvatarPath(),
                         group.getFileId(), group.getUpdateTime()))
                 .collect(Collectors.toList());
-        handleFileAssociation(groupAvatarPath, files, 1, 1);
+        handleFileAssociation(groupAvatarPath, files, 1, FileAssociationType.GroupAvatar);
         List<FileAssociation> imageContentPath = imageContentDao
                 .selectList(Wrappers.<ImageContent>lambdaQuery()
                 .select(ImageContent::getId, ImageContent::getPath, ImageContent::getFileId, ImageContent::getUpdateTime))
@@ -111,7 +112,7 @@ public class FileServiceImpl implements FileService {
                 .map(imageContent -> new FileAssociation(imageContent.getId(), imageContent.getPath(),
                         imageContent.getFileId(), imageContent.getUpdateTime()))
                 .collect(Collectors.toList());
-        handleFileAssociation(imageContentPath, files, 1, 2);
+        handleFileAssociation(imageContentPath, files, 1, FileAssociationType.ImageContent);
 
         // 处理可能会过期的文件
         List<FileAssociation> fileContentPath = fileContentDao
@@ -121,7 +122,7 @@ public class FileServiceImpl implements FileService {
                 .map(fileContent -> new FileAssociation(fileContent.getId(), fileContent.getPath(),
                         fileContent.getFileId(), fileContent.getUpdateTime()))
                 .collect(Collectors.toList());
-        handleFileAssociation(fileContentPath, files, 0, 3);
+        handleFileAssociation(fileContentPath, files, 0, FileAssociationType.FileContent);
     }
 
     @Override
@@ -148,7 +149,7 @@ public class FileServiceImpl implements FileService {
      */
     private void handleFileAssociation(List<FileAssociation> nonExpireFiles,
                                        List<com.sxrekord.chatting.model.po.File> allFiles,
-                                       Integer expirePolicy, Integer type) {
+                                       Integer expirePolicy, FileAssociationType type) {
         for (FileAssociation fileAssociation : nonExpireFiles) {
             if (fileAssociation.getFileId() != null) {
                 continue;
@@ -159,22 +160,22 @@ public class FileServiceImpl implements FileService {
                     Long id = fileAssociation.getId();
                     Long fileId = file.getId();
                     switch (type) {
-                        case 0:
+                        case UserAvatar:
                             userDao.update(new User(id, fileId), Wrappers.<User>lambdaUpdate()
                                     .eq(User::getId, id)
                                     .set(User::getFileId, fileId));
                             break;
-                        case 1:
+                        case GroupAvatar:
                             groupDao.update(new Group(id, fileId), Wrappers.<Group>lambdaUpdate()
                                     .eq(Group::getId, id)
                                     .set(Group::getFileId, fileId));
                             break;
-                        case 2:
+                        case ImageContent:
                             imageContentDao.update(new ImageContent(id, fileId), Wrappers.<ImageContent>lambdaUpdate()
                                     .eq(ImageContent::getId, id)
                                     .set(ImageContent::getFileId, fileId));
                             break;
-                        case 3:
+                        case FileContent:
                             fileContentDao.update(new FileContent(id, fileId), Wrappers.<FileContent>lambdaUpdate()
                                     .eq(FileContent::getId, id)
                                     .set(FileContent::getFileId, fileId));
