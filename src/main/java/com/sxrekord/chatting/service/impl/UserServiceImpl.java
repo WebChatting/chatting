@@ -1,13 +1,17 @@
 package com.sxrekord.chatting.service.impl;
 
+import com.sxrekord.chatting.common.ExpirePolicy;
+import com.sxrekord.chatting.dao.FileDao;
 import com.sxrekord.chatting.dao.RelationDao;
 import com.sxrekord.chatting.dao.UserDao;
+import com.sxrekord.chatting.model.po.File;
 import com.sxrekord.chatting.model.po.Relation;
 import com.sxrekord.chatting.model.po.User;
 import com.sxrekord.chatting.model.vo.ResponseJson;
 import com.sxrekord.chatting.service.UserService;
 import com.sxrekord.chatting.util.HeaderUtils;
 import com.sxrekord.chatting.util.JwtTokenUtils;
+import com.sxrekord.chatting.util.TimeUtils;
 import com.sxrekord.chatting.util.WrapEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +34,8 @@ public class UserServiceImpl implements UserService {
     private UserDao userDao;
     @Autowired
     private RelationDao relationDao;
+    @Autowired
+    private FileDao fileDao;
 
     @Value("${file.default.user}")
     private String user_avatar_default;
@@ -75,6 +81,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseJson updateUser(String username, String password, String avatarPath, Long userId) {
         ResponseJson responseJson = new ResponseJson();
+        // 判断头像是否修改，若修改则需要同步更新文件表
+        User oldUser = userDao.selectById(userId);
+        if (oldUser.getFileId() != null && !oldUser.getAvatarPath().equals(avatarPath)) {
+            File file = fileDao.selectById(oldUser.getFileId());
+            file.setExpirePolicy(file.getExpirePolicy() - 1);
+            file.setExpireTime(TimeUtils.subtractDaysFromDate(file.getExpireTime(), ExpirePolicy.EXPIRE_DAY_INTERVAL));
+            fileDao.updateExpirePolicy(file);
+        }
         userDao.updateById(new User(userId, username, password, avatarPath));
         responseJson.success("信息更新成功");
         return responseJson;
