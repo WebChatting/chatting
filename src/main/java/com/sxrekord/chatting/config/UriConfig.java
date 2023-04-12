@@ -1,5 +1,7 @@
 package com.sxrekord.chatting.config;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -11,21 +13,10 @@ import java.util.List;
  */
 @Component
 @ConfigurationProperties(prefix = "config")
+@Setter
+@Getter
 public class UriConfig {
     private List<String> includeUri;
-
     private List<String> excludeUri;
 
-    public List<String> getIncludeUri() {
-        return includeUri;
-    }
-    public void setIncludeUri(List<String> includeUri) {
-        this.includeUri = includeUri;
-    }
-    public List<String> getExcludeUri() {
-        return excludeUri;
-    }
-    public void setExcludeUri(List<String> excludeUri) {
-        this.excludeUri = excludeUri;
-    }
 }
