@@ -10,22 +10,38 @@ import java.util.stream.Stream;
  */
 @Getter
 public enum WSType {
-    // 上线
+    /**
+     * 上线
+     */
     ONLINE(1),
-    // 离线
+    /**
+     * 离线
+     */
     OFFLINE(2),
 
-    // 文本单发
+    /**
+     * 文本单发
+     */
     TEXT_SINGLE_SENDING(3),
-    // 文本群发
+    /**
+     * 文本群发
+     */
     TEXT_GROUP_SENDING(4),
-    // 图片单发
+    /**
+     * 图片单发
+     */
     IMAGE_SINGLE_SENDING(5),
-    // 图片群发
+    /**
+     * 图片群发
+      */
     IMAGE_GROUP_SENDING(6),
-    // 文件单发
+    /**
+     * 文件单发
+     */
     FILE_SINGLE_SENDING(7),
-    // 文件群发
+    /**
+     * 文件群发
+      */
     FILE_GROUP_SENDING(8);
 
     private final Integer id;
