@@ -17,6 +17,7 @@ public interface MessageDao extends BaseMapper<Message> {
 
     /**
      * 列出消息
+     * 如果类型是1，则fromId无效
      * @param type
      * @param updateTime
      * @param fromId
