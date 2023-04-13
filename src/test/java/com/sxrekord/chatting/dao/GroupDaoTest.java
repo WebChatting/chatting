@@ -41,7 +41,7 @@ public class GroupDaoTest {
         Assert.isTrue(feedback.size() == 1, "test searchGroupByName error");
 
         System.out.println(feedback = groupDao.searchGroupByName("group"));
-//        Assert.isTrue(feedback.size() == 2, "test searchGroupByName error");
+        Assert.isTrue(feedback.size() == 2, "test searchGroupByName error");
 
         System.out.println(feedback = groupDao.searchGroupByName("not group"));
         Assert.isTrue(feedback.size() == 0, "test searchGroupByName error");
@@ -55,7 +55,7 @@ public class GroupDaoTest {
         Assert.isTrue(feedback.size() == 1, "test listGroupByOwnerId error");
 
         System.out.println(feedback = groupDao.listGroupByOwnerId(502L));
-//        Assert.isTrue(feedback.size() == 1, "test listGroupByOwnerId error");
+        Assert.isTrue(feedback.size() == 1, "test listGroupByOwnerId error");
 
         System.out.println(feedback = groupDao.listGroupByOwnerId(503L));
         Assert.isTrue(feedback.size() == 0, "test listGroupByOwnerId error");
