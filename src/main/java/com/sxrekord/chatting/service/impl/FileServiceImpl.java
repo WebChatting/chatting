@@ -11,6 +11,7 @@ import com.sxrekord.chatting.model.po.User;
 import com.sxrekord.chatting.model.vo.ResponseJson;
 import com.sxrekord.chatting.service.FileService;
 import com.sxrekord.chatting.util.FileUtils;
+import com.sxrekord.chatting.util.TimeUtils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -138,6 +139,14 @@ public class FileServiceImpl implements FileService {
                         file.getPath().substring(SERVER_URL_PREFIX.length())).toString());
             }
         }
+    }
+
+    @Override
+    public void updateFileAssociation(Long fileId) {
+        com.sxrekord.chatting.model.po.File file = fileDao.selectById(fileId);
+        file.setExpirePolicy(file.getExpirePolicy() - ExpirePolicy.PERMANENT_ASSOCIATION);
+        file.setExpireTime(TimeUtils.subtractDaysFromDate(file.getExpireTime(), ExpirePolicy.EXPIRE_DAY_INTERVAL));
+        fileDao.updateExpirePolicy(file);
     }
 
     private boolean isRemoveFile(com.sxrekord.chatting.model.po.File file) {

@@ -24,4 +24,10 @@ public interface FileService {
      * 清理过期文件
      */
     void clean();
+
+    /**
+     * 更新文件联结
+     * @param fileId
+     */
+    void updateFileAssociation(Long fileId);
 }

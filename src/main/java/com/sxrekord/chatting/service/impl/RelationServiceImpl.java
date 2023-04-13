@@ -6,6 +6,7 @@ import com.sxrekord.chatting.dao.UserDao;
 import com.sxrekord.chatting.model.po.Group;
 import com.sxrekord.chatting.model.po.Relation;
 import com.sxrekord.chatting.model.vo.ResponseJson;
+import com.sxrekord.chatting.service.FileService;
 import com.sxrekord.chatting.service.RelationService;
 import com.sxrekord.chatting.util.WrapEntity;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,12 +24,12 @@ import java.util.List;
 public class RelationServiceImpl implements RelationService {
     @Autowired
     RelationDao relationDao;
-
     @Autowired
     GroupDao groupDao;
-
     @Autowired
     UserDao userDao;
+    @Autowired
+    FileService fileService;
 
     @Override
     public ResponseJson createRelation(Relation relation, Long userId) {
@@ -59,6 +60,10 @@ public class RelationServiceImpl implements RelationService {
             // 删除所有群友关系
             relationDao.deleteRelationByTypeAndAcceptId(1, relation.getAcceptId());
             // 删除群组
+            Group group = groupDao.selectById(relation.getAcceptId());
+            if (group.getFileId() != null) {
+                fileService.updateFileAssociation(group.getFileId());
+            }
             groupDao.deleteById(relation.getAcceptId());
         }
         if (relation.getStatus() == 3) {
