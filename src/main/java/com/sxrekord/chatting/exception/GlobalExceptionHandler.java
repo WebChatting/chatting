@@ -60,7 +60,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ResponseJson signatureExceptionHandler(SignatureException e) {
         log.error(e.getMessage());
-        return new ResponseJson(-1).setMsg("signature invalid");
+        return new ResponseJson(401).setMsg("signature invalid");
     }
 
     /**
