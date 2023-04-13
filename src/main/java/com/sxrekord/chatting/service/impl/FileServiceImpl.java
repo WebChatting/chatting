@@ -97,7 +97,7 @@ public class FileServiceImpl implements FileService {
                 .map(user -> new FileAssociation(user.getId(), user.getAvatarPath(),
                         user.getFileId(), user.getUpdateTime()))
                 .collect(Collectors.toList());
-        handleFileAssociation(userAvatarPath, files, 1, FileAssociationType.UserAvatar);
+        handleFileAssociation(userAvatarPath, files, ExpirePolicy.PERMANENT_ASSOCIATION, FileAssociationType.UserAvatar);
         List<FileAssociation> groupAvatarPath = groupDao
                 .selectList(Wrappers.<Group>lambdaQuery()
                 .select(Group::getId, Group::getAvatarPath, Group::getFileId, Group::getUpdateTime))
@@ -105,7 +105,7 @@ public class FileServiceImpl implements FileService {
                 .map(group -> new FileAssociation(group.getId(), group.getAvatarPath(),
                         group.getFileId(), group.getUpdateTime()))
                 .collect(Collectors.toList());
-        handleFileAssociation(groupAvatarPath, files, 1, FileAssociationType.GroupAvatar);
+        handleFileAssociation(groupAvatarPath, files, ExpirePolicy.PERMANENT_ASSOCIATION, FileAssociationType.GroupAvatar);
         List<FileAssociation> imageContentPath = imageContentDao
                 .selectList(Wrappers.<ImageContent>lambdaQuery()
                 .select(ImageContent::getId, ImageContent::getPath, ImageContent::getFileId, ImageContent::getUpdateTime))
@@ -113,7 +113,7 @@ public class FileServiceImpl implements FileService {
                 .map(imageContent -> new FileAssociation(imageContent.getId(), imageContent.getPath(),
                         imageContent.getFileId(), imageContent.getUpdateTime()))
                 .collect(Collectors.toList());
-        handleFileAssociation(imageContentPath, files, 1, FileAssociationType.ImageContent);
+        handleFileAssociation(imageContentPath, files, ExpirePolicy.PERMANENT_ASSOCIATION, FileAssociationType.ImageContent);
 
         // 处理可能会过期的文件
         List<FileAssociation> fileContentPath = fileContentDao
@@ -123,7 +123,7 @@ public class FileServiceImpl implements FileService {
                 .map(fileContent -> new FileAssociation(fileContent.getId(), fileContent.getPath(),
                         fileContent.getFileId(), fileContent.getUpdateTime()))
                 .collect(Collectors.toList());
-        handleFileAssociation(fileContentPath, files, 0, FileAssociationType.FileContent);
+        handleFileAssociation(fileContentPath, files, ExpirePolicy.TIMING_ASSOCIATION, FileAssociationType.FileContent);
     }
 
     @Override

@@ -15,4 +15,12 @@ public class ExpirePolicy {
      */
     public static final Integer TIMED_EXPIRATION = 1;
 
+    /**
+     * 永久联结
+     */
+    public static final Integer PERMANENT_ASSOCIATION = 1;
+    /**
+     * 定时联结
+     */
+    public static final Integer TIMING_ASSOCIATION = 0;
 }
