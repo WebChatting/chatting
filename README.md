@@ -13,3 +13,6 @@ make run
 ```shell
 .\scripts\local-deploy.bat --run-application
 ```
+
+## API
+启动应用后访问 [swagger-ui](http://localhost:8088/chatting/swagger-ui/index.html)

@@ -3,12 +3,10 @@ package com.sxrekord.chatting.controller;
 import com.sxrekord.chatting.model.vo.ResponseJson;
 import com.sxrekord.chatting.service.UserService;
 import com.sxrekord.chatting.util.HeaderUtils;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,13 +15,15 @@ import javax.servlet.http.HttpServletResponse;
  * @author Rekord
  * @date 2022/9/10 14:11
  */
-@Controller
+@Api(tags = "User-Related")
+@RestController
 @RequestMapping("/user")
 public class UserController {
 
     @Autowired
     UserService userService;
 
+    @ApiOperation(value = "User Login")
     @RequestMapping(value = "login", method = RequestMethod.POST)
     @ResponseBody
     public ResponseJson login(HttpServletResponse response,

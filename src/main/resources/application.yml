@@ -51,6 +51,9 @@ spring:
           enabled: true
       web-stat-filter:
         enabled: true
+  mvc:
+    pathmatch:
+      matching-strategy: ANT_PATH_MATCHER
 
   sql:
     init:
@@ -85,7 +88,7 @@ netty:
     port: 3333
 
 config:
-  exclude-uri: [ /user/register, /user/login, /upload, /admin/** ]
+  exclude-uri: [ /user/register, /user/login, /upload, /admin/**, /swagger**/**, /webjars/**, /v3/**, /doc.html ]
   include-uri: [ /** ]
 
 logging:
