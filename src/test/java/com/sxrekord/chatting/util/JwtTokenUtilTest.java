@@ -36,4 +36,11 @@ public class JwtTokenUtilTest {
         Thread.sleep(3000);
         String newToken = JwtTokenUtils.refreshAccessToken(token);
     }
+
+    @Test
+    public void testParseRemainingExpirationTime() {
+        String token = JwtTokenUtils.generateAccessToken(user);
+        System.out.println(JwtTokenUtils.parseRemainingExpirationTime(token));
+        System.out.println(30*60*1000);
+    }
 }

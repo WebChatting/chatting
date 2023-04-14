@@ -4,6 +4,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * @author Rekord
  * @date 2023/3/16 10:16
@@ -18,10 +20,10 @@ public class RedisUtilsTest {
         redisUtils.set("chatting-key", "chatting-value");
         assert redisUtils.get("chatting-key").equals("chatting-value");
 
-        redisUtils.set("chatting-expire-key", "chatting-expire-value", 10L);
+        redisUtils.set("chatting-expire-key", "chatting-expire-value", 10L, TimeUnit.SECONDS);
         assert redisUtils.get("chatting-expire-key").equals("chatting-expire-value");
 
-        redisUtils.set("test-getExpire", "test-getExpire", 10L);
+        redisUtils.set("test-getExpire", "test-getExpire", 10L, TimeUnit.SECONDS);
         System.out.println(redisUtils.getExpire("test-getExpire"));
     }
 

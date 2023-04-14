@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.security.auth.login.AccountExpiredException;
+import javax.security.sasl.AuthenticationException;
 import java.security.SignatureException;
 import java.util.stream.Collectors;
 
@@ -51,9 +52,9 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(AccountExpiredException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public ResponseJson authenticationExceptionHandler(AccountExpiredException e) {
+    public ResponseJson accountExpiredExceptionHandler(AccountExpiredException e) {
         log.error(e.getMessage());
-        return new ResponseJson(402).setMsg("authentication failure");
+        return new ResponseJson(402).setMsg("account expired");
     }
 
     @ExceptionHandler(SignatureException.class)
@@ -62,6 +63,15 @@ public class GlobalExceptionHandler {
         log.error(e.getMessage());
         return new ResponseJson(401).setMsg("signature invalid");
     }
+
+    @ExceptionHandler(AuthenticationException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ResponseJson tokenBlacklistedException(AuthenticationException e) {
+        log.error(e.getMessage());
+        return new ResponseJson(451).setMsg("token has been blacklisted");
+    }
+
+
 
     /**
      * 描述：请求方法不支持异常提示
