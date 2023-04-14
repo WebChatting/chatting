@@ -89,7 +89,7 @@ public class RedisUtils {
      * @return
      */
     public int getSize() {
-        Long size = (Long)redisTemplate.execute(RedisServerCommands::dbSize);
+        Long size = (Long)stringRedisTemplate.execute(RedisServerCommands::dbSize);
         return size.intValue();
     }
 
@@ -100,7 +100,7 @@ public class RedisUtils {
      *         The command returns -1 if the key exists but has no associated expire.
      */
     public long getExpire(String key) {
-        return redisTemplate.getExpire(key, TimeUnit.SECONDS);
+        return stringRedisTemplate.getExpire(key, TimeUnit.SECONDS);
     }
 
     /**
