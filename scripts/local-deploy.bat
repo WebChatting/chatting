@@ -1,5 +1,16 @@
 @echo off
 
+set RUNAPP=%1
+
+if /i "%RUNAPP%"=="--help" (
+    echo Usage: local-deploy.bat [--run-application] [--help]
+    echo.
+    echo Options:
+    echo  --run-application  Starts the Spring Boot application after starting the Redis and MySQL containers
+    echo  --help             Displays this help message
+	exit /b
+)
+
 call :stopContainer redis
 echo Starting Redis container...
 docker run --name redis ^
@@ -30,11 +41,13 @@ if errorlevel 1 (
     exit /b 1
 )
 
-echo Waiting for 5 seconds...
 echo Containers started successfully.
-timeout /t 5 /nobreak
 
-mvn clean spring-boot:run
+if /i "%RUNAPP%"=="--run-application" (
+	echo Waiting for 5 seconds...
+	timeout /t 5 /nobreak
+	mvn clean spring-boot:run
+)
 exit /b
 
 :stopContainer

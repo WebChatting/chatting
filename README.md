@@ -11,5 +11,5 @@ make run
 
 2. 本地部署
 ```shell
-.\scripts\local-deploy.bat
+.\scripts\local-deploy.bat --run-application
 ```
