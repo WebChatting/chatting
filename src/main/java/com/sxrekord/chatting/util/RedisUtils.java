@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.connection.RedisServerCommands;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.TimeUnit;
@@ -21,7 +20,6 @@ import java.util.concurrent.TimeUnit;
 public class RedisUtils {
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
-
     @Autowired
     private RedisTemplate redisTemplate;
 
@@ -35,8 +33,7 @@ public class RedisUtils {
     public boolean set(final String key, String value) {
         boolean result = false;
         try {
-            ValueOperations<String, String> operations = stringRedisTemplate.opsForValue();
-            operations.set(key, value);
+            stringRedisTemplate.opsForValue().set(key, value);
             result = true;
         } catch (Exception e) {
             log.error("写入redis缓存失败！错误信息为: " + e.getMessage());
@@ -45,19 +42,18 @@ public class RedisUtils {
     }
 
     /**
-     * 写入redis缓存，设置expire存活时间(以秒为单位)
-     *
+     * 写入redis缓存，设置过期时间
      * @param key
      * @param value
-     * @param expire
+     * @param timeout
+     * @param unit
      * @return
      */
-    public boolean set(final String key, String value, Long expire) {
+    public boolean set(final String key, String value, Long timeout, TimeUnit unit) {
         boolean result = false;
         try {
-            ValueOperations<String, String> operations = stringRedisTemplate.opsForValue();
-            operations.set(key, value);
-            stringRedisTemplate.expire(key, expire, TimeUnit.SECONDS);
+            stringRedisTemplate.opsForValue().set(key, value);
+            stringRedisTemplate.expire(key, timeout, unit);
             result = true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -76,8 +72,7 @@ public class RedisUtils {
     public Object get(final String key) {
         Object result = null;
         try {
-            ValueOperations<String, String> operations = stringRedisTemplate.opsForValue();
-            result = operations.get(key);
+            result = stringRedisTemplate.opsForValue().get(key);
         } catch (Exception e) {
             log.info("读取redis缓存失败！错误信息为：" + e.getMessage());
         }
