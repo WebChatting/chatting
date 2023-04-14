@@ -111,8 +111,8 @@ public class RedisUtils {
      * @return
      */
     public Long sAdd(String key, String value, long timeout) {
-        long result = redisTemplate.opsForSet().add(key, value);
-        redisTemplate.expire(key, timeout, TimeUnit.SECONDS);
+        long result = stringRedisTemplate.opsForSet().add(key, value);
+        stringRedisTemplate.expire(key, timeout, TimeUnit.SECONDS);
         return result;
     }
 
@@ -123,6 +123,6 @@ public class RedisUtils {
      * @return
      */
     public boolean sIsMember(String key, String value) {
-        return redisTemplate.opsForSet().isMember(key, value);
+        return stringRedisTemplate.opsForSet().isMember(key, value);
     }
 }
