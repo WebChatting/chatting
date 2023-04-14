@@ -114,6 +114,10 @@ public class JwtTokenUtils {
         return userId.longValue();
     }
 
+    public static Long parseRemainingExpirationTime(String token) {
+        return (parseAccessToken(token).getExpiration().getTime() - System.currentTimeMillis()) / 1000 + 1;
+    }
+
     private static String refreshAccessToken(String token, Date expirationTime) {
         return Jwts.builder()
                 .setHeader(headers)

@@ -1,11 +1,15 @@
 package com.sxrekord.chatting.interceptor;
 
+import com.sxrekord.chatting.common.RedisKey;
 import com.sxrekord.chatting.util.HeaderUtils;
 import com.sxrekord.chatting.util.JwtTokenUtils;
+import com.sxrekord.chatting.util.RedisUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.security.sasl.AuthenticationException;
 import javax.security.auth.login.AccountExpiredException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,7 +21,8 @@ import java.security.SignatureException;
  */
 @Component
 public class UserAuthInterceptor implements HandlerInterceptor{
-
+    @Autowired
+    private RedisUtils redisUtils;
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
@@ -29,6 +34,9 @@ public class UserAuthInterceptor implements HandlerInterceptor{
             }
             if (JwtTokenUtils.isTokenExpired(accessToken)) {
                 throw new AccountExpiredException("accessToken expired");
+            }
+            if (redisUtils.sIsMember(RedisKey.TOKEN_BLACKLIST_KEY, accessToken)) {
+                throw new AuthenticationException("token has been blacklisted");
             }
             return true;
         }

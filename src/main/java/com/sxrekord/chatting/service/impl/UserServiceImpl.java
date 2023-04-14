@@ -1,5 +1,6 @@
 package com.sxrekord.chatting.service.impl;
 
+import com.sxrekord.chatting.common.RedisKey;
 import com.sxrekord.chatting.dao.RelationDao;
 import com.sxrekord.chatting.dao.UserDao;
 import com.sxrekord.chatting.model.po.Relation;
@@ -9,6 +10,7 @@ import com.sxrekord.chatting.service.FileService;
 import com.sxrekord.chatting.service.UserService;
 import com.sxrekord.chatting.util.HeaderUtils;
 import com.sxrekord.chatting.util.JwtTokenUtils;
+import com.sxrekord.chatting.util.RedisUtils;
 import com.sxrekord.chatting.util.WrapEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +38,8 @@ public class UserServiceImpl implements UserService {
 
     @Value("${file.default.user}")
     private String user_avatar_default;
+    @Autowired
+    private RedisUtils redisUtils;
 
     @Override
     public ResponseJson registerUser(String username, String password) {
@@ -71,7 +75,7 @@ public class UserServiceImpl implements UserService {
         ResponseJson responseJson = new ResponseJson();
         log.info(MessageFormat.format("userId为 {0} 的用户已注销登录！", JwtTokenUtils.parseUserId(token)));
         // 将该token加入黑名单
-
+        redisUtils.sAdd(RedisKey.TOKEN_BLACKLIST_KEY, token, JwtTokenUtils.parseRemainingExpirationTime(token));
         return responseJson.success();
     }
 

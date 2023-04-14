@@ -13,7 +13,6 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
 
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 
@@ -67,27 +66,6 @@ public class RedisUtils {
         return result;
     }
 
-    /**
-     * 写入redis缓存，设置expire存活时间(以小时为单位)
-     *
-     * @param key
-     * @param value
-     * @param expire
-     * @return
-     */
-    public boolean setByHours(final String key, String value, Long expire) {
-        boolean result = false;
-        try {
-            ValueOperations<String, String> operations = stringRedisTemplate.opsForValue();
-            operations.set(key, value);
-            stringRedisTemplate.expire(key, expire, TimeUnit.HOURS);
-            result = true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            log.error("写入redis缓存（设置expire存活时间）失败！错误信息为：" + e.getMessage());
-        }
-        return result;
-    }
 
     /**
      * 读取Redis缓存
@@ -104,99 +82,6 @@ public class RedisUtils {
             log.info("读取redis缓存失败！错误信息为：" + e.getMessage());
         }
         return result;
-    }
-
-    /**
-     * 判断redis缓存中是否有对应的key
-     *
-     * @param key
-     * @return
-     */
-    public boolean exist(final String key) {
-        boolean result = false;
-        try {
-            result = stringRedisTemplate.hasKey(key);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return result;
-    }
-
-    /**
-     * redis根据key删除对应的value
-     *
-     * @param key
-     * @return
-     */
-    public boolean remove(final String key) {
-        boolean result = false;
-        try {
-            if (exist(key)) {
-                stringRedisTemplate.delete(key);
-            }
-            result = true;
-        } catch (Exception e) {
-            log.error("redis根据key删除对应的value失败！错误信息为：" + e.getMessage());
-        }
-        return result;
-    }
-
-    /**
-     * Redis根据keys批量删除对应的value
-     *
-     * @param keys
-     */
-    public void remove(final String... keys) {
-        for (String key : keys) {
-            remove(key);
-        }
-    }
-
-    /**
-     * 存储对象（设置过期时间）
-     * @param key
-     * @param value
-     * @param expire
-     * @return
-     */
-    public boolean setObject(String key, Object value, long expire) {
-        try {
-            redisTemplate.opsForValue().set(key, value, expire, TimeUnit.MILLISECONDS);
-            return true;
-        } catch (Exception e) {
-            log.error("----------------->redis 写入object失败" + e.getMessage());
-            return false;
-        }
-    }
-
-    /**
-     * 存储对象（不设置过期时间）
-     * @param key
-     * @param value
-     * @return
-     */
-    public boolean setObject(String key, Object value) {
-        try {
-            redisTemplate.opsForValue().set(key, value);
-            return true;
-        } catch (Exception e) {
-            log.error("----------------->redis 写入object失败" + e.getMessage());
-            return false;
-        }
-    }
-
-    /**
-     * 获取对象
-     * @param key
-     * @return
-     */
-    public Object getObject(String key) {
-        try {
-            return redisTemplate.opsForValue().get(key);
-        } catch (Exception e) {
-            log.error("redis 获取object异常" + e.getMessage());
-            return null;
-        }
     }
 
     /**
@@ -219,75 +104,25 @@ public class RedisUtils {
     }
 
     /**
-     * 获取map类型值
+     * 往set中添加一个元素
      * @param key
-     * @param item
+     * @param value
+     * @param timeout
      * @return
      */
-    public Object hGet(String key, String item) {
-        return this.redisTemplate.opsForHash().get(key, item);
+    public Long sAdd(String key, String value, long timeout) {
+        long result = redisTemplate.opsForSet().add(key, value);
+        redisTemplate.expire(key, timeout, TimeUnit.SECONDS);
+        return result;
     }
 
     /**
-     * 获取map所有key
+     * 判断set中是否存在某一元素
      * @param key
+     * @param value
      * @return
      */
-    public Map<Object, Object> hmGet(String key) {
-        return this.redisTemplate.opsForHash().entries(key);
-    }
-
-    /**
-     * 设置map值
-     * @param key
-     * @param map
-     * @return
-     */
-    public boolean hmSet(String key, Map<String, Object> map) {
-        try {
-            redisTemplate.opsForHash().putAll(key, map);
-            return true;
-        } catch (Exception e) {
-            log.error("redis 设置map异常" + e.getMessage());
-            return false;
-        }
-    }
-
-    public boolean hmSet(String key, Map<String, Object> map, long time) {
-        try {
-            this.redisTemplate.opsForHash().putAll(key, map);
-            if (time > 0L) {
-                redisTemplate.expire(key, time, TimeUnit.SECONDS);
-            }
-
-            return true;
-        } catch (Exception e) {
-            log.error("redis 设置map异常" + e.getMessage());
-            return false;
-        }
-    }
-
-    public boolean hSet(String key, String item, Object value) {
-        try {
-            this.redisTemplate.opsForHash().put(key, item, value);
-            return true;
-        } catch (Exception e) {
-            log.error("redis 设置map异常" + e.getMessage());
-            return false;
-        }
-    }
-
-    public boolean hSet(String key, String item, Object value, long time) {
-        try {
-            this.redisTemplate.opsForHash().put(key, item, value);
-            if (time > 0L) {
-                redisTemplate.expire(key, time, TimeUnit.SECONDS);
-            }
-
-            return true;
-        } catch (Exception e) {
-            log.error("redis 设置map异常" + e.getMessage());
-            return false;
-        }
+    public boolean sIsMember(String key, String value) {
+        return redisTemplate.opsForSet().isMember(key, value);
     }
 }
