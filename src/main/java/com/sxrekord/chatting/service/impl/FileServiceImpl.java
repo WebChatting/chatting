@@ -93,6 +93,7 @@ public class FileServiceImpl implements FileService {
         // 处理永不过期的文件
         List<FileAssociation> userAvatarPath = userDao
                 .selectList(Wrappers.<User>lambdaQuery()
+                .isNull(User::getFileId)
                 .select(User::getId, User::getAvatarPath, User::getFileId, User::getUpdateTime))
                 .stream()
                 .map(user -> new FileAssociation(user.getId(), user.getAvatarPath(),
@@ -101,6 +102,7 @@ public class FileServiceImpl implements FileService {
         handleFileAssociation(userAvatarPath, files, ExpirePolicy.PERMANENT_ASSOCIATION, FileAssociationType.UserAvatar);
         List<FileAssociation> groupAvatarPath = groupDao
                 .selectList(Wrappers.<Group>lambdaQuery()
+                .isNull(Group::getFileId)
                 .select(Group::getId, Group::getAvatarPath, Group::getFileId, Group::getUpdateTime))
                 .stream()
                 .map(group -> new FileAssociation(group.getId(), group.getAvatarPath(),
@@ -109,6 +111,7 @@ public class FileServiceImpl implements FileService {
         handleFileAssociation(groupAvatarPath, files, ExpirePolicy.PERMANENT_ASSOCIATION, FileAssociationType.GroupAvatar);
         List<FileAssociation> imageContentPath = imageContentDao
                 .selectList(Wrappers.<ImageContent>lambdaQuery()
+                .isNull(ImageContent::getFileId)
                 .select(ImageContent::getId, ImageContent::getPath, ImageContent::getFileId, ImageContent::getUpdateTime))
                 .stream()
                 .map(imageContent -> new FileAssociation(imageContent.getId(), imageContent.getPath(),
@@ -119,6 +122,7 @@ public class FileServiceImpl implements FileService {
         // 处理可能会过期的文件
         List<FileAssociation> fileContentPath = fileContentDao
                 .selectList(Wrappers.<FileContent>lambdaQuery()
+                .isNull(FileContent::getFileId)
                 .select(FileContent::getId, FileContent::getPath, FileContent::getFileId, FileContent::getUpdateTime))
                 .stream()
                 .map(fileContent -> new FileAssociation(fileContent.getId(), fileContent.getPath(),
@@ -161,9 +165,6 @@ public class FileServiceImpl implements FileService {
                                        List<com.sxrekord.chatting.model.po.File> allFiles,
                                        Integer expirePolicy, FileAssociationType type) {
         for (FileAssociation fileAssociation : nonExpireFiles) {
-            if (fileAssociation.getFileId() != null) {
-                continue;
-            }
             for (com.sxrekord.chatting.model.po.File file : allFiles) {
                 if (file.getPath().equals(fileAssociation.getPath())) {
                     // 关联文件表并更新过期政策
