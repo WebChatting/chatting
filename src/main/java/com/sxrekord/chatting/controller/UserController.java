@@ -1,5 +1,6 @@
 package com.sxrekord.chatting.controller;
 
+import com.sxrekord.chatting.model.po.User;
 import com.sxrekord.chatting.model.vo.ResponseJson;
 import com.sxrekord.chatting.service.UserService;
 import com.sxrekord.chatting.util.HeaderUtils;
@@ -24,20 +25,17 @@ public class UserController {
     UserService userService;
 
     @ApiOperation(value = "Login User")
-    @RequestMapping(value = "login", method = RequestMethod.POST)
+    @RequestMapping(value = "login", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public ResponseJson login(HttpServletResponse response,
-                              @RequestParam String username,
-                              @RequestParam String password) {
-        return userService.loginUser(username, password, response);
+    public ResponseJson login(HttpServletResponse response, @RequestBody User user) {
+        return userService.loginUser(user, response);
     }
 
     @ApiOperation(value = "Register User")
-    @RequestMapping(value = "register", method = RequestMethod.POST)
+    @RequestMapping(value = "register", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public ResponseJson register(@RequestParam String username,
-                                 @RequestParam String password) {
-        return userService.registerUser(username, password);
+    public ResponseJson register(@RequestBody User user) {
+        return userService.registerUser(user);
     }
 
     @ApiOperation(value = "Logout User")
@@ -52,7 +50,7 @@ public class UserController {
     @ResponseBody
     public ResponseJson update(@RequestParam String name, @RequestParam String password,
                                @RequestParam String avatarPath, HttpServletRequest request) {
-        return userService.updateUser(name, password, avatarPath, HeaderUtils.getUserId(request));
+        return userService.updateUser(new User(name, password, avatarPath), HeaderUtils.getUserId(request));
     }
 
     @ApiOperation(value = "Search User")

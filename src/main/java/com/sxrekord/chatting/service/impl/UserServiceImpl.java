@@ -42,7 +42,9 @@ public class UserServiceImpl implements UserService {
     private RedisUtils redisUtils;
 
     @Override
-    public ResponseJson registerUser(String username, String password) {
+    public ResponseJson registerUser(User user) {
+        String username = user.getUsername();
+        String password = user.getPassword();
         ResponseJson responseJson = new ResponseJson();
         if (userDao.getUserByUsername(username) == null) {
             userDao.insert(new User(username, password, user_avatar_default));
@@ -55,9 +57,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public ResponseJson loginUser(String username, String password, HttpServletResponse response) {
+    public ResponseJson loginUser(User u, HttpServletResponse response) {
         ResponseJson responseJson = new ResponseJson();
-        User user = userDao.getUserByUsernameAndPassword(username, password);
+        User user = userDao.getUserByUsernameAndPassword(u.getUsername(), u.getPassword());
         if (user == null) {
             responseJson.error("用户名或密码错误！");
         } else {
@@ -80,14 +82,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseJson updateUser(String username, String password, String avatarPath, Long userId) {
+    public ResponseJson updateUser(User user, Long userId) {
         ResponseJson responseJson = new ResponseJson();
         // 判断头像是否修改，若修改则需要同步更新文件表
         User oldUser = userDao.selectById(userId);
-        if (oldUser.getFileId() != null && !oldUser.getAvatarPath().equals(avatarPath)) {
+        if (oldUser.getFileId() != null && !oldUser.getAvatarPath().equals(user.getAvatarPath())) {
             fileService.updateFileAssociation(oldUser.getFileId());
         }
-        userDao.updateById(new User(userId, username, password, avatarPath));
+        userDao.updateById(new User(userId, user.getUsername(), user.getPassword(), user.getAvatarPath()));
         responseJson.success("信息更新成功");
         return responseJson;
     }

@@ -22,18 +22,18 @@ public class UserServiceTest {
     public void login() {
         HttpServletResponse response = new MockHttpServletResponse();
 
-        System.out.println(userService.loginUser("member001", "001", response));
-        System.out.println(userService.loginUser("test1", "test1", response));
-        System.out.println(userService.loginUser("test2", "test1", response));
-        System.out.println(userService.loginUser("not_exists", "not_exists", response));
+        System.out.println(userService.loginUser(new User("member001", "001"), response));
+        System.out.println(userService.loginUser(new User("test1", "test1"), response));
+        System.out.println(userService.loginUser(new User("test2", "test1"), response));
+        System.out.println(userService.loginUser(new User("not_exists", "not_exists"), response));
     }
 
     @Test
     public void register() {
-        System.out.println(userService.registerUser("test1", "test1"));
-        System.out.println(userService.registerUser("test2", "test2"));
-        System.out.println(userService.registerUser("test3", "test3"));
-        System.out.println(userService.registerUser("test2", "test3"));
+        System.out.println(userService.registerUser(new User("test1", "test1")));
+        System.out.println(userService.registerUser(new User("test2", "test2")));
+        System.out.println(userService.registerUser(new User("test3", "test3")));
+        System.out.println(userService.registerUser(new User("test2", "test3")));
     }
 
     @Test
@@ -46,7 +46,7 @@ public class UserServiceTest {
     @Test
     public void update() {
         register();
-        System.out.println(userService.updateUser("test_test", "test_test", "avatar/default_user_avatar.jpg", 506L));
+        System.out.println(userService.updateUser(new User("test_test", "test_test", "avatar/default_user_avatar.jpg"), 506L));
     }
 
     @Test

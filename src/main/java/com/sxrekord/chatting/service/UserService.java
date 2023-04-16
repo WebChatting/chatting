@@ -1,5 +1,6 @@
 package com.sxrekord.chatting.service;
 
+import com.sxrekord.chatting.model.po.User;
 import com.sxrekord.chatting.model.vo.ResponseJson;
 
 import javax.servlet.http.HttpServletResponse;
@@ -12,19 +13,18 @@ public interface UserService {
 
     /**
      * 用户注册
-     * @param username
-     * @param password
+     * @param user
      * @return
      */
-    ResponseJson registerUser(String username, String password);
+    ResponseJson registerUser(User user);
 
     /**
      * 用户登录
-     * @param username
-     * @param password
+     * @param user
+     * @param response
      * @return
      */
-    ResponseJson loginUser(String username, String password, HttpServletResponse response);
+    ResponseJson loginUser(User user, HttpServletResponse response);
 
     /**
      * 用户登出
@@ -35,16 +35,16 @@ public interface UserService {
 
     /**
      * 更新用户信息
-     * @param username
-     * @param password
-     * @param avatarPath
+     * @param user
+     * @param userId
      * @return
      */
-    ResponseJson updateUser(String username, String password, String avatarPath, Long userId);
+    ResponseJson updateUser(User user, Long userId);
 
     /**
      * 查询用户
      * @param username
+     * @param userId
      * @return
      */
     ResponseJson searchUser(String username, Long userId);
