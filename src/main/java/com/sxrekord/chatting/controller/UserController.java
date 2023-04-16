@@ -23,7 +23,7 @@ public class UserController {
     @Autowired
     UserService userService;
 
-    @ApiOperation(value = "User Login")
+    @ApiOperation(value = "Login User")
     @RequestMapping(value = "login", method = RequestMethod.POST)
     @ResponseBody
     public ResponseJson login(HttpServletResponse response,
@@ -32,6 +32,7 @@ public class UserController {
         return userService.loginUser(username, password, response);
     }
 
+    @ApiOperation(value = "Register User")
     @RequestMapping(value = "register", method = RequestMethod.POST)
     @ResponseBody
     public ResponseJson register(@RequestParam String username,
@@ -39,12 +40,14 @@ public class UserController {
         return userService.registerUser(username, password);
     }
 
+    @ApiOperation(value = "Logout User")
     @RequestMapping(value = "logout", method = RequestMethod.POST)
     @ResponseBody
     public ResponseJson logout(HttpServletRequest request) {
         return userService.logoutUser(HeaderUtils.getValidAuthorizationHeader(request));
     }
 
+    @ApiOperation(value = "Update User")
     @RequestMapping(value = "update", method = RequestMethod.POST)
     @ResponseBody
     public ResponseJson update(@RequestParam String name, @RequestParam String password,
@@ -52,6 +55,7 @@ public class UserController {
         return userService.updateUser(name, password, avatarPath, HeaderUtils.getUserId(request));
     }
 
+    @ApiOperation(value = "Search User")
     @RequestMapping(value = "search", method = RequestMethod.GET)
     @ResponseBody
     public ResponseJson search(@RequestParam String name, HttpServletRequest request) {

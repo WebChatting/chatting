@@ -3,6 +3,8 @@ package com.sxrekord.chatting.controller;
 import com.sxrekord.chatting.model.vo.ResponseJson;
 import com.sxrekord.chatting.service.MessageService;
 import com.sxrekord.chatting.util.HeaderUtils;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
@@ -19,12 +21,14 @@ import java.util.Date;
  * @author Rekord
  * @date 2022/9/13 23:41
  */
+@Api(tags = "Message-Related")
 @Controller
 @RequestMapping("/message")
 public class MessageController {
     @Autowired
     MessageService messageService;
 
+    @ApiOperation(value = "Load Message")
     @PostMapping(value = "load")
     @ResponseBody
     public ResponseJson load(@RequestParam("type") Integer type,
