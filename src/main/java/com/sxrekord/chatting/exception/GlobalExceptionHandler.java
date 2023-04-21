@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.security.auth.login.AccountExpiredException;
 import javax.security.sasl.AuthenticationException;
-import java.security.SignatureException;
 import java.util.stream.Collectors;
 
 /**
@@ -57,9 +56,9 @@ public class GlobalExceptionHandler {
         return new ResponseJson(402).setMsg("account expired");
     }
 
-    @ExceptionHandler(SignatureException.class)
+    @ExceptionHandler({java.security.SignatureException.class, io.jsonwebtoken.security.SignatureException.class})
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public ResponseJson signatureExceptionHandler(SignatureException e) {
+    public ResponseJson signatureExceptionHandler(Exception e) {
         log.error(e.getMessage());
         return new ResponseJson(401).setMsg("signature invalid");
     }
