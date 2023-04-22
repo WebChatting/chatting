@@ -32,7 +32,7 @@ public class SecurityUtils {
     }
 
     private static final String algorithm = "RSA";
-    private static final int keySize = 1024;
+    private static final int keySize = 2048;
     private static final String charsetName = "UTF-8";
     private static final Base64.Encoder encoder = Base64.getEncoder();
     private static final Base64.Decoder decoder = Base64.getDecoder();
