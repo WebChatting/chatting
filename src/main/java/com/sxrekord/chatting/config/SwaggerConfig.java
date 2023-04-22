@@ -34,7 +34,7 @@ public class SwaggerConfig {
                 .title("Chatting 接口文档")
                 .description("Chatting on Web")
                 .contact(new Contact("Rekord", "https://github.com/Crazyokd", "wildrekord@gmail.com"))
-                .version("v0.4.1")
+                .version("v0.4.2")
                 .build();
     }
 }
