@@ -2,6 +2,7 @@ package com.sxrekord.chatting.service;
 
 import com.sxrekord.chatting.model.po.User;
 import com.sxrekord.chatting.util.JwtTokenUtils;
+import com.sxrekord.chatting.util.SecurityUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,10 +23,14 @@ public class UserServiceTest {
     public void login() {
         HttpServletResponse response = new MockHttpServletResponse();
 
-        System.out.println(userService.loginUser(new User("member001", "001"), response));
-        System.out.println(userService.loginUser(new User("test1", "test1"), response));
-        System.out.println(userService.loginUser(new User("test2", "test1"), response));
-        System.out.println(userService.loginUser(new User("not_exists", "not_exists"), response));
+        System.out.println(userService.loginUser(new User(SecurityUtils.encrypt("member001"),
+                SecurityUtils.encrypt("001")), response));
+        System.out.println(userService.loginUser(new User(SecurityUtils.encrypt("test1"),
+                SecurityUtils.encrypt("test1")), response));
+        System.out.println(userService.loginUser(new User(SecurityUtils.encrypt("test2"),
+                SecurityUtils.encrypt("test1")), response));
+        System.out.println(userService.loginUser(new User(SecurityUtils.encrypt("not_exists"),
+                SecurityUtils.encrypt("not_exists")), response));
     }
 
     @Test
