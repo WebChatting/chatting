@@ -88,9 +88,11 @@ netty:
     port: 3333
 
 config:
-  exclude-uri: [ /user/register, /user/login, /upload, /admin/**, /swagger**/**, /webjars/**, /v3/**, /doc.html ]
+  exclude-uri: [ /user/register, /user/login, /upload, /common/**, /admin/**, /swagger**/**, /webjars/**, /v3/**, /doc.html ]
   include-uri: [ /** ]
 
 logging:
+  level:
+    org.springframework.web.servlet.handler.SimpleUrlHandlerMapping: DEBUG
   pattern:
     console: "\u001b[32m%d{yyyy-MM-dd HH:mm:ss.SSS}\u001b[0m %clr(%5p) [\u001b[35m%clr(${PID:- })\u001b[0m] --- \u001b[33m[%t]\u001b[0m \u001b[36m%-40.40logger{39}\u001b[0m: %m%n${LOG_EXCEPTION_CONVERSION_WORD:%wEx}"

@@ -8,10 +8,7 @@ import com.sxrekord.chatting.model.po.User;
 import com.sxrekord.chatting.model.vo.ResponseJson;
 import com.sxrekord.chatting.service.FileService;
 import com.sxrekord.chatting.service.UserService;
-import com.sxrekord.chatting.util.HeaderUtils;
-import com.sxrekord.chatting.util.JwtTokenUtils;
-import com.sxrekord.chatting.util.RedisUtils;
-import com.sxrekord.chatting.util.WrapEntity;
+import com.sxrekord.chatting.util.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -59,7 +56,9 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     public ResponseJson loginUser(User u, HttpServletResponse response) {
         ResponseJson responseJson = new ResponseJson();
-        User user = userDao.getUserByUsernameAndPassword(u.getUsername(), u.getPassword());
+        String username = new String(SecurityUtils.decrypt(u.getUsername()));
+        String password = new String(SecurityUtils.decrypt(u.getPassword()));
+        User user = userDao.getUserByUsernameAndPassword(username, password);
         if (user == null) {
             responseJson.error("用户名或密码错误！");
         } else {
