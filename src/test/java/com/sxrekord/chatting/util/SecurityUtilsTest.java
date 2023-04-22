@@ -11,7 +11,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 public class SecurityUtilsTest {
     @Test
     public void testSecurityUtils() {
-        System.out.println(SecurityUtils.publicKey);
-        System.out.println(SecurityUtils.privateKey);
+        String cipher = SecurityUtils.encrypt("member001");
+        System.out.println(cipher);
+        System.out.println(SecurityUtils.decrypt(cipher));
     }
 }
