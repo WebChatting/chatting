@@ -23,7 +23,7 @@
         where username = #{username} and password = #{password};
     </select>
 
-    <select id="getUserByUsername" parameterType="java.lang.String" resultMap="UserDao">
+    <select id="getUserByUsername" parameterType="String" resultMap="UserDao">
         select
         <include refid="selectFields"/>
         from user

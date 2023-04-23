@@ -15,14 +15,14 @@
         <result column="owner_id" jdbcType="INTEGER" property="ownerId"/>
     </resultMap>
 
-    <select id="searchGroupByName" parameterType="java.lang.String" resultMap="GroupDao">
+    <select id="searchGroupByName" parameterType="String" resultMap="GroupDao">
         select
         <include refid="selectFields"/>
         from `group`
         where name like concat('%', #{name}, '%')
     </select>
 
-    <select id="listGroupByOwnerId" parameterType="java.lang.Long" resultMap="GroupDao">
+    <select id="listGroupByOwnerId" parameterType="Long" resultMap="GroupDao">
         select
         <include refid="selectFields"/>
         from `group`

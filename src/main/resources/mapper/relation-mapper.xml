@@ -13,7 +13,7 @@
         <result column="status" jdbcType="INTEGER" property="status"/>
     </resultMap>
 
-    <select id="listUserIdByGroupId" resultType="java.lang.Long">
+    <select id="listUserIdByGroupId" resultType="Long">
         select request_id from relation
         where type = 1 and accept_id = #{id};
     </select>

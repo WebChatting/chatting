@@ -8,6 +8,7 @@ spring:
     host: 127.0.0.1 #指定redis所在的host
     port: 6379  #指定redis的端口
     password: webchatting  #设置redis密码
+    timeout: 10000
     lettuce:
       pool:
         max-active: 8 #最大连接数
@@ -62,11 +63,26 @@ spring:
       data-locations: classpath:sql/data.sql
 
 mybatis-plus:
-  mapper-locations: classpath:mapper/*
+  mapper-locations: classpath:mapper/*.xml
   type-aliases-package: com.sxrekord.chatting.model.po
   configuration:
     map-underscore-to-camel-case: true
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    type-aliases:
+      - alias: Integer
+        type: java.lang.Integer
+      - alias: Long
+        type: java.lang.Long
+      - alias: String
+        type: java.lang.String
+      - alias: HashMap
+        type: java.util.HashMap
+      - alias: LinkedHashMap
+        type: java.util.LinkedHashMap
+      - alias: ArrayList
+        type: java.util.ArrayList
+      - alias: LinkedList
+        type: java.util.LinkedList
   global-config:
     db-config:
       id-type: auto # 设置统一的主键生成策略, auto 表示使用数据库的自增策略
@@ -75,6 +91,7 @@ pagehelper:
   helperDialect: mysql
   reasonable: true
   pageSizeZero: true
+  supportMethodsArguments: true
 
 file:
   upload:
