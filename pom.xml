@@ -11,7 +11,19 @@
 
     <name>chatting</name>
     <description>chatting system</description>
+    <url>https://github.com/WebChatting/chatting</url>
 
+    <developers>
+        <developer>
+            <name>Rekord</name>
+            <roles>
+                <role>project leader</role>
+            </roles>
+            <email>wildrekord@gmail.com</email>
+            <url>https://github.com/Crazyokd</url>
+            <timezone>8</timezone>
+        </developer>
+    </developers>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
