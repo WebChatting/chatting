@@ -1,8 +1,8 @@
 @echo off
 
-set RUNAPP=%1
+set ACTION=%1
 
-if /i "%RUNAPP%"=="--help" (
+if /i "%ACTION%"=="--help" (
     echo Usage: local-deploy.bat [--run-application ^| --test] [--help]
     echo.
     echo Options:
@@ -44,10 +44,10 @@ if errorlevel 1 (
 
 echo Containers started successfully.
 
-if /i "%RUNAPP%"=="--run-application" (
+if /i "%ACTION%"=="--run-application" (
 	call :wait 5
 	mvn clean spring-boot:run
-) else if /i "%RUNAPP%"=="--test" (
+) else if /i "%ACTION%"=="--test" (
 	call :wait 5
 	mvn clean test
 )
@@ -58,7 +58,6 @@ echo Stopping %1 container...
 docker stop "%1" >NUL 2>&1
 docker rm "%1" >NUL 2>&1
 exit /b
-
 
 :outputErrorMsg
 SET "string=%~1"
