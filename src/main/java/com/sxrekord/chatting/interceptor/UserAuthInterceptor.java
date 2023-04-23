@@ -1,16 +1,18 @@
 package com.sxrekord.chatting.interceptor;
 
+import com.sxrekord.chatting.annotation.NoAuthorization;
 import com.sxrekord.chatting.common.RedisKey;
 import com.sxrekord.chatting.util.HeaderUtils;
 import com.sxrekord.chatting.util.JwtTokenUtils;
 import com.sxrekord.chatting.util.RedisUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.security.sasl.AuthenticationException;
 import javax.security.auth.login.AccountExpiredException;
+import javax.security.sasl.AuthenticationException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.security.SignatureException;
@@ -26,6 +28,10 @@ public class UserAuthInterceptor implements HandlerInterceptor{
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
+        // 如果方法上存在NoAuthorization注解，则无需鉴权
+        if (((HandlerMethod)handler).getMethod().getAnnotation(NoAuthorization.class) != null) {
+            return true;
+        }
         String authorizationHeader = HeaderUtils.getAuthorizationHeader(request);
         if (authorizationHeader != null && authorizationHeader.startsWith(authorizationHeader)) {
             String accessToken = HeaderUtils.getValidAuthorizationHeader(request);

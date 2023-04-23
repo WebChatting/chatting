@@ -105,7 +105,7 @@ netty:
     port: 3333
 
 config:
-  exclude-uri: [ /user/register, /user/login, /upload, /common/**, /admin/**, /swagger**/**, /webjars/**, /v3/**, /doc.html ]
+  exclude-uri: [ /swagger**/**, /webjars/**, /v3/**, /doc.html ]
   include-uri: [ /** ]
 
 logging:

@@ -1,5 +1,6 @@
 package com.sxrekord.chatting.controller;
 
+import com.sxrekord.chatting.annotation.NoAuthorization;
 import com.sxrekord.chatting.model.vo.ResponseJson;
 import com.sxrekord.chatting.util.SecurityUtils;
 import io.swagger.annotations.Api;
@@ -22,6 +23,7 @@ public class CommonController {
     @ApiOperation(value = "Get Public Key")
     @RequestMapping(value = "public-key", method = GET)
     @ResponseBody
+    @NoAuthorization
     public ResponseJson getPublicKey() {
         return new ResponseJson().setData("public-key", SecurityUtils.getPublicKeyBase64()).success();
     }

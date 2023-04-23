@@ -1,5 +1,6 @@
 package com.sxrekord.chatting.controller;
 
+import com.sxrekord.chatting.annotation.NoAuthorization;
 import com.sxrekord.chatting.model.po.User;
 import com.sxrekord.chatting.model.vo.ResponseJson;
 import com.sxrekord.chatting.service.UserService;
@@ -27,6 +28,7 @@ public class UserController {
     @ApiOperation(value = "Login User")
     @RequestMapping(value = "login", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
+    @NoAuthorization
     public ResponseJson login(HttpServletResponse response, @RequestBody User user) {
         return userService.loginUser(user, response);
     }
@@ -34,6 +36,7 @@ public class UserController {
     @ApiOperation(value = "Register User")
     @RequestMapping(value = "register", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ResponseBody
+    @NoAuthorization
     public ResponseJson register(@RequestBody User user) {
         return userService.registerUser(user);
     }
