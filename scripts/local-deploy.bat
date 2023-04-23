@@ -3,10 +3,11 @@
 set RUNAPP=%1
 
 if /i "%RUNAPP%"=="--help" (
-    echo Usage: local-deploy.bat [--run-application] [--help]
+    echo Usage: local-deploy.bat [--run-application ^| --test] [--help]
     echo.
     echo Options:
     echo  --run-application  Starts the Spring Boot application after starting the Redis and MySQL containers
+    echo  --test             Runs the tests using Maven after starting the Redis and MySQL containers
     echo  --help             Displays this help message
 	exit /b
 )
@@ -44,9 +45,11 @@ if errorlevel 1 (
 echo Containers started successfully.
 
 if /i "%RUNAPP%"=="--run-application" (
-	echo Waiting for 5 seconds...
-	timeout /t 5 /nobreak
+	call :wait 5
 	mvn clean spring-boot:run
+) else if /i "%RUNAPP%"=="--test" (
+	call :wait 5
+	mvn clean test
 )
 exit /b
 
@@ -63,4 +66,9 @@ SET "firstLetter=%string:~0,1%"
 SET "remainingLetters=%string:~1%"
 SET "capitalized=%firstLetter:~0,1%%firstLetter:~1,1%^%remainingLetters%"
 echo echo Failed to start %capitalized% container.
+exit /b
+
+:wait
+echo Waiting for %1 seconds...
+timeout /t %1 /nobreak
 exit /b
