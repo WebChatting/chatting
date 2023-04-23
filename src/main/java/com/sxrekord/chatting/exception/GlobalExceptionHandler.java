@@ -94,8 +94,9 @@ public class GlobalExceptionHandler {
      * @return
      */
     @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseJson illegalArgumentExceptionHandler(IllegalArgumentException e) {
-        return new ResponseJson().setMsg(e.getMessage());
+        return new ResponseJson(400).setMsg(e.getLocalizedMessage());
     }
 
     /**

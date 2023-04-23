@@ -84,6 +84,8 @@ public class SecurityUtils {
             Cipher cipher = Cipher.getInstance(algorithm);
             cipher.init(Cipher.DECRYPT_MODE, priKey);
             return new String(cipher.doFinal(inputByte));
+        } catch (IllegalArgumentException iae) {
+            throw new IllegalArgumentException("参数无法正确解密sta");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
