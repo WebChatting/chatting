@@ -70,8 +70,6 @@ public class GlobalExceptionHandler {
         return new ResponseJson(451).setMsg("token has been blacklisted");
     }
 
-
-
     /**
      * 描述：请求方法不支持异常提示
      * @param exception

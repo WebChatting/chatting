@@ -3,6 +3,7 @@ package com.sxrekord.chatting.util;
 
 import lombok.extern.slf4j.Slf4j;
 
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import java.security.*;
 import java.security.interfaces.RSAPrivateKey;
@@ -84,8 +85,8 @@ public class SecurityUtils {
             Cipher cipher = Cipher.getInstance(algorithm);
             cipher.init(Cipher.DECRYPT_MODE, priKey);
             return new String(cipher.doFinal(inputByte));
-        } catch (IllegalArgumentException iae) {
-            throw new IllegalArgumentException("参数无法正确解密sta");
+        } catch (IllegalArgumentException | BadPaddingException ee) {
+            throw new IllegalArgumentException("参数无法正确解密，请检查是否加密或尝试重新获取公钥");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
