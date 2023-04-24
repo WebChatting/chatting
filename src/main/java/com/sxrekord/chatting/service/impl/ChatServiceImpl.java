@@ -1,13 +1,12 @@
 package com.sxrekord.chatting.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.sxrekord.chatting.common.Constant;
 import com.sxrekord.chatting.common.MessageType;
-import com.sxrekord.chatting.common.WSType;
 import com.sxrekord.chatting.dao.*;
 import com.sxrekord.chatting.model.po.*;
 import com.sxrekord.chatting.model.vo.ResponseJson;
 import com.sxrekord.chatting.service.ChatService;
-import com.sxrekord.chatting.common.Constant;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import lombok.extern.slf4j.Slf4j;
@@ -25,9 +24,7 @@ import java.util.Map.Entry;
  */
 @Slf4j
 @Service
-public class ChatServiceImpl implements ChatService{
-
-            
+public class ChatServiceImpl implements ChatService {
     @Autowired
     private GroupDao groupDao;
     @Autowired
@@ -47,10 +44,6 @@ public class ChatServiceImpl implements ChatService{
     public void online(JSONObject param, ChannelHandlerContext ctx) {
         String id = param.get("id").toString();
         Constant.onlineUserMap.put(id, ctx);
-        String responseJson = new ResponseJson().success()
-                .setData("type", WSType.ONLINE)
-                .toString();
-//        sendMessage(ctx, responseJson);
         log.info(MessageFormat.format("当前握手实例总数为：{0}", Constant.webSocketHandshakerMap.size()));
         log.info(MessageFormat.format("id为 {0} 的用户登记到在线用户表，当前在线人数为：{1}"
                 , id, Constant.onlineUserMap.size()));
@@ -76,7 +69,6 @@ public class ChatServiceImpl implements ChatService{
 
     @Override
     public void send(JSONObject jm, ChannelHandlerContext ctx, Integer type, Integer contentType) {
-        System.out.println("enter send method, type: " + type);
         Long fromId = Long.parseLong(jm.get("fromId").toString());
         Long toId = Long.parseLong(jm.get("toId").toString());
 
@@ -138,8 +130,7 @@ public class ChatServiceImpl implements ChatService{
     }
 
     private void sendToGroup(Group group, Long fromId, String responseJson) {
-        List<Long> members = new ArrayList<>();
-        members.addAll(relationDao.listUserIdByGroupId(group.getId()));
+        List<Long> members = new ArrayList<>(relationDao.listUserIdByGroupId(group.getId()));
         members.add(groupDao.selectById(group.getId()).getOwnerId());
         for (Long userId : members) {
             ChannelHandlerContext toCtx = Constant.onlineUserMap.get(userId);

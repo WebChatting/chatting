@@ -138,7 +138,8 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<WebSocke
      */
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        log.info("caught exception: " + cause);
+//        log.info("caught exception: " + cause);
+        cause.printStackTrace();
     }
     
     private void sendErrorMessage(ChannelHandlerContext ctx, Integer errorStatus, String errorMsg) {
