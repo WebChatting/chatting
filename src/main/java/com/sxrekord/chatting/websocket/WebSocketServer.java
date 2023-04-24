@@ -1,13 +1,12 @@
 package com.sxrekord.chatting.websocket;
 
-import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.*;
-import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.ChannelHandler;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.FixedRecvByteBufAllocator;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.Executors;
@@ -23,19 +22,11 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 @Component
-public class WebSocketServer implements Runnable {
+public class WebSocketServer extends BaseServer implements Runnable {
 	private final ScheduledExecutorService executorService;
-
-	private final EventLoopGroup bossGroup = new NioEventLoopGroup();
-	private final EventLoopGroup workerGroup = new NioEventLoopGroup();
-	private final ServerBootstrap serverBootstrap = new ServerBootstrap();
-
-	@Value("${netty.server.port}")
-	private int port;
 	@Autowired
 	@Qualifier("webSocketChildChannelHandler")
 	private ChannelHandler childChannelHandler;
-	private ChannelFuture serverChannelFuture;
 
 	public WebSocketServer() {
 		executorService = Executors.newScheduledThreadPool(2);
@@ -43,14 +34,16 @@ public class WebSocketServer implements Runnable {
 
 	@Override
 	public void run() {
-        build();
+        start();
 	}
 
 	/**
 	 * 描述：启动Netty Websocket服务器
 	 */
-	public void build() {
+	@Override
+	public void start() {
 		try {
+			super.init();
 			long begin = System.currentTimeMillis();
 			serverBootstrap.group(bossGroup, workerGroup) // 分别用于处理客户端的连接请求和与客户端的读写操作。
 					.channel(NioServerSocketChannel.class) // 配置客户端的 channel 类型
@@ -78,17 +71,7 @@ public class WebSocketServer implements Runnable {
 		if (executorService != null) {
 			executorService.shutdown();
 		}
-		try {
-			// 停止接受新连接
-			bossGroup.shutdownGracefully().sync();
-			// 等待现有连接关闭
-			serverChannelFuture.channel().close().sync();
-			// 停止读写操作
-			workerGroup.shutdownGracefully().sync();
-		} catch (InterruptedException ie) {
-			log.error("Interrupted while closing Netty WebSocket Server", ie);
-			Thread.currentThread().interrupt();
-		}
+		super.close();
 	}
 
 	private void scheduleTasks() {
@@ -96,14 +79,14 @@ public class WebSocketServer implements Runnable {
 			@Override
 			public void run() {
 				log.info("scanNotActiveChannel --------");
-//          UserInfoManager.scanNotActiveChannel();
+//				UserInfoManager.scanNotActiveChannel();
 			}
 		}, 3, 60, TimeUnit.SECONDS);
 
 		executorService.scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
-//          UserInfoManager.broadCastPing();
+//          		UserInfoManager.broadCastPing();
 			}
 		}, 3, 50, TimeUnit.SECONDS);
 	}
