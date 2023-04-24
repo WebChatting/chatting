@@ -1,11 +1,14 @@
 package com.sxrekord.chatting.websocket;
 
 
+import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
+import com.sxrekord.chatting.common.Constant;
+import com.sxrekord.chatting.common.WSErrorCode;
 import com.sxrekord.chatting.common.WSType;
 import com.sxrekord.chatting.model.vo.ResponseJson;
 import com.sxrekord.chatting.service.ChatService;
-import com.sxrekord.chatting.common.Constant;
+import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -17,6 +20,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * @author Rekord
+ * @date 2023/4/10 19:15
  */
 @Slf4j
 @Component
@@ -47,7 +51,9 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<WebSocke
             WebSocketServerHandshaker handshaker = 
                     Constant.webSocketHandshakerMap.get(ctx.channel().id().asLongText());
             if (handshaker == null) {
-                sendErrorMessage(ctx, "不存在的客户端连接！");
+                // 发送提示信息后关闭握手实例
+                CloseWebSocketFrame closeFrame = new CloseWebSocketFrame(WebSocketCloseStatus.NORMAL_CLOSURE.code(), "不存在的客户端连接！");
+                ctx.writeAndFlush(closeFrame).addListener(ChannelFutureListener.CLOSE);
             } else {
                 handshaker.close(ctx.channel(), (CloseWebSocketFrame) frame.retain());
             }
@@ -58,23 +64,24 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<WebSocke
             ctx.channel().write(new PongWebSocketFrame(frame.content().retain()));
             return;
         }
-        // 只支持文本格式，不支持二进制消息
+        // 目前只支持文本格式，不支持二进制消息
         if (!(frame instanceof TextWebSocketFrame)) {
-            sendErrorMessage(ctx, "仅支持文本(Text)格式，不支持二进制消息");
+            sendErrorMessage(ctx, WSErrorCode.INVALID_DATA_TYPE.getCode(), WSErrorCode.INVALID_DATA_TYPE.getMessage());
+            return;
         }
 
         // 客户端发送过来的消息
         String request = ((TextWebSocketFrame)frame).text();
-        log.info("服务端收到新信息：" + request);
+        log.info("服务端收到新信息:\n" + request);
         JSONObject param = null;
         try {
             param = JSONObject.parseObject(request);
-        } catch (Exception e) {
-            sendErrorMessage(ctx, "JSON字符串转换出错！");
-            e.printStackTrace();
+        } catch (JSONException jsonException) {
+            sendErrorMessage(ctx, WSErrorCode.INVALID_JSON_FORMAT.getCode(), WSErrorCode.INVALID_JSON_FORMAT.getMessage());
+            return;
         }
         if (param == null) {
-            sendErrorMessage(ctx, "参数为空！");
+            sendErrorMessage(ctx, WSErrorCode.MESSAGE_CONTENT_EMPTY.getCode(), WSErrorCode.MESSAGE_CONTENT_EMPTY.getMessage());
             return;
         }
 
@@ -115,22 +122,28 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<WebSocke
      */
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        log.info("Client " + ctx.channel().remoteAddress() + " disconnected");
         chatService.offline(ctx);
+    }
+
+    @Override
+    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+        // 客户端与服务端建立连接后执行的操作
+        log.info("Client " + ctx.channel().remoteAddress() + " connected");
+        // 可以在此处记录连接信息、发送欢迎消息等
     }
    
     /**
-     * 异常处理：关闭 channel
+     * 捕获异常
      */
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        cause.printStackTrace();
-        ctx.close();
+        log.info("caught exception: " + cause);
     }
     
-    
-    private void sendErrorMessage(ChannelHandlerContext ctx, String errorMsg) {
-        String responseJson = new ResponseJson()
-                .error(errorMsg)
+    private void sendErrorMessage(ChannelHandlerContext ctx, Integer errorStatus, String errorMsg) {
+        String responseJson = new ResponseJson(errorStatus)
+                .setMsg(errorMsg)
                 .toString();
         ctx.channel().writeAndFlush(new TextWebSocketFrame(responseJson));
     }
