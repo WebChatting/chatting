@@ -64,22 +64,7 @@ public class WebSocketServer implements Runnable {
 
 			serverChannelFuture = serverBootstrap.bind(port).sync();
 
-			// 定时扫描所有的Channel，关闭失效的Channel
-			executorService.scheduleAtFixedRate(new Runnable() {
-				@Override
-				public void run() {
-					log.info("scanNotActiveChannel --------");
-//					UserInfoManager.scanNotActiveChannel();
-				}
-			}, 3, 60, TimeUnit.SECONDS);
-
-			// 定时向所有客户端发送Ping消息
-			executorService.scheduleAtFixedRate(new Runnable() {
-				@Override
-				public void run() {
-//					UserInfoManager.broadCastPing();
-				}
-			}, 3, 50, TimeUnit.SECONDS);
+			scheduleTasks();
 		} catch (Exception e) {
 			log.error("Error occurred while starting Netty WebSocket Server", e);
 			close();
@@ -104,6 +89,23 @@ public class WebSocketServer implements Runnable {
 			log.error("Interrupted while closing Netty WebSocket Server", ie);
 			Thread.currentThread().interrupt();
 		}
+	}
+
+	private void scheduleTasks() {
+		executorService.scheduleAtFixedRate(new Runnable() {
+			@Override
+			public void run() {
+				log.info("scanNotActiveChannel --------");
+//          UserInfoManager.scanNotActiveChannel();
+			}
+		}, 3, 60, TimeUnit.SECONDS);
+
+		executorService.scheduleAtFixedRate(new Runnable() {
+			@Override
+			public void run() {
+//          UserInfoManager.broadCastPing();
+			}
+		}, 3, 50, TimeUnit.SECONDS);
 	}
 
 }
