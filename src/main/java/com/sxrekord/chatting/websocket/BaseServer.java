@@ -47,11 +47,10 @@ public abstract class BaseServer implements Server {
     @Override
     public void close() {
         try {
+            serverChannelFuture.channel().close().sync();
             // 停止接受新连接
             bossGroup.shutdownGracefully().sync();
-            // 等待现有连接关闭
-            serverChannelFuture.channel().close().sync();
-            // 停止读写操作
+            // 等待现有连接处理完毕并关闭
             workerGroup.shutdownGracefully().sync();
         } catch (InterruptedException ie) {
             log.error("Interrupted while closing Netty WebSocket Server", ie);
