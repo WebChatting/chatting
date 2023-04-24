@@ -13,13 +13,18 @@ import io.netty.handler.codec.http.websocketx.WebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketServerHandshaker;
 import io.netty.handler.codec.http.websocketx.WebSocketServerHandshakerFactory;
 import io.netty.util.CharsetUtil;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+
+import java.text.MessageFormat;
 
 /**
  * @author Rekord
  */
 @Component
 @Sharable
+@Slf4j
 public class HttpRequestHandler extends SimpleChannelInboundHandler<Object> {
 
     /**
@@ -51,7 +56,7 @@ public class HttpRequestHandler extends SimpleChannelInboundHandler<Object> {
                 "ws:/" + ctx.channel() + "/websocket", null, false);
         WebSocketServerHandshaker handshaker = wsFactory.newHandshaker(req);
         Constant.webSocketHandshakerMap.put(ctx.channel().id().asLongText(), handshaker);
-
+        log.info(MessageFormat.format("当前握手实例总数为：{0}", Constant.webSocketHandshakerMap.size()));
         if (handshaker == null) {
             WebSocketServerHandshakerFactory.sendUnsupportedVersionResponse(ctx.channel());
         } else {
@@ -61,7 +66,7 @@ public class HttpRequestHandler extends SimpleChannelInboundHandler<Object> {
     
     private void sendHttpResponse(ChannelHandlerContext ctx, FullHttpRequest req, DefaultFullHttpResponse res) {
         // 返回应答给客户端
-        if (res.status().code() != 200) {
+        if (res.status().code() != HttpStatus.OK.value()) {
             ByteBuf buf = Unpooled.copiedBuffer(res.status().toString(), CharsetUtil.UTF_8);
             res.content().writeBytes(buf);
             buf.release();
