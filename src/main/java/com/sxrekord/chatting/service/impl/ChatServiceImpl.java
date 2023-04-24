@@ -44,7 +44,6 @@ public class ChatServiceImpl implements ChatService {
     public void online(JSONObject param, ChannelHandlerContext ctx) {
         String id = param.get("id").toString();
         Constant.onlineUserMap.put(id, ctx);
-        log.info(MessageFormat.format("当前握手实例总数为：{0}", Constant.webSocketHandshakerMap.size()));
         log.info(MessageFormat.format("id为 {0} 的用户登记到在线用户表，当前在线人数为：{1}"
                 , id, Constant.onlineUserMap.size()));
     }
@@ -56,9 +55,6 @@ public class ChatServiceImpl implements ChatService {
         while(iterator.hasNext()) {
             Entry<String, ChannelHandlerContext> entry = iterator.next();
             if (entry.getValue() == ctx) {
-                Constant.webSocketHandshakerMap.remove(ctx.channel().id().asLongText());
-                log.info(MessageFormat.format("已移除握手实例，当前握手实例总数为：{0}"
-                        , Constant.webSocketHandshakerMap.size()));
                 iterator.remove();
                 log.info(MessageFormat.format("userId为 {0} 的用户已退出聊天，当前在线人数为：{1}"
                         , entry.getKey(), Constant.onlineUserMap.size()));

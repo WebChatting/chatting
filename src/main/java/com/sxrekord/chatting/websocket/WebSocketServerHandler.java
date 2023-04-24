@@ -17,6 +17,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.text.MessageFormat;
+
 
 /**
  * @author Rekord
@@ -123,7 +125,11 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<WebSocke
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         log.info("Client " + ctx.channel().remoteAddress() + " disconnected");
+        Constant.webSocketHandshakerMap.remove(ctx.channel().id().asLongText());
+        log.info(MessageFormat.format("已移除握手实例，当前握手实例总数为：{0}"
+                , Constant.webSocketHandshakerMap.size()));
         chatService.offline(ctx);
+        ctx.channel().close();
     }
 
     @Override
@@ -138,7 +144,7 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<WebSocke
      */
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-//        log.info("caught exception: " + cause);
+        log.info("caught exception: " + cause);
         cause.printStackTrace();
     }
     
