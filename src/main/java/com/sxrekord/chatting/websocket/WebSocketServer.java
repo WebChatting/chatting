@@ -1,14 +1,19 @@
 package com.sxrekord.chatting.websocket;
 
 import io.netty.channel.ChannelHandler;
+import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.FixedRecvByteBufAllocator;
+import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.http.HttpObjectAggregator;
+import io.netty.handler.codec.http.HttpServerCodec;
+import io.netty.handler.stream.ChunkedWriteHandler;
+import io.netty.handler.timeout.IdleStateHandler;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -24,9 +29,10 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class WebSocketServer extends BaseServer implements Runnable {
 	private final ScheduledExecutorService executorService;
-	@Autowired
-	@Qualifier("webSocketChildChannelHandler")
-	private ChannelHandler childChannelHandler;
+	@Resource(name = "webSocketServerHandler")
+	private ChannelHandler webSocketServerHandler;
+	@Resource(name = "httpRequestHandler")
+	private ChannelHandler httpRequestHandler;
 
 	public WebSocketServer() {
 		executorService = Executors.newScheduledThreadPool(2);
@@ -51,7 +57,22 @@ public class WebSocketServer extends BaseServer implements Runnable {
 					.childOption(ChannelOption.TCP_NODELAY, true) // 开启 TCP_NODELAY 算法，尽可能发送大块数据，减少小块数据的充斥
 					.childOption(ChannelOption.SO_KEEPALIVE, true) // 开启TCP心跳机制
 					.childOption(ChannelOption.RCVBUF_ALLOCATOR, new FixedRecvByteBufAllocator(592048)) // 使用固定长度接收缓存区分配器
-					.childHandler(childChannelHandler); // 绑定I/O事件的处理类
+					.childHandler(new ChannelInitializer<SocketChannel>() {
+						@Override
+						protected void initChannel(SocketChannel ch) throws Exception {
+							ch.pipeline().addLast(defLoopGroup);
+							// HTTP请求编码解码器
+							ch.pipeline().addLast("http-codec", new HttpServerCodec())
+									// 把HTTP头、HTTP体拼成完整的HTTP请求
+									.addLast("aggregator", new HttpObjectAggregator(65536))
+									// 方便大文件传输，不过实质上都是短的文本数据
+									.addLast("http-chunked", new ChunkedWriteHandler())
+									// 检测链路是否读空闲(userEventTriggered)
+									.addLast("idle-handler", new IdleStateHandler(60, 0, 0))
+									.addLast("http-handler", httpRequestHandler)
+									.addLast("websocket-handler",webSocketServerHandler);
+						}
+					}); // 绑定I/O事件的处理类
 			long end = System.currentTimeMillis();
 			log.info("Netty Websocket服务器启动完成，耗时 " + (end - begin) + " ms，已绑定端口 " + port + " 阻塞式等候客户端连接");
 

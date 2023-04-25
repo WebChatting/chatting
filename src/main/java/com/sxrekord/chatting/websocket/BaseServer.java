@@ -2,6 +2,7 @@ package com.sxrekord.chatting.websocket;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
+import io.netty.channel.DefaultEventLoopGroup;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import lombok.extern.slf4j.Slf4j;
@@ -19,12 +20,21 @@ public abstract class BaseServer implements Server {
     @Value("${netty.server.port}")
     protected int port;
 
+    protected DefaultEventLoopGroup defLoopGroup;
+    protected ChannelFuture serverChannelFuture;
     protected EventLoopGroup bossGroup;
     protected EventLoopGroup workerGroup;
-    protected ChannelFuture serverChannelFuture;
     protected ServerBootstrap serverBootstrap;
 
     public void init() {
+        defLoopGroup = new DefaultEventLoopGroup(8, new ThreadFactory() {
+            private final AtomicInteger index = new AtomicInteger(0);
+
+            @Override
+            public Thread newThread(Runnable r) {
+                return new Thread(r, "DEFAULTEVENTLOOPGROUP_" + index.incrementAndGet());
+            }
+        });
         bossGroup = new NioEventLoopGroup(Runtime.getRuntime().availableProcessors(), new ThreadFactory() {
             private final AtomicInteger index = new AtomicInteger(0);
 
@@ -47,6 +57,7 @@ public abstract class BaseServer implements Server {
     @Override
     public void close() {
         try {
+            defLoopGroup.shutdownGracefully().sync();
             serverChannelFuture.channel().close().sync();
             // 停止接受新连接
             bossGroup.shutdownGracefully().sync();

@@ -1,6 +1,5 @@
 package com.sxrekord.chatting.websocket;
 
-
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.sxrekord.chatting.common.Constant;
