@@ -60,8 +60,8 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<WebSocke
             }
             return;
         }
-        // ping请求
-        if (frame instanceof PingWebSocketFrame) {
+        // ping | pong 请求
+        if (frame instanceof PingWebSocketFrame | frame instanceof PongWebSocketFrame) {
             ctx.channel().write(new PongWebSocketFrame(frame.content().retain()));
             return;
         }
@@ -86,7 +86,13 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<WebSocke
             return;
         }
 
-        WSType type = WSType.getWSTypeById((Integer)param.get("ws_type"));
+        WSType type = null;
+        try {
+            type = WSType.getWSTypeById((Integer)param.get("ws_type"));
+        } catch (NullPointerException npe) {
+            sendErrorMessage(ctx, WSErrorCode.MISSING_REQUIRED_FIELD.getCode(), WSErrorCode.MISSING_REQUIRED_FIELD.getMessage());
+            return;
+        }
         switch (type) {
             case ONLINE:
                 chatService.online(param, ctx);

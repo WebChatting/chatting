@@ -21,7 +21,11 @@ public enum WSErrorCode {
     /**
      * Message content is empty
      */
-    MESSAGE_CONTENT_EMPTY(1003, "Message content is empty");
+    MESSAGE_CONTENT_EMPTY(1003, "Message content is empty"),
+    /**
+     * Required field is missing in the request
+     */
+    MISSING_REQUIRED_FIELD(1003, "Required field is missing");
 
     private final int code;
     private final String message;
