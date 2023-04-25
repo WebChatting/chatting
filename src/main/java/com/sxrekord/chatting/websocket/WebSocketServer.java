@@ -1,9 +1,7 @@
 package com.sxrekord.chatting.websocket;
 
-import io.netty.channel.ChannelHandler;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.FixedRecvByteBufAllocator;
+import com.sxrekord.chatting.common.Constant;
+import io.netty.channel.*;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.http.HttpObjectAggregator;
@@ -99,17 +97,27 @@ public class WebSocketServer extends BaseServer implements Runnable {
 		executorService.scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
-				log.info("scanNotActiveChannel --------");
-//				UserInfoManager.scanNotActiveChannel();
+				scanNotActiveChannel();
 			}
 		}, 3, 60, TimeUnit.SECONDS);
 
 		executorService.scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
-//          		UserInfoManager.broadCastPing();
+          		broadCastPing();
 			}
 		}, 3, 50, TimeUnit.SECONDS);
 	}
 
+	private void scanNotActiveChannel() {
+		log.info("scanNotActiveChannel --------");
+		for (Channel channel : Constant.webSocketHandshakerMap.keySet()) {
+			if (!channel.isOpen() || !channel.isActive()) {
+				log.info("移除握手实例" + channel.id().asLongText());
+				channel.close();
+			}
+		}
+	}
+
+	private void broadCastPing() {}
 }

@@ -59,7 +59,7 @@ public class HttpRequestHandler extends SimpleChannelInboundHandler<Object> {
             WebSocketServerHandshakerFactory.sendUnsupportedVersionResponse(ctx.channel());
         } else {
             handshaker.handshake(ctx.channel(), req);
-            Constant.webSocketHandshakerMap.put(ctx.channel().id().asLongText(), handshaker);
+            Constant.webSocketHandshakerMap.put(ctx.channel(), handshaker);
             log.info(MessageFormat.format("当前握手实例总数为：{0}", Constant.webSocketHandshakerMap.size()));
         }
     }

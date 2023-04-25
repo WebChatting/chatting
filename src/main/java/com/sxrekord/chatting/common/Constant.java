@@ -1,5 +1,6 @@
 package com.sxrekord.chatting.common;
 
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.websocketx.WebSocketServerHandshaker;
 
@@ -19,7 +20,7 @@ public class Constant {
 
     public static final String USER_TOKEN = "CHATTING:USER:ID";
     
-    public static Map<String, WebSocketServerHandshaker> webSocketHandshakerMap = 
+    public static Map<Channel, WebSocketServerHandshaker> webSocketHandshakerMap =
             new ConcurrentHashMap<>();
     
 	public static Map<String, ChannelHandlerContext> onlineUserMap = 

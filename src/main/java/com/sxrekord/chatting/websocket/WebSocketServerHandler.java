@@ -130,7 +130,7 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<WebSocke
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         log.info("Client " + ctx.channel().remoteAddress() + " disconnected");
-        Constant.webSocketHandshakerMap.remove(ctx.channel().id().asLongText());
+        Constant.webSocketHandshakerMap.remove(ctx.channel());
         log.info(MessageFormat.format("已移除握手实例，当前握手实例总数为：{0}"
                 , Constant.webSocketHandshakerMap.size()));
         chatService.offline(ctx);
