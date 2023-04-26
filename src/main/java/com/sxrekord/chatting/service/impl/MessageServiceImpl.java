@@ -40,7 +40,7 @@ public class MessageServiceImpl implements MessageService {
                             textContentDao.selectById(message.getContentId()).getContent()
                             : (message.getContentType() == 1 ? imageContentDao.selectById(message.getContentId()).getPath()
                             : fileContentDao.selectById(message.getContentId()).getName()))
-                    .setData("url", message.getType() == 2 ?
+                    .setData("url", message.getContentType() == 2 ?
                             fileContentDao.selectById(message.getContentId()).getPath() : null)
                     .toString();
             responseJson.addToCollection("messages");
