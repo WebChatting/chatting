@@ -58,7 +58,7 @@ public class FileServiceImpl implements FileService {
         filename = filename + suffix;
 
         System.out.println("存储路径为:" + FILE_STORE_PATH + filename);
-        new File(FILE_STORE_PATH).mkdir();
+        new File(FILE_STORE_PATH).mkdirs();
         Path filePath = Paths.get(FILE_STORE_PATH, filename);
         try {
             Files.copy(file.getInputStream(), filePath);
