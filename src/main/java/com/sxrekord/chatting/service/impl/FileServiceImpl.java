@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
 public class FileServiceImpl implements FileService {
 
     private final static String SERVER_URL_PREFIX = "upload" + FileUtils.SLASH;
-    @Value("${file.upload.location}")
+    @Value("#{ T(java.lang.System).getProperty('os.name').contains('Windows') ? '${file.upload.location.windows}' : '${file.upload.location.linux}' }")
     private String FILE_STORE_PATH;
 
     @Autowired
