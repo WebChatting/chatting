@@ -97,7 +97,7 @@ file:
   upload:
     location:
       windows: D:/dev/repo/chatting-vue/public/upload/
-      linux: /srv/http/chatting/public/upload/
+      linux: /srv/http/chatting/upload/
   default:
     user: avatar/default_user_avatar.jpg
     group: avatar/default_group_avatar.jpg
