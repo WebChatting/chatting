@@ -22,10 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.FileAlreadyExistsException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -66,6 +63,8 @@ public class FileServiceImpl implements FileService {
             fileDao.insert(new com.sxrekord.chatting.model.po.File(fileSize, SERVER_URL_PREFIX + filename));
         } catch (FileAlreadyExistsException e) {
             System.out.println("复用文件");
+        } catch (NoSuchFileException | AccessDeniedException nfe) {
+            return new ResponseJson(530).setMsg("文件存取路径无效(路径有误或没有写入权限)");
         } catch (IOException ioe) {
             ioe.printStackTrace();
             return new ResponseJson().error("文件上传发生错误！");
