@@ -24,7 +24,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Autowired
     UserAuthInterceptor userAuthInterceptor;
 
-    @Value("#{ T(java.lang.System).getProperty('os.name').contains('Windows') ? '${file.upload.location.windows}' : '${file.upload.location.linux}' }")
+    @Value("${file.upload.location}")
     private String FILE_STORE_PATH;
 
     @Override

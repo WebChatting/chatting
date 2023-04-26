@@ -11,7 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
  */
 @SpringBootTest
 public class FileUtilsTest {
-    @Value("#{ T(java.lang.System).getProperty('os.name').contains('Windows') ? '${file.upload.location.windows}' : '${file.upload.location.linux}' }")
+    @Value("${file.upload.location}")
     private String FILE_STORE_PATH;
 
     @Test
