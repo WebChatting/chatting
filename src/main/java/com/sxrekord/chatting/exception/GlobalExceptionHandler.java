@@ -4,9 +4,8 @@ import com.sxrekord.chatting.model.vo.ResponseJson;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -98,26 +97,6 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * 方法参数不合法
-     * @param e
-     * @return
-     */
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseJson methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException e) {
-        return new ResponseJson().setMsg(e.getMessage());
-    }
-
-    /**
-     * 请求参数缺失
-     * @param e
-     * @return
-     */
-    @ExceptionHandler(MissingServletRequestParameterException.class)
-    public ResponseJson missingServletRequestParameterExceptionHandler(MissingServletRequestParameterException e) {
-        return new ResponseJson().setMsg(e.getMessage());
-    }
-
-    /**
      * 描述：数据绑定失败异常提示
      * @param exception
      * @return
@@ -129,5 +108,11 @@ public class GlobalExceptionHandler {
                 .map(error -> error.getField() + error.getDefaultMessage())
                 .collect(Collectors.joining(","));
         return new ResponseJson(HttpStatus.BAD_REQUEST).setMsg(errors);
+    }
+
+    @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseJson httpMediaTypeNotSupportedExceptionHandler(HttpMediaTypeNotSupportedException e) {
+        return new ResponseJson(HttpStatus.BAD_REQUEST).setMsg(e.getLocalizedMessage());
     }
 }
