@@ -91,10 +91,10 @@ public class GlobalExceptionHandler {
      * @param e
      * @return
      */
-    @ExceptionHandler(IllegalArgumentException.class)
+    @ExceptionHandler(ChattingIllegalArgumentException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseJson illegalArgumentExceptionHandler(IllegalArgumentException e) {
-        return new ResponseJson(400).setMsg(e.getLocalizedMessage());
+    public ResponseJson illegalArgumentExceptionHandler(ChattingIllegalArgumentException e) {
+        return new ResponseJson(e.getErrorCode()).setMsg(e.getLocalizedMessage());
     }
 
     /**

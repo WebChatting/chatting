@@ -1,6 +1,7 @@
 package com.sxrekord.chatting.util;
 
 
+import com.sxrekord.chatting.exception.ChattingIllegalArgumentException;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.crypto.BadPaddingException;
@@ -85,8 +86,10 @@ public class SecurityUtils {
             Cipher cipher = Cipher.getInstance(algorithm);
             cipher.init(Cipher.DECRYPT_MODE, priKey);
             return new String(cipher.doFinal(inputByte));
-        } catch (IllegalArgumentException | BadPaddingException ee) {
-            throw new IllegalArgumentException("参数无法正确解密，请检查是否加密或尝试重新获取公钥");
+        } catch (BadPaddingException bpe) {
+            throw new ChattingIllegalArgumentException("解密失败，请获取最新公钥", 422);
+        } catch (IllegalArgumentException iae) {
+            throw new ChattingIllegalArgumentException("参数未加密，请使用公钥进行加密");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
