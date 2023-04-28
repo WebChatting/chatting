@@ -107,7 +107,7 @@ netty:
     port: 3333
 
 config:
-  exclude-uri: [ /swagger**/**, /webjars/**, /v3/**, /doc.html ]
+  exclude-uri: [ /upload/**, /swagger**/**, /webjars/**, /v3/**, /doc.html ]
   include-uri: [ /** ]
 
 logging:

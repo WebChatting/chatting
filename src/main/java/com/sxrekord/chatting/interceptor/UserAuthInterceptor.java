@@ -29,7 +29,7 @@ public class UserAuthInterceptor implements HandlerInterceptor{
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
         // 如果方法上存在NoAuthorization注解，则无需鉴权
-        if (((HandlerMethod)handler).getMethod().getAnnotation(NoAuthorization.class) != null) {
+        if (handler instanceof HandlerMethod && ((HandlerMethod)handler).getMethod().getAnnotation(NoAuthorization.class) != null) {
             return true;
         }
         String authorizationHeader = HeaderUtils.getAuthorizationHeader(request);
