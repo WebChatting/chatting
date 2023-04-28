@@ -25,7 +25,7 @@ public class FileController {
     private FileService fileService;
 
     @ApiOperation(value = "Upload File")
-    @RequestMapping(value = "/upload", method = POST)
+    @RequestMapping(value = "/file/upload", method = POST)
     @ResponseBody
     @NoAuthorization
     public ResponseJson upload(
