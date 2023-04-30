@@ -129,7 +129,7 @@ public class ChatServiceImpl implements ChatService {
         List<Long> members = new ArrayList<>(relationDao.listUserIdByGroupId(group.getId()));
         members.add(groupDao.selectById(group.getId()).getOwnerId());
         for (Long userId : members) {
-            ChannelHandlerContext toCtx = Constant.onlineUserMap.get(userId);
+            ChannelHandlerContext toCtx = Constant.onlineUserMap.get(userId.toString());
             if (toCtx != null && !fromId.equals(userId)) {
                 sendMessage(toCtx, responseJson);
             }
