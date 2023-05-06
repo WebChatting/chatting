@@ -3,29 +3,33 @@
 set ACTION=%1
 
 if /i "%ACTION%"=="--help" (
-    echo Usage: local-deploy.bat [--run-application ^| --test ^| --docker-compose] [--help]
+    echo Usage: local-deploy.bat [--run-application ^| --test ^| --docker-compose] [--clean] [--help]
     echo.
     echo Options:
     echo  --run-application   Starts the Spring Boot application after starting the Redis and MySQL containers
     echo  --test              Runs the tests using Maven after starting the Redis and MySQL containers
     echo  --docker-compose    Starts the entire project using Docker Compose file
+    echo  --clean             Cleans the project
     echo  --help              Displays this help message
     exit /b
 )
 
+if /i "%ACTION%"=="--clean" (
+	call :clean
+	exit /b
+)
+
 if /i "%ACTION%"=="--docker-compose" (
-	call :stopContainer redis
-	call :stopContainer mysql
+	call :clean
 	REM Replace service name
 	powershell -Command "(Get-Content -Encoding utf8 src\main\resources\application.yml) -replace 'host: 127.0.0.1','host: redis' -replace 'localhost:3306','mysql:3306' | Set-Content -Encoding utf8 src\main\resources\application.yml"
 	mvn clean package -DskipTests
 	REM Restore
 	git restore src\main\resources\application.yml
-	docker-compose down
-	call :stopContainer chatting
-	docker rmi "webchatting/chatting"
+
 	docker build -t webchatting/chatting ..
 	docker-compose up
+	exit /b
 )
 
 call :stopContainer redis
@@ -67,6 +71,14 @@ if /i "%ACTION%"=="--run-application" (
 	call :wait 5
 	mvn clean test
 )
+exit /b
+
+:clean
+call :stopContainer redis
+call :stopContainer mysql
+docker-compose down
+call :stopContainer chatting
+docker rmi "webchatting/chatting" >NUL 2>&1
 exit /b
 
 :stopContainer
