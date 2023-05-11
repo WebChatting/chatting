@@ -1,5 +1,16 @@
 version: "3.9"
 services:
+  chatting-vue:
+    image: sxrekord/chatting-vue
+    container_name: chatting-vue
+    ports:
+      - "8080:8080"
+    networks:
+      - chatting-network
+    restart: always
+    depends_on:
+      - chatting
+
   chatting:
     image: webchatting/chatting
     container_name: chatting
