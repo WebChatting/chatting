@@ -4,11 +4,15 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.sxrekord.chatting.model.po.Group;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.util.Assert;
 
+import javax.sql.DataSource;
 import java.util.List;
 
 /**
@@ -18,7 +22,18 @@ import java.util.List;
 @SpringBootTest
 public class GroupDaoTest {
     @Autowired
+    private DataSource dataSource;
+
+    @Autowired
     GroupDao groupDao;
+
+    @BeforeEach
+    public void init() {
+        ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
+        populator.addScript(new ClassPathResource("sql/schema.sql"));
+        populator.addScript(new ClassPathResource("sql/data.sql"));
+        populator.execute(dataSource);
+    }
 
     @Test
     public void testPageHelperForSearchGroupByName() {
